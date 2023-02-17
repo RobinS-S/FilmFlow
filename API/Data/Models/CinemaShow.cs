@@ -12,8 +12,6 @@
 
         public ICollection<Reservation> Reservations { get; set; } = new HashSet<Reservation>();
 
-        public ICollection<ShowTicket> ShowTickets { get; set; } = new HashSet<ShowTicket>();
-
         public CinemaShow() { }
 
         public CinemaShow(DateTime start, DateTime end, Movie movie, CinemaHall hall) 

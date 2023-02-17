@@ -10,6 +10,10 @@ namespace FilmFlow.Server.Data.Models
         
         public ApplicationUser? User { get; set; }
 
+        public ShowTicket? Ticket { get; set; }
+
+        public long? TicketId { get; set; }
+
         public bool IsPaid { get; set; }
 
         public TarriffType TarriffType { get; set; }
@@ -20,15 +24,15 @@ namespace FilmFlow.Server.Data.Models
 
         public Reservation() { }
 
-        public Reservation(CinemaShow cinemaShow, ApplicationUser? user, bool isPaid, int seatId, int rowId, TarriffType tarriffType)
+        public Reservation(CinemaShow cinemaShow, ApplicationUser? user, bool isPaid, TarriffType tarriffType, int seatId, int rowId)
         {
             Code = Misc.Crypto.GenerateHash(Misc.Crypto.GenerateRandomBaseEncodedString());
             CinemaShow = cinemaShow;
             User = user;
             IsPaid = isPaid;
+            TarriffType = tarriffType;
             SeatId = seatId;
             RowId = rowId;
-            TarriffType = TarriffType;
         }
     }
 }

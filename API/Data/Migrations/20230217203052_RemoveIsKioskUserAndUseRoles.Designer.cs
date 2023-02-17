@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace FilmFlow.Server.Data.Migrations
+namespace FilmFlow.API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230217021005_Cinema")]
-    partial class Cinema
+    [Migration("20230217203052_RemoveIsKioskUserAndUseRoles")]
+    partial class RemoveIsKioskUserAndUseRoles
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -180,9 +180,6 @@ namespace FilmFlow.Server.Data.Migrations
                         .HasColumnType("varchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsKioskUser")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -365,12 +362,18 @@ namespace FilmFlow.Server.Data.Migrations
                     b.Property<int>("TarriffType")
                         .HasColumnType("int");
 
+                    b.Property<long?>("TicketId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("UserId")
                         .HasColumnType("varchar(95)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CinemaShowId");
+
+                    b.HasIndex("TicketId")
+                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -383,9 +386,6 @@ namespace FilmFlow.Server.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    b.Property<long>("CinemaShowId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -395,8 +395,6 @@ namespace FilmFlow.Server.Data.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CinemaShowId");
 
                     b.ToTable("ShowTickets");
                 });
@@ -567,24 +565,19 @@ namespace FilmFlow.Server.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("FilmFlow.Server.Data.Models.ShowTicket", "Ticket")
+                        .WithOne("Reservation")
+                        .HasForeignKey("FilmFlow.Server.Data.Models.Reservation", "TicketId");
+
                     b.HasOne("FilmFlow.Server.Data.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("CinemaShow");
 
+                    b.Navigation("Ticket");
+
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("FilmFlow.Server.Data.Models.ShowTicket", b =>
-                {
-                    b.HasOne("FilmFlow.Server.Data.Models.CinemaShow", "CinemaShow")
-                        .WithMany("ShowTickets")
-                        .HasForeignKey("CinemaShowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CinemaShow");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -641,8 +634,6 @@ namespace FilmFlow.Server.Data.Migrations
             modelBuilder.Entity("FilmFlow.Server.Data.Models.CinemaShow", b =>
                 {
                     b.Navigation("Reservations");
-
-                    b.Navigation("ShowTickets");
                 });
 
             modelBuilder.Entity("FilmFlow.Server.Data.Models.Movie", b =>
@@ -650,6 +641,12 @@ namespace FilmFlow.Server.Data.Migrations
                     b.Navigation("CinemaShows");
 
                     b.Navigation("MovieReviews");
+                });
+
+            modelBuilder.Entity("FilmFlow.Server.Data.Models.ShowTicket", b =>
+                {
+                    b.Navigation("Reservation")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -22,6 +22,9 @@ namespace FilmFlow.Server.Data.Configuration
             builder.HasOne(cs => cs.CinemaHall)
                 .WithMany()
                 .IsRequired();
+
+            builder.HasMany(st => st.Reservations)
+                .WithOne(cs => cs.CinemaShow);
         }
     }
 }

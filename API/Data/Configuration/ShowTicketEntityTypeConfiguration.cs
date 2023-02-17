@@ -14,15 +14,11 @@ namespace FilmFlow.Server.Data.Configuration
                 .IsUnicode(false)
                 .IsRequired();
 
+            builder.HasIndex(st => st.Code);
+
             builder.Property(st => st.SoldBy)
                 .HasMaxLength(128)
                 .IsRequired();
-
-            builder.HasOne(st => st.CinemaShow)
-                .WithMany(cs => cs.ShowTickets)
-                .IsRequired();
-
-            builder.HasIndex(st => st.Code);
         }
     }
 }
