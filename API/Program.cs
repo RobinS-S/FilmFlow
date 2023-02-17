@@ -1,3 +1,4 @@
+using FilmFlow.API.Services;
 using FilmFlow.Server.Data;
 using FilmFlow.Server.Data.Models;
 using FilmFlow.Server.Misc;
@@ -61,6 +62,15 @@ namespace FilmFlow
             {
                 builder.Services.AddSwaggerGen();
             }
+
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            builder.Services.AddScoped<CinemaHallService>();
+            builder.Services.AddScoped<CinemaShowService>();
+            builder.Services.AddScoped<MovieReviewService>();
+            builder.Services.AddScoped<MovieService>();
+            builder.Services.AddScoped<ReservationService>();
+            builder.Services.AddScoped<ShowTicketService>();
 
             var app = builder.Build();
 
