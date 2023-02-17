@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FilmFlow.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230217012731_Cinema")]
+    [Migration("20230217013031_Cinema")]
     partial class Cinema
     {
         /// <inheritdoc />

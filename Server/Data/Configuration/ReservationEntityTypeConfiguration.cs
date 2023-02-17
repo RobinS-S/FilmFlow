@@ -28,6 +28,8 @@ namespace FilmFlow.Server.Data.Configuration
 
             builder.Property(r => r.IsPaid)
                 .IsRequired();
+
+            builder.HasIndex(st => st.Code);
         }
     }
 }

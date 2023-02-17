@@ -16,6 +16,8 @@ namespace FilmFlow.Server.Data.Configuration
 
             builder.HasOne(st => st.CinemaShow)
                 .WithMany(cs => cs.ShowTickets);
+
+            builder.HasIndex(st => st.Code);
         }
     }
 }
