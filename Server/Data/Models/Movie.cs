@@ -6,9 +6,13 @@
 
         public string Description { get; set; } = null!;
 
-        public DateTime ReleaseDate { get; set;}
+        public DateTime ReleaseDate { get; set; }
 
         public string Category { get; set; }  = null!;
+
+        public int MinAge { get; set; }
+
+        public string Language { get; set; } = null!;
 
         public ICollection<MovieReview> MovieReviews { get; set; } = new HashSet<MovieReview>();
 
@@ -16,12 +20,14 @@
 
         public Movie() { }
 
-        public Movie(string title, string description, DateTime releaseDate, string category)
+        public Movie(string title, string description, DateTime releaseDate, string category, int minAge, string language)
         {
             Title = title;
             Description = description;
             ReleaseDate = releaseDate;
             Category = category;
+            MinAge = minAge;
+            Language = language;
         }
     }
 }

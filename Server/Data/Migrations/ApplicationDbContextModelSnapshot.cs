@@ -233,6 +233,12 @@ namespace FilmFlow.Server.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
+                    b.Property<bool>("IsThreeDimensional")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsWheelchairFriendly")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<int>("RowsTotal")
                         .HasColumnType("int");
 
@@ -259,9 +265,6 @@ namespace FilmFlow.Server.Data.Migrations
                     b.Property<long>("MovieId")
                         .HasColumnType("bigint");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(65,30)");
-
                     b.Property<DateTime>("Start")
                         .HasColumnType("datetime");
 
@@ -287,6 +290,13 @@ namespace FilmFlow.Server.Data.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("MinAge")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime");
@@ -349,6 +359,9 @@ namespace FilmFlow.Server.Data.Migrations
                     b.Property<int>("SeatId")
                         .HasColumnType("int");
 
+                    b.Property<int>("TarriffType")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .HasColumnType("varchar(95)");
 
@@ -371,6 +384,10 @@ namespace FilmFlow.Server.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SoldBy")
                         .IsRequired()
                         .HasColumnType("longtext");
 

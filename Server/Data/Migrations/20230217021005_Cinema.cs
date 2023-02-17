@@ -19,7 +19,9 @@ namespace FilmFlow.Server.Data.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     SeatsPerRow = table.Column<int>(type: "int", nullable: false),
-                    RowsTotal = table.Column<int>(type: "int", nullable: false)
+                    RowsTotal = table.Column<int>(type: "int", nullable: false),
+                    IsThreeDimensional = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    IsWheelchairFriendly = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -39,6 +41,9 @@ namespace FilmFlow.Server.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ReleaseDate = table.Column<DateTime>(type: "datetime", nullable: false),
                     Category = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    MinAge = table.Column<int>(type: "int", nullable: false),
+                    Language = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -55,7 +60,6 @@ namespace FilmFlow.Server.Data.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Start = table.Column<DateTime>(type: "datetime", nullable: false),
                     End = table.Column<DateTime>(type: "datetime", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
                     MovieId = table.Column<long>(type: "bigint", nullable: false),
                     CinemaHallId = table.Column<long>(type: "bigint", nullable: false)
                 },
@@ -114,6 +118,7 @@ namespace FilmFlow.Server.Data.Migrations
                     UserId = table.Column<string>(type: "varchar(95)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IsPaid = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    TarriffType = table.Column<int>(type: "int", nullable: false),
                     SeatId = table.Column<int>(type: "int", nullable: false),
                     RowId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -142,7 +147,9 @@ namespace FilmFlow.Server.Data.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Code = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CinemaShowId = table.Column<long>(type: "bigint", nullable: false)
+                    CinemaShowId = table.Column<long>(type: "bigint", nullable: false),
+                    SoldBy = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {

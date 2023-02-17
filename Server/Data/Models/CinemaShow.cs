@@ -6,8 +6,6 @@
 
         public DateTime End { get; set; }
 
-        public decimal Price { get; set; }
-
         public Movie Movie { get; set; } = null!;
 
         public CinemaHall CinemaHall { get; set; } = null!;
@@ -18,11 +16,10 @@
 
         public CinemaShow() { }
 
-        public CinemaShow(DateTime start, DateTime end, decimal price, Movie movie, CinemaHall hall) 
+        public CinemaShow(DateTime start, DateTime end, Movie movie, CinemaHall hall) 
         {
             Start = start;
             End = end;
-            Price = price;
             Movie = movie;
             CinemaHall = hall;
         }

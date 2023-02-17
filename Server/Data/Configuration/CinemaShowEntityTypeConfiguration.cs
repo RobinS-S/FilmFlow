@@ -15,14 +15,13 @@ namespace FilmFlow.Server.Data.Configuration
             builder.Property(cs => cs.End)
                 .IsRequired();
 
-            builder.Property(cs => cs.Price)
+            builder.HasOne(cs => cs.Movie)
+                .WithMany(m => m.CinemaShows)
                 .IsRequired();
 
-            builder.HasOne(cs => cs.Movie)
-                .WithMany(m => m.CinemaShows);
-
             builder.HasOne(cs => cs.CinemaHall)
-                .WithMany();
+                .WithMany()
+                .IsRequired();
         }
     }
 }

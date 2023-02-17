@@ -9,10 +9,11 @@ namespace FilmFlow.Server.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<MovieReview> builder)
         {
-            builder.HasOne(mr => mr.Movie)
-                .WithMany(m => m.MovieReviews);
-
             builder.Property(m => m.Stars)
+                .IsRequired();
+
+            builder.HasOne(mr => mr.Movie)
+                .WithMany(m => m.MovieReviews)
                 .IsRequired();
 
             builder.Property(m => m.Author)

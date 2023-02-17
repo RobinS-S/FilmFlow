@@ -19,7 +19,18 @@ namespace FilmFlow.Server.Data.Configuration
                 .IsUnicode()
                 .IsRequired();
 
+            builder.Property(m => m.ReleaseDate)
+                .IsRequired();
+
             builder.Property(m => m.Category)
+                .HasMaxLength(64)
+                .IsUnicode()
+                .IsRequired();
+
+            builder.Property(m => m.MinAge)
+                .IsRequired();
+
+            builder.Property(m => m.Language)
                 .HasMaxLength(64)
                 .IsUnicode()
                 .IsRequired();

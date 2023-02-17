@@ -14,6 +14,12 @@ namespace FilmFlow.Server.Data.Configuration
 
             builder.Property(ch => ch.RowsTotal)
                 .IsRequired();
+
+            builder.Property(ch => ch.IsThreeDimensional)
+                .IsRequired();
+
+            builder.Property(ch => ch.IsWheelchairFriendly)
+                .IsRequired();
         }
     }
 }
