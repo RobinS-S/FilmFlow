@@ -23,5 +23,7 @@ namespace FilmFlow.Server.Data
         public DbSet<Reservation> Reservations { get; set; } = null!;
 
         public DbSet<ShowTicket> ShowTickets { get; set; } = null!;
+
+        public DbSet<MovieReview> MovieReviews { get; set; } = null!;
     }
 }

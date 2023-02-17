@@ -78,6 +78,31 @@ namespace FilmFlow.Server.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "MovieReviews",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Stars = table.Column<int>(type: "int", nullable: false),
+                    MovieId = table.Column<long>(type: "bigint", nullable: false),
+                    Author = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Text = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MovieReviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MovieReviews_Movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Reservations",
                 columns: table => new
                 {
@@ -142,6 +167,11 @@ namespace FilmFlow.Server.Data.Migrations
                 column: "MovieId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MovieReviews_MovieId",
+                table: "MovieReviews",
+                column: "MovieId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reservations_CinemaShowId",
                 table: "Reservations",
                 column: "CinemaShowId");
@@ -160,6 +190,9 @@ namespace FilmFlow.Server.Data.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "MovieReviews");
+
             migrationBuilder.DropTable(
                 name: "Reservations");
 

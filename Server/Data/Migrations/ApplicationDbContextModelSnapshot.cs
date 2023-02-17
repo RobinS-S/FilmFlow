@@ -300,6 +300,33 @@ namespace FilmFlow.Server.Data.Migrations
                     b.ToTable("Movies");
                 });
 
+            modelBuilder.Entity("FilmFlow.Server.Data.Models.MovieReview", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("MovieId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Stars")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("MovieReviews");
+                });
+
             modelBuilder.Entity("FilmFlow.Server.Data.Models.Reservation", b =>
                 {
                     b.Property<long>("Id")
@@ -501,6 +528,17 @@ namespace FilmFlow.Server.Data.Migrations
                     b.Navigation("Movie");
                 });
 
+            modelBuilder.Entity("FilmFlow.Server.Data.Models.MovieReview", b =>
+                {
+                    b.HasOne("FilmFlow.Server.Data.Models.Movie", "Movie")
+                        .WithMany("MovieReviews")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+                });
+
             modelBuilder.Entity("FilmFlow.Server.Data.Models.Reservation", b =>
                 {
                     b.HasOne("FilmFlow.Server.Data.Models.CinemaShow", "CinemaShow")
@@ -590,6 +628,8 @@ namespace FilmFlow.Server.Data.Migrations
             modelBuilder.Entity("FilmFlow.Server.Data.Models.Movie", b =>
                 {
                     b.Navigation("CinemaShows");
+
+                    b.Navigation("MovieReviews");
                 });
 #pragma warning restore 612, 618
         }

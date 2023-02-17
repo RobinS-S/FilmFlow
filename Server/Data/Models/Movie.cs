@@ -10,6 +10,8 @@
 
         public string Category { get; set; }  = null!;
 
+        public ICollection<MovieReview> MovieReviews { get; set; } = new HashSet<MovieReview>();
+
         public ICollection<CinemaShow> CinemaShows { get; set; } = new HashSet<CinemaShow>();
 
         public Movie() { }
