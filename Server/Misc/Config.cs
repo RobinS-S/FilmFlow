@@ -1,4 +1,4 @@
-﻿namespace FilmFlow.Server.Data
+﻿namespace FilmFlow.Server.Misc
 {
     public class Config
     {

@@ -1,5 +1,6 @@
 ﻿using FilmFlow.Server.Auth;
 using FilmFlow.Server.Data.Models;
+using FilmFlow.Server.Misc;
 using Microsoft.AspNetCore.Identity;
 using System.Data;
 
@@ -10,6 +11,7 @@ namespace FilmFlow.Server.Data
         public static async Task SeedDatabase(IServiceProvider serviceProvider)
         {
             using var scope = serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var configuration = scope.ServiceProvider.GetRequiredService<Config>();
