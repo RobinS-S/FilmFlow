@@ -35,7 +35,11 @@ namespace FilmFlow.Server.Data
             if (user == null)
             {
                 var createPowerUser = await userManager.CreateAsync(defaultUser, configuration.AdminUserPassword);
-                if (createPowerUser.Succeeded) await userManager.AddToRoleAsync(defaultUser, Roles.Admin);
+                if (createPowerUser.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(defaultUser, Roles.Admin);
+                    user = await userManager.FindByEmailAsync(configuration.AdminUserEmail);
+                }
             }
             else
             {
