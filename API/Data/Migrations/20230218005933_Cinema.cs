@@ -12,6 +12,10 @@ namespace FilmFlow.API.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "IsKioskUser",
+                table: "AspNetUsers");
+
             migrationBuilder.CreateTable(
                 name: "CinemaHalls",
                 columns: table => new
@@ -106,7 +110,7 @@ namespace FilmFlow.API.Data.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Stars = table.Column<int>(type: "int", nullable: false),
                     MovieId = table.Column<long>(type: "bigint", nullable: false),
-                    Author = table.Column<string>(type: "longtext", nullable: false)
+                    UserId = table.Column<string>(type: "varchar(95)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Text = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
@@ -114,6 +118,12 @@ namespace FilmFlow.API.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MovieReviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MovieReviews_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MovieReviews_Movies_MovieId",
                         column: x => x.MovieId,
@@ -178,6 +188,11 @@ namespace FilmFlow.API.Data.Migrations
                 column: "MovieId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MovieReviews_UserId",
+                table: "MovieReviews",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reservations_CinemaShowId",
                 table: "Reservations",
                 column: "CinemaShowId");
@@ -214,6 +229,13 @@ namespace FilmFlow.API.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Movies");
+
+            migrationBuilder.AddColumn<bool>(
+                name: "IsKioskUser",
+                table: "AspNetUsers",
+                type: "tinyint(1)",
+                nullable: false,
+                defaultValue: false);
         }
     }
 }

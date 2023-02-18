@@ -12,14 +12,19 @@ namespace FilmFlow.Server.Data.Configuration
             builder.Property(m => m.Stars)
                 .IsRequired();
 
-            builder.HasOne(mr => mr.Movie)
-                .WithMany(m => m.MovieReviews)
+            builder.Property(mr => mr.MovieId)
                 .IsRequired();
 
-            builder.Property(m => m.Author)
-                .HasMaxLength(128)
-                .IsUnicode()
+            builder.HasOne(mr => mr.Movie)
+                .WithMany(m => m.MovieReviews)
+                .HasForeignKey(mr => mr.MovieId);
+
+            builder.Property(mr => mr.UserId)
                 .IsRequired();
+
+            builder.HasOne(mr => mr.User)
+                .WithMany()
+                .HasForeignKey(mr => mr.UserId);
 
             builder.Property(m => m.Text)
                 .HasMaxLength(1024)

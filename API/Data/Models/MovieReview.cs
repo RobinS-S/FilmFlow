@@ -6,18 +6,22 @@
 
         public Movie Movie { get; set; } = null!;
 
-        public string Author { get; set; } = null!;
+        public long MovieId { get; set; }
+
+        public ApplicationUser User { get; set; } = null!;
+
+        public string UserId { get; set; } = null!;
 
         public string Text { get; set; } = null!;
 
         public MovieReview() { }
 
-        public MovieReview(Movie movie, int stars, string author, string text)
+        public MovieReview(Movie movie, int stars, ApplicationUser user, string text)
         {
             Stars = stars;
             Movie = movie;
-            Author = author;
             Text = text;
+            User = user;
         }
     }
 }

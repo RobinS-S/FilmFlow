@@ -47,11 +47,16 @@ namespace FilmFlow.Server.Data
                 if (!isAdmin) await userManager.AddToRoleAsync(user, Roles.Admin);
             }
 
-            await SeedSampleData(dbContext);
+            if(user != null)
+            {
+                await SeedSampleData(dbContext, user);
+            }
         }
 
-        private static async Task SeedSampleData(ApplicationDbContext dbContext)
+        private static async Task SeedSampleData(ApplicationDbContext dbContext, ApplicationUser user)
         {
+            if (dbContext.Movies.Any()) return;
+
             var halls = new List<CinemaHall>
             {
                 new CinemaHall(10, 10, false, true),
@@ -70,11 +75,11 @@ namespace FilmFlow.Server.Data
 
             var reviews = new List<MovieReview>
             {
-                new MovieReview(movies[0], 4, "John Doe", "A great family movie"),
-                new MovieReview(movies[1], 5, "Jane Smith", "Joaquin Phoenix gives a stunning performance"),
-                new MovieReview(movies[2], 4, "Bob Johnson", "A fitting conclusion to the Marvel Cinematic Universe"),
-                new MovieReview(movies[3], 5, "Alice Brown", "A brilliantly crafted film with a powerful message"),
-                new MovieReview(movies[4], 3, "Jack White", "A faithful adaptation, but lacks the charm of the original")
+                new MovieReview(movies[0], 4, user, "A great family movie"),
+                new MovieReview(movies[1], 5, user, "Joaquin Phoenix gives a stunning performance"),
+                new MovieReview(movies[2], 4, user, "A fitting conclusion to the Marvel Cinematic Universe"),
+                new MovieReview(movies[3], 5, user, "A brilliantly crafted film with a powerful message"),
+                new MovieReview(movies[4], 3, user, "A faithful adaptation, but lacks the charm of the original")
             };
 
             var shows = new List<CinemaShow>();
