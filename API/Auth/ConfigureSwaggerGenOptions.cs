@@ -1,10 +1,10 @@
-﻿using FilmFlow.Server.Misc;
+﻿using FilmFlow.API.Misc;
 using IdentityModel.Client;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace FilmFlow.Server.Swagger
+namespace FilmFlow.API.Swagger
 {
 
     public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>

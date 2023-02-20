@@ -1,4 +1,4 @@
-﻿namespace FilmFlow.Server.Misc
+﻿namespace FilmFlow.API.Misc
 {
     public class Config
     {

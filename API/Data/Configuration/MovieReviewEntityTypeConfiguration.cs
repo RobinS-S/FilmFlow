@@ -1,8 +1,8 @@
-﻿using FilmFlow.Server.Data.Models;
+﻿using FilmFlow.API.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FilmFlow.Server.Data.Configuration
+namespace FilmFlow.API.Data.Configuration
 {
     public class MovieReviewEntityTypeConfiguration
         : IEntityTypeConfiguration<MovieReview>

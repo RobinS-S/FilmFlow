@@ -1,13 +1,13 @@
-﻿using FilmFlow.Server.Data.Enums;
+﻿using FilmFlow.API.Data.Enums;
 
-namespace FilmFlow.Server.Data.Models
+namespace FilmFlow.API.Data.Models
 {
     public class Reservation : Entity
     {
         public string Code { get; set; } = null!;
 
         public CinemaShow CinemaShow { get; set; } = null!;
-        
+
         public ApplicationUser? User { get; set; }
 
         public ShowTicket? Ticket { get; set; }

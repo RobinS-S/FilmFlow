@@ -1,4 +1,4 @@
-﻿namespace FilmFlow.Server.Data.Models
+﻿namespace FilmFlow.API.Data.Models
 {
     public class ShowTicket : Entity
     {

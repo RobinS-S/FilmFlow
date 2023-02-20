@@ -1,12 +1,10 @@
+using FilmFlow.API.Data;
+using FilmFlow.API.Data.Models;
+using FilmFlow.API.Misc;
 using FilmFlow.API.Services;
-using FilmFlow.Server.Data;
-using FilmFlow.Server.Data.Models;
-using FilmFlow.Server.Misc;
-using FilmFlow.Server.Swagger;
+using FilmFlow.API.Swagger;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -39,7 +37,7 @@ namespace FilmFlow
 
             builder.Services.AddIdentityServer(options =>
             {
-                if(builder.Environment.IsDevelopment())
+                if (builder.Environment.IsDevelopment())
                 {
                     options.Events.RaiseErrorEvents = true;
                     options.Events.RaiseInformationEvents = true;

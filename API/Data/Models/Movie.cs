@@ -1,4 +1,4 @@
-﻿namespace FilmFlow.Server.Data.Models
+﻿namespace FilmFlow.API.Data.Models
 {
     public class Movie : Entity
     {
@@ -8,7 +8,7 @@
 
         public DateTime ReleaseDate { get; set; }
 
-        public string Category { get; set; }  = null!;
+        public string Category { get; set; } = null!;
 
         public int MinAge { get; set; }
 

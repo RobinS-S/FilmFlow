@@ -1,10 +1,9 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FilmFlow.Server.Data.Migrations
+namespace FilmFlow.API.Data.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration

@@ -3,7 +3,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Net;
 
-namespace FilmFlow.Server.Swagger
+namespace FilmFlow.API.Swagger
 {
     public class AuthorizeOperationFilter
         : IOperationFilter

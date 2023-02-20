@@ -1,6 +1,6 @@
-﻿using FilmFlow.Server.Data.Enums;
+﻿using FilmFlow.API.Data.Enums;
 
-namespace FilmFlow.Server.Misc
+namespace FilmFlow.API.Misc
 {
     public class TarriffTypes
     {

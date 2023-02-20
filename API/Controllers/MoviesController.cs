@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using FilmFlow.API.Auth;
+using FilmFlow.API.Data.Models;
 using FilmFlow.API.Dto;
 using FilmFlow.API.Services;
-using FilmFlow.Server.Auth;
-using FilmFlow.Server.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -153,13 +153,13 @@ namespace FilmFlow.API.Controllers
             review.MovieId = movieId;
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if(userId == null)
+            if (userId == null)
             {
                 return BadRequest();
             }
 
             var user = await userManager.FindByIdAsync(userId);
-            if(user == null)
+            if (user == null)
             {
                 return BadRequest();
             }
@@ -201,7 +201,7 @@ namespace FilmFlow.API.Controllers
                 return BadRequest();
             }
 
-            if(review.UserId != user.Id && !await userManager.IsInRoleAsync(user, Roles.Admin))
+            if (review.UserId != user.Id && !await userManager.IsInRoleAsync(user, Roles.Admin))
             {
                 return Forbid();
             }
@@ -215,6 +215,7 @@ namespace FilmFlow.API.Controllers
         [HttpDelete("{movieId}/reviews/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<IActionResult> DeleteReview(long movieId, long id)
         {
             var review = await movieReviewService.GetByIdForMovie(movieId, id);
