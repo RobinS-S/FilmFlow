@@ -17,13 +17,14 @@ namespace FilmFlow.API.Controllers
         private readonly MovieService movieService;
         private readonly MovieReviewService movieReviewService;
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly IMapper _mapper;
+        private readonly IMapper mapper;
 
-        public MovieController(MovieService movieService, MovieReviewService movieReviewService, IMapper mapper)
+        public MovieController(MovieService movieService, MovieReviewService movieReviewService, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             this.movieService = movieService;
             this.movieReviewService = movieReviewService;
-            _mapper = mapper;
+            this.userManager = userManager;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -31,7 +32,7 @@ namespace FilmFlow.API.Controllers
         public async Task<IActionResult> GetAll()
         {
             var movies = await movieService.GetAll();
-            var movieDtos = _mapper.Map<IEnumerable<MovieDto>>(movies);
+            var movieDtos = mapper.Map<IEnumerable<MovieDto>>(movies);
             return Ok(movieDtos);
         }
 
@@ -47,7 +48,7 @@ namespace FilmFlow.API.Controllers
                 return NotFound();
             }
 
-            var movieDto = _mapper.Map<MovieDto>(movie);
+            var movieDto = mapper.Map<MovieDto>(movie);
             return Ok(movieDto);
         }
 
@@ -57,10 +58,10 @@ namespace FilmFlow.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] MovieDto movieDto)
         {
-            var movie = _mapper.Map<Movie>(movieDto);
+            var movie = mapper.Map<Movie>(movieDto);
             await movieService.Create(movie);
 
-            movieDto = _mapper.Map<MovieDto>(movie);
+            movieDto = mapper.Map<MovieDto>(movie);
             return CreatedAtAction(nameof(GetById), new { id = movie.Id }, movieDto);
         }
 
@@ -83,7 +84,7 @@ namespace FilmFlow.API.Controllers
                 return NotFound();
             }
 
-            _mapper.Map(movieDto, movie);
+            mapper.Map(movieDto, movie);
             await movieService.Update(movie);
 
             return NoContent();
@@ -116,7 +117,7 @@ namespace FilmFlow.API.Controllers
         public async Task<IActionResult> GetAllReviews(long movieId)
         {
             var reviews = await movieReviewService.GetAllByMovieId(movieId);
-            var reviewDtos = _mapper.Map<IEnumerable<MovieReviewDto>>(reviews);
+            var reviewDtos = mapper.Map<IEnumerable<MovieReviewDto>>(reviews);
             return Ok(reviewDtos);
         }
 
@@ -132,7 +133,7 @@ namespace FilmFlow.API.Controllers
                 return NotFound();
             }
 
-            var reviewDto = _mapper.Map<MovieReviewDto>(review);
+            var reviewDto = mapper.Map<MovieReviewDto>(review);
             return Ok(reviewDto);
         }
 
@@ -149,7 +150,7 @@ namespace FilmFlow.API.Controllers
                 return BadRequest();
             }
 
-            var review = _mapper.Map<MovieReview>(reviewDto);
+            var review = mapper.Map<MovieReview>(reviewDto);
             review.MovieId = movieId;
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -166,7 +167,7 @@ namespace FilmFlow.API.Controllers
 
             await movieReviewService.Create(review, user);
 
-            reviewDto = _mapper.Map<MovieReviewDto>(review);
+            reviewDto = mapper.Map<MovieReviewDto>(review);
             return CreatedAtAction(nameof(GetReviewById), new { movieId, id = review.Id }, reviewDto);
         }
 
@@ -206,7 +207,7 @@ namespace FilmFlow.API.Controllers
                 return Forbid();
             }
 
-            _mapper.Map(reviewDto, review);
+            mapper.Map(reviewDto, review);
             await movieReviewService.Update(review);
 
             return NoContent();

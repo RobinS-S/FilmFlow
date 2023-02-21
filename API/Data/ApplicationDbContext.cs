@@ -3,6 +3,8 @@ using FilmFlow.API.Data.Models;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Reflection.Emit;
+using System.Reflection;
 
 namespace FilmFlow.API.Data
 {
@@ -25,5 +27,12 @@ namespace FilmFlow.API.Data
         public DbSet<ShowTicket> ShowTickets { get; set; } = null!;
 
         public DbSet<MovieReview> MovieReviews { get; set; } = null!;
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            base.OnModelCreating(builder);
+        }
     }
 }

@@ -9,12 +9,6 @@ namespace FilmFlow.API.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<CinemaHall> builder)
         {
-            builder.Property(ch => ch.SeatsPerRow)
-                .IsRequired();
-
-            builder.Property(ch => ch.RowsTotal)
-                .IsRequired();
-
             builder.Property(ch => ch.IsThreeDimensional)
                 .IsRequired();
 

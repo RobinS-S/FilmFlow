@@ -55,13 +55,13 @@ namespace FilmFlow.API.Data
 
         private static async Task SeedSampleData(ApplicationDbContext dbContext, ApplicationUser user)
         {
-            if (dbContext.Movies.Any()) return;
+            if (dbContext.Movies.Any()) return; // If the database has been touched, don't seed any more data
 
             var halls = new List<CinemaHall>
             {
-                new CinemaHall(10, 10, false, true),
-                new CinemaHall(12, 12, true, true),
-                new CinemaHall(8, 8, false, true)
+                new CinemaHall(Enumerable.Range(1, 5).Select(i => new CinemaHallRow(8, i)).ToList(), false, false),
+                new CinemaHall(Enumerable.Range(1, 8).Select(i => new CinemaHallRow(10, i)).ToList(), false, true),
+                new CinemaHall(Enumerable.Range(1, 12).Select(i => new CinemaHallRow(12, i)).ToList(), true, true),
             };
 
             var movies = new List<Movie>
@@ -99,50 +99,58 @@ namespace FilmFlow.API.Data
             var reservations = new List<Reservation>
             {
                 // Reservations for show 1 (cinema hall 1)
-                new Reservation(shows[0], null, true, TarriffType.NORMAL, 1, 1),
-                new Reservation(shows[0], null, false, TarriffType.CHILDREN, 2, 2),
+                new Reservation(shows[0], halls[0].Rows.ElementAt(1), null, true, TarriffType.NORMAL, 1),
+                new Reservation(shows[0], halls[0].Rows.ElementAt(2), null, false, TarriffType.CHILDREN, 2),
     
                 // Reservations for show 2 (cinema hall 2)
-                new Reservation(shows[1], null, true, TarriffType.NORMAL, 3, 3),
-                new Reservation(shows[1], null, false, TarriffType.CHILDREN, 4, 4),
+                new Reservation(shows[1], halls[1].Rows.ElementAt(3), null, true, TarriffType.NORMAL, 3),
+                new Reservation(shows[1], halls[1].Rows.ElementAt(2), null, false, TarriffType.CHILDREN, 4),
     
                 // Reservations for show 3 (cinema hall 3)
-                new Reservation(shows[2], null, true, TarriffType.NORMAL, 5, 5),
-                new Reservation(shows[2], null, false, TarriffType.CHILDREN, 6, 6),
+                new Reservation(shows[2], halls[2].Rows.ElementAt(3), null, true, TarriffType.NORMAL, 5),
+                new Reservation(shows[2], halls[2].Rows.ElementAt(8), null, false, TarriffType.CHILDREN, 4),
     
                 // Reservations for show 4 (cinema hall 1)
-                new Reservation(shows[3], null, true, TarriffType.NORMAL, 7, 7),
-                new Reservation(shows[3], null, false, TarriffType.CHILDREN, 8, 8),
-    
+                new Reservation(shows[3], halls[0].Rows.ElementAt(2), null, true, TarriffType.NORMAL, 5),
+                new Reservation(shows[3], halls[0].Rows.ElementAt(2), null, false, TarriffType.CHILDREN, 4),
+        
                 // Reservations for show 5 (cinema hall 2)
-                new Reservation(shows[4], null, true, TarriffType.NORMAL, 9, 9),
-                new Reservation(shows[4], null, false, TarriffType.CHILDREN, 10, 10),
+                new Reservation(shows[4], halls[1].Rows.ElementAt(2), null, true, TarriffType.NORMAL, 5),
+                new Reservation(shows[4], halls[1].Rows.ElementAt(4), null, false, TarriffType.CHILDREN, 4),
     
                 // Reservations for show 6 (cinema hall 3)
-                new Reservation(shows[5], null, true, TarriffType.NORMAL, 11, 11),
-                new Reservation(shows[5], null, false, TarriffType.CHILDREN, 12, 12),
-    
+                new Reservation(shows[5], halls[2].Rows.ElementAt(2), null, true, TarriffType.NORMAL, 5),
+                new Reservation(shows[5], halls[2].Rows.ElementAt(5), null, false, TarriffType.CHILDREN, 4),
+        
                 // Reservations for show 7 (cinema hall 1)
-                new Reservation(shows[6], null, true, TarriffType.NORMAL, 13, 13),
-                new Reservation(shows[6], null, false, TarriffType.CHILDREN, 14, 14),
+                new Reservation(shows[6], halls[0].Rows.ElementAt(2), null, true, TarriffType.NORMAL, 5),
+                new Reservation(shows[6], halls[0].Rows.ElementAt(2), null, false, TarriffType.CHILDREN, 4),
     
                 // Reservations for show 8 (cinema hall 2)
-                new Reservation(shows[7], null, true, TarriffType.NORMAL, 15, 15),
-                new Reservation(shows[7], null, false, TarriffType.CHILDREN, 16, 16),
+                new Reservation(shows[7], halls[1].Rows.ElementAt(2), null, true, TarriffType.NORMAL, 5),
+                new Reservation(shows[7], halls[1].Rows.ElementAt(4), null, false, TarriffType.CHILDREN, 4),
     
                 // Reservations for show 9 (cinema hall 3)
-                new Reservation(shows[8], null, true, TarriffType.NORMAL, 17, 17),
-                new Reservation(shows[8], null, false, TarriffType.CHILDREN, 18, 18),
+                new Reservation(shows[8], halls[2].Rows.ElementAt(2), null, true, TarriffType.NORMAL, 5),
+                new Reservation(shows[8], halls[2].Rows.ElementAt(5), null, false, TarriffType.CHILDREN, 4),
     
                 // Reservations for show 10 (cinema hall 1)
-                new Reservation(shows[9], null, true, TarriffType.NORMAL, 19, 19),
-                new Reservation(shows[9], null, false, TarriffType.CHILDREN, 20, 20)
+                new Reservation(shows[9], halls[0].Rows.ElementAt(2), null, true, TarriffType.NORMAL, 5),
+                new Reservation(shows[9], halls[0].Rows.ElementAt(2), null, false, TarriffType.CHILDREN, 4)
             };
 
             var random = new Random();
             foreach (Reservation r in reservations)
             {
-                r.Ticket = random.Next(100) > 70 ? new ShowTicket("Kiosk") : new ShowTicket("Kassiere Anna");
+                if(random.Next(100) > 70)
+                {
+                    r.Ticket = new ShowTicket("Kiosk");
+                }
+                else
+                {
+                    r.Ticket = new ShowTicket("Kassiere Baas");
+                    r.User = user;
+                }
             }
 
             dbContext.CinemaHalls.AddRange(halls);

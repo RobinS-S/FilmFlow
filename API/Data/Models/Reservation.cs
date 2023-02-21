@@ -1,4 +1,5 @@
 ﻿using FilmFlow.API.Data.Enums;
+using FilmFlow.API.Data.Models.Helpers;
 
 namespace FilmFlow.API.Data.Models
 {
@@ -8,7 +9,11 @@ namespace FilmFlow.API.Data.Models
 
         public CinemaShow CinemaShow { get; set; } = null!;
 
+        public long CinemaShowId { get; set; }
+
         public ApplicationUser? User { get; set; }
+
+        public string? UserId { get; set; }
 
         public ShowTicket? Ticket { get; set; }
 
@@ -20,19 +25,24 @@ namespace FilmFlow.API.Data.Models
 
         public int SeatId { get; set; }
 
-        public int RowId { get; set; }
+        public CinemaHallRow Row { get; set; } = null!;
+
+        public long RowId { get; set; }
+
+        public DateTime CreatedAt { get; set; }
 
         public Reservation() { }
 
-        public Reservation(CinemaShow cinemaShow, ApplicationUser? user, bool isPaid, TarriffType tarriffType, int seatId, int rowId)
+        public Reservation(CinemaShow cinemaShow, CinemaHallRow row, ApplicationUser? user, bool isPaid, TarriffType tarriffType, int seatId)
         {
             Code = Misc.Crypto.GenerateHash(Misc.Crypto.GenerateRandomBaseEncodedString());
+            Row = row;
             CinemaShow = cinemaShow;
             User = user;
             IsPaid = isPaid;
             TarriffType = tarriffType;
             SeatId = seatId;
-            RowId = rowId;
+            CreatedAt = DateTime.UtcNow;
         }
     }
 }

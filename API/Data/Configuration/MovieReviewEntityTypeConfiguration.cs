@@ -19,12 +19,12 @@ namespace FilmFlow.API.Data.Configuration
                 .WithMany(m => m.MovieReviews)
                 .HasForeignKey(mr => mr.MovieId);
 
-            builder.Property(mr => mr.UserId)
-                .IsRequired();
-
             builder.HasOne(mr => mr.User)
                 .WithMany()
                 .HasForeignKey(mr => mr.UserId);
+
+            builder.Property(mr => mr.UserId)
+                .IsRequired();
 
             builder.Property(m => m.Text)
                 .HasMaxLength(1024)
