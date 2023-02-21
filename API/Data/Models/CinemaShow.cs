@@ -1,4 +1,4 @@
-﻿namespace FilmFlow.Server.Data.Models
+﻿namespace FilmFlow.API.Data.Models
 {
     public class CinemaShow : Entity
     {
@@ -14,7 +14,7 @@
 
         public CinemaShow() { }
 
-        public CinemaShow(DateTime start, DateTime end, Movie movie, CinemaHall hall) 
+        public CinemaShow(DateTime start, DateTime end, Movie movie, CinemaHall hall)
         {
             Start = start;
             End = end;

@@ -4,7 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>FilmFlow.Server-059d9c55-43ff-4f65-9b41-14bc6f440c80</UserSecretsId>
+    <UserSecretsId>FilmFlow.API-059d9c55-43ff-4f65-9b41-14bc6f440c80</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

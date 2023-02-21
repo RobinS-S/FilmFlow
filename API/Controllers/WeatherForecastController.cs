@@ -2,7 +2,7 @@ using FilmFlow.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FilmFlow.Server.Controllers
+namespace FilmFlow.API.Controllers
 {
     [Authorize]
     [ApiController]

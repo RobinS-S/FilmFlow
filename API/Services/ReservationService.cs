@@ -1,5 +1,5 @@
-﻿using FilmFlow.Server.Data.Models;
-using FilmFlow.Server.Data;
+﻿using FilmFlow.API.Data;
+using FilmFlow.API.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FilmFlow.API.Services

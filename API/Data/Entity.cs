@@ -1,4 +1,4 @@
-﻿namespace FilmFlow.Server.Data
+﻿namespace FilmFlow.API.Data
 {
     public abstract class Entity<T>
     {

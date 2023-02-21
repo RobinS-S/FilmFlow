@@ -1,10 +1,10 @@
-﻿using FilmFlow.Server.Auth;
-using FilmFlow.Server.Data.Enums;
-using FilmFlow.Server.Data.Models;
-using FilmFlow.Server.Misc;
+﻿using FilmFlow.API.Auth;
+using FilmFlow.API.Data.Enums;
+using FilmFlow.API.Data.Models;
+using FilmFlow.API.Misc;
 using Microsoft.AspNetCore.Identity;
 
-namespace FilmFlow.Server.Data
+namespace FilmFlow.API.Data
 {
     public class DatabaseSeeder
     {
@@ -47,7 +47,7 @@ namespace FilmFlow.Server.Data
                 if (!isAdmin) await userManager.AddToRoleAsync(user, Roles.Admin);
             }
 
-            if(user != null)
+            if (user != null)
             {
                 await SeedSampleData(dbContext, user);
             }

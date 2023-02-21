@@ -10,7 +10,7 @@
 
         public DateTime ReleaseDate { get; set; }
 
-        public string Category { get; set; }  = null!;
+        public string Category { get; set; } = null!;
 
         public int MinAge { get; set; }
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FilmFlow.Server.Controllers
+namespace FilmFlow.API.Controllers
 {
     public class OidcConfigurationController : Controller
     {

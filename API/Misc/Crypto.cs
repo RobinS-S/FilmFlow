@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace FilmFlow.Server.Misc
+namespace FilmFlow.API.Misc
 {
     public class Crypto
     {

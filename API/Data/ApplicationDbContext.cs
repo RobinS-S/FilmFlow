@@ -1,10 +1,10 @@
 ﻿using Duende.IdentityServer.EntityFramework.Options;
-using FilmFlow.Server.Data.Models;
+using FilmFlow.API.Data.Models;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace FilmFlow.Server.Data
+namespace FilmFlow.API.Data
 {
     public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {

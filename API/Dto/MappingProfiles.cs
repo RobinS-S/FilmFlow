@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using FilmFlow.Server.Data.Models;
+using FilmFlow.API.Data.Models;
 
 namespace FilmFlow.API.Dto
 {

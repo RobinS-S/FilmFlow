@@ -1,4 +1,4 @@
-﻿namespace FilmFlow.Server.Auth
+﻿namespace FilmFlow.API.Auth
 {
     public class Roles
     {
