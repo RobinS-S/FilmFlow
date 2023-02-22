@@ -1,5 +1,5 @@
 using FilmFlow.API.Data;
-using FilmFlow.API.Data.Models;
+using FilmFlow.API.Data.Entities;
 using FilmFlow.API.Misc;
 using FilmFlow.API.Services;
 using FilmFlow.API.Swagger;

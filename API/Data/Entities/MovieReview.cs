@@ -1,6 +1,6 @@
-﻿using FilmFlow.API.Data.Models.Helpers;
+﻿using FilmFlow.API.Data.Entities.Helpers;
 
-namespace FilmFlow.API.Data.Models
+namespace FilmFlow.API.Data.Entities
 {
     public class MovieReview : Entity
     {

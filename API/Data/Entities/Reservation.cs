@@ -1,7 +1,7 @@
-﻿using FilmFlow.API.Data.Enums;
-using FilmFlow.API.Data.Models.Helpers;
+﻿using FilmFlow.API.Data.Entities.Helpers;
+using FilmFlow.API.Data.Enums;
 
-namespace FilmFlow.API.Data.Models
+namespace FilmFlow.API.Data.Entities
 {
     public class Reservation : Entity
     {
