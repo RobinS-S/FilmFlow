@@ -1,15 +1,22 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4 auth">
-            <LoginDisplay />
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+<nav class="navbar d-flex navbar-expand sticky-top navbar-dark" style="background: #050505;">
+    <div class="container-fluid px-5">
+        <a class="navbar-brand text-uppercase fw-bold" href="#">FilmFlow</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                <a class="nav-link" href="/movies">Movies</a>
+                <a class="nav-link" href="#">About</a>
+            </div>
         </div>
+    </div>
+</nav>
+<div class="page">
+    <main>
 
         <article class="content px-4">
             @Body
