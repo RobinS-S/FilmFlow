@@ -1,4 +1,4 @@
-﻿namespace FilmFlow.API.Dto
+﻿namespace FilmFlow.Shared.Dto
 {
     public class MovieReviewDto
     {

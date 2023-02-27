@@ -1,4 +1,6 @@
-﻿namespace FilmFlow.API.Data.Models
+﻿using FilmFlow.API.Entities.Helpers;
+
+namespace FilmFlow.API.Data.Entities
 {
     public class Movie : Entity
     {

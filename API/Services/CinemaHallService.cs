@@ -1,5 +1,5 @@
 ﻿using FilmFlow.API.Data;
-using FilmFlow.API.Data.Models;
+using FilmFlow.API.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FilmFlow.API.Services
@@ -15,12 +15,16 @@ namespace FilmFlow.API.Services
 
         public async Task<List<CinemaHall>> GetAll()
         {
-            return await context.CinemaHalls.ToListAsync();
+            return await context.CinemaHalls
+                .Include(ch => ch.Rows)
+                .ToListAsync();
         }
 
         public async Task<CinemaHall?> GetById(long id)
         {
-            return await context.CinemaHalls.FindAsync(id);
+            return await context.CinemaHalls
+                .Include(ch => ch.Rows)
+                .SingleOrDefaultAsync(ch => ch.Id == id);
         }
 
         public async Task Create(CinemaHall cinemaHall)

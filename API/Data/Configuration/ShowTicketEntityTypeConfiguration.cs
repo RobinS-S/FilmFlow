@@ -1,4 +1,4 @@
-﻿using FilmFlow.API.Data.Models;
+﻿using FilmFlow.API.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +10,7 @@ namespace FilmFlow.API.Data.Configuration
         public void Configure(EntityTypeBuilder<ShowTicket> builder)
         {
             builder.Property(st => st.Code)
-                .HasMaxLength(32)
+                .HasMaxLength(64)
                 .IsUnicode(false)
                 .IsRequired();
 

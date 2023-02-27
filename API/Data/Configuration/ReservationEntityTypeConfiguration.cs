@@ -1,4 +1,4 @@
-﻿using FilmFlow.API.Data.Models;
+﻿using FilmFlow.API.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,14 +10,25 @@ namespace FilmFlow.API.Data.Configuration
         public void Configure(EntityTypeBuilder<Reservation> builder)
         {
             builder.Property(r => r.Code)
-                .HasMaxLength(32)
+                .HasMaxLength(64)
                 .IsUnicode(false)
                 .IsRequired();
 
-            builder.HasIndex(st => st.Code);
+            builder.HasIndex(r => r.Code);
+
+            builder.HasAlternateKey(r => new { r.CinemaShowId, r.RowId, r.SeatId });
 
             builder.HasOne(r => r.CinemaShow)
-                .WithMany(st => st.Reservations)
+                .WithMany(st => st.Reservations);
+
+            builder.Property(r => r.CinemaShowId)
+                .IsRequired();
+
+            builder.HasOne(r => r.Row)
+                .WithMany()
+                .HasForeignKey(r => r.RowId);
+
+            builder.Property(r => r.RowId)
                 .IsRequired();
 
             builder.HasOne(r => r.User)
@@ -27,10 +38,6 @@ namespace FilmFlow.API.Data.Configuration
                 .WithOne(st => st.Reservation)
                 .HasForeignKey<Reservation>(r => r.TicketId);
 
-            builder.HasOne(r => r.User)
-                .WithMany()
-                .IsRequired();
-
             builder.Property(r => r.IsPaid)
                 .IsRequired();
 
@@ -38,9 +45,6 @@ namespace FilmFlow.API.Data.Configuration
                 .IsRequired();
 
             builder.Property(r => r.SeatId)
-                .IsRequired();
-
-            builder.Property(r => r.RowId)
                 .IsRequired();
         }
     }
