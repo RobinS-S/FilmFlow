@@ -1,4 +1,4 @@
-﻿using FilmFlow.API.Entities.Helpers;
+﻿using FilmFlow.API.Data.Entities.Helpers;
 
 namespace FilmFlow.API.Data.Entities
 {
