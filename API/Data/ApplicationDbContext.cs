@@ -17,6 +17,7 @@ namespace FilmFlow.API.Data
         }
 
         public DbSet<CinemaHall> CinemaHalls { get; set; } = null!;
+        public DbSet<CinemaHallRow> CinemaHallsRows { get; set; } = null!;
 
         public DbSet<CinemaShow> CinemaShows { get; set; } = null!;
 
