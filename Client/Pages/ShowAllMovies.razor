@@ -7,20 +7,22 @@
 
 <h3>Movies</h3>
 
-
-        @foreach (var movie in Movies)
-		{
-             <div class="d-flex p-3 row">
-                <div class="card m-4" style="width: 18rem; border: 0px;">
-                    <img src="https://i0.wp.com/jennyalvares.com/wp-content/uploads/2016/09/phpk4bgvjPM.jpg?fit=760%2C508&ssl=1" class="card-img-top" alt="...">
-                    <div class="card-body">
-                         <h5 class="card-title">@movie.Title</h5>
-                        <p class="card-text">@movie.Description</p>
-                        <a href="movie/1" class="btn btn-primary">Meer over deze film</a>
-                    </div>
-               </div>
-             </div>
-        }
+@if(Movies != null)
+{
+    <div class="d-flex p-3 row">
+    @foreach (MovieDto movie in Movies)
+    {
+            <div class="card m-4" style="width: 18rem; border: 0px;">
+                <img src="@movie.ImageUrl" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">@movie.Title</h5>
+                    <p class="card-text">@movie.Description</p>
+                    <a href="movie/1" class="btn btn-primary">Meer over deze film</a>
+                </div>
+            </div>
+    }
+    </div>
+}
 
     @*<div class="d-flex p-3 row">
         <div class="card m-4" style="width: 18rem; border: 0px;">
@@ -69,7 +71,7 @@
     {
         try
         {
-            Movies = await Http.GetFromJsonAsync<MovieDto[]>("Movies");
+            Movies = await Http.GetFromJsonAsync<MovieDto[]>("/api/Movies");
         }
         catch (AccessTokenNotAvailableException exception)
         {
