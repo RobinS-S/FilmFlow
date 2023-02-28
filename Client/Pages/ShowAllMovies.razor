@@ -2,13 +2,13 @@
 @using FilmFlow.Shared.Dto
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-@*@attribute []*@
+@using FilmFlow.Shared
 @inject HttpClient Http
 
 <h3>Movies</h3>
 
 
-        @foreach (MovieDto movie in allMovies)
+        @foreach (MovieDto movie in Movies)
 		{
              <div class="d-flex p-3 row">
                 <div class="card m-4" style="width: 18rem; border: 0px;">
@@ -61,4 +61,20 @@
 
 @code {
     List<MovieDto> allMovies = new List<MovieDto>();        
+
+
+    private MovieDto[]? Movies;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Movies = await Http.GetFromJsonAsync<MovieDto[]>("Movies");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
 }
