@@ -16,13 +16,15 @@ namespace FilmFlow.API.Data.Entities
 
         public string Language { get; set; } = null!;
 
+        public string ImageUrl { get; set; } = null!;
+
         public ICollection<MovieReview> MovieReviews { get; set; } = new HashSet<MovieReview>();
 
         public ICollection<CinemaShow> CinemaShows { get; set; } = new HashSet<CinemaShow>();
 
         public Movie() { }
 
-        public Movie(string title, string description, DateTime releaseDate, string category, int minAge, string language)
+        public Movie(string title, string description, DateTime releaseDate, string category, int minAge, string language, string imageUrl)
         {
             Title = title;
             Description = description;
@@ -30,6 +32,7 @@ namespace FilmFlow.API.Data.Entities
             Category = category;
             MinAge = minAge;
             Language = language;
+            ImageUrl = imageUrl;
         }
     }
 }

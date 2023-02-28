@@ -66,11 +66,11 @@ namespace FilmFlow.API.Data
 
             var movies = new List<Movie>
             {
-                new Movie("Toy Story 4", "Woody and the gang are back!", new DateTime(2019, 6, 20), "Animation", 0, "English"),
-                new Movie("Joker", "The origin of the iconic villain", new DateTime(2019, 10, 4), "Drama", 16, "English"),
-                new Movie("Avengers: Endgame", "The epic conclusion to the Infinity Saga", new DateTime(2019, 4, 26), "Action", 12, "English"),
-                new Movie("Parasite", "A poor family becomes entangled with a wealthy one", new DateTime(2019, 11, 8), "Drama", 16, "Korean"),
-                new Movie("The Lion King", "A remake of the classic Disney animated film", new DateTime(2019, 7, 19), "Animation", 0, "English")
+                new Movie("Toy Story 4", "Woody and the gang are back!", new DateTime(2019, 6, 20), "Animation", 0, "English", "https://m.media-amazon.com/images/M/MV5BMTYzMDM4NzkxOV5BMl5BanBnXkFtZTgwNzM1Mzg2NzM@._V1_.jpg"),
+                new Movie("Joker", "The origin of the iconic villain", new DateTime(2019, 10, 4), "Drama", 16, "English","https://m.media-amazon.com/images/M/MV5BNGVjNWI4ZGUtNzE0MS00YTJmLWE0ZDctN2ZiYTk2YmI3NTYyXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_.jpg"),
+                new Movie("Avengers: Endgame", "The epic conclusion to the Infinity Saga", new DateTime(2019, 4, 26), "Action", 12, "English", "https://cdn.marvel.com/content/1x/avengersendgame_lob_crd_05.jpg"),
+                new Movie("Parasite", "A poor family becomes entangled with a wealthy one", new DateTime(2019, 11, 8), "Drama", 16, "Korean", "https://images.pathe-thuis.nl/20648_450x640.jpg"),
+                new Movie("The Lion King", "A remake of the classic Disney animated film", new DateTime(2019, 7, 19), "Animation", 0, "English","https://images.pathe-thuis.nl/19492_450x640.jpg")
             };
 
             var reviews = new List<MovieReview>
