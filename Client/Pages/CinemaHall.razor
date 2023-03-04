@@ -1,0 +1,117 @@
+﻿@page "/cinemahall"
+@using FilmFlow.Shared.Dto
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using FilmFlow.Shared
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+
+<h3>CinemaHall</h3>
+<p>Seats to plan: @seatsLeft</p>
+
+@if (Hall != null)
+{
+    <div class="card-body">
+    
+    @foreach (var row in seats)
+    {
+            <div class="d-flex flex-row justify-content-center align-items-center">
+            @foreach (var seat in row.Value)
+            {
+                <img src="@GetSeatImage(row.Key, seat.Key)" @onclick="() => ToggleSelected(row.Key, seat.Key)" />
+            }
+        </div>
+    }
+    </div>
+    <button @onclick="Pay" disabled="@(seatsLeft != 0)">Pay</button>
+}
+
+@code {
+    private CinemaHallDto? Hall;
+    private int seatsOrdered = 3; //hardcoded: number of seats ordered
+    private int seatsLeft;
+    Dictionary<int, Dictionary<int, string>> seats = new Dictionary<int, Dictionary<int, string>>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        seatsLeft = seatsOrdered;
+
+        try
+        {
+            Hall = await Http.GetFromJsonAsync<CinemaHallDto>("/api/cinemahalls/10"); //hardcoded: hall Id
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+
+        int row = 1;
+        foreach (CinemaHallRowDto rows in Hall.Rows)
+        {
+            seats.Add(row, new Dictionary<int, string>());
+            for (int i = 0; i < rows.RowChairsTotal; i++)
+            {
+                int seat = i + 1;
+                seats[row].Add(i, "");
+            }
+            row++;
+        }
+
+        //sample occupied seats
+        seats[1][3] = "occupied";
+        seats[1][4] = "occupied";
+        seats[1][5] = "occupied";
+        seats[2][2] = "occupied";
+        seats[2][3] = "occupied";
+        seats[2][3] = "occupied";
+        seats[5][1] = "occupied";
+        seats[5][3] = "occupied";
+        seats[5][6] = "occupied";
+    }
+
+    private string GetSeatImage(int row, int seat)
+    {
+        if (seats.TryGetValue(row, out var seatNumbers) && seatNumbers[seat] == "")
+        {
+            return "img/seat-available.png";
+        }
+        else if (seatNumbers[seat] == "selected")
+        {
+            return "img/seat-selected.png";
+        }
+        else
+        {            
+            return "img/seat-not-available.png";
+        }
+    }    
+
+    private void ToggleSelected(int row, int seat)
+    {
+        if (seats.TryGetValue(row, out var seatNumbers) && seatNumbers.TryGetValue(seat, out var isSelected))
+        {
+            if (isSelected == "" && seatsLeft > 0)
+            {
+                seats[row][seat] = "selected";                
+                seatsLeft--;
+            }
+            else if (isSelected == "selected" && seatsLeft < seatsOrdered)
+            {
+                seats[row][seat] = "";
+                seatsLeft++;
+            }
+            StateHasChanged();
+            Console.WriteLine(seatsLeft);
+        }
+    }
+
+    private async Task Pay()
+    {
+        //naar betaalmodule
+        if (JSRuntime != null)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Betaald!");
+        }
+    }
+
+}
