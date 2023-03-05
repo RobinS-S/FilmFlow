@@ -16,14 +16,14 @@ namespace FilmFlow.API.Services
         public async Task<List<CinemaHall>> GetAll()
         {
             return await context.CinemaHalls
-                .Include(ch => ch.Rows)
+                .Include(ch => ch.Rows.OrderBy(r => r.RowId))
                 .ToListAsync();
         }
 
         public async Task<CinemaHall?> GetById(long id)
         {
             return await context.CinemaHalls
-                .Include(ch => ch.Rows)
+                .Include(ch => ch.Rows.OrderBy(r => r.RowId))
                 .SingleOrDefaultAsync(ch => ch.Id == id);
         }
 
