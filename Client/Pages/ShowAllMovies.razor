@@ -23,9 +23,11 @@
             <label for="languageFilter">Language: </label>
             <select id="languageFilter" class="form-select" @bind="languageFilter">
                 <option value="">Select Language</option>
-                @foreach (var lang in languages)
-                {
-                    <option value="@lang">@lang</option>
+                @if(languages != null) {
+                    @foreach (var lang in languages)
+                    {
+                        <option value="@lang">@lang</option>
+                    }
                 }
             </select>
         </div>
@@ -33,9 +35,11 @@
             <label for="categoryFilter">Category: </label>
             <select id="categoryFilter" class="form-select" @bind="categoryFilter">
                 <option value="">Select Category</option>
-                @foreach (var cat in categories)
-                {
-                    <option value="@cat">@cat</option>
+                @if(categories != null) {
+                    @foreach (var cat in categories)
+                    {
+                        <option value="@cat">@cat</option>
+                    }
                 }
             </select>
         </div>
@@ -69,7 +73,7 @@ else
 }
 
 @code {
-    List<MovieDto> allMovies = new List<MovieDto>();
+    IEnumerable<MovieDto> allMovies = Enumerable.Empty<MovieDto>();
     string searchText = "";
     int minAge = 0;
     string ageFilter = "";
@@ -77,8 +81,8 @@ else
     string categoryFilter = "";
     private MovieDto[]? Movies;
 
-    string[] languages = new[] { "English", "Dutch", "Korean", "German", "Spanish", "French" };
-    string[] categories = new[] { "Animation", "Drama", "Action", "Horror", "Romance", "Sci-Fi", "Comedy", "Thriller" };
+    string[] languages;
+    string[] categories;
     int[] ageOptions = new[] { 6, 12, 16, 18 };
 
     private IEnumerable<MovieDto> filteredMovies
@@ -119,7 +123,11 @@ else
         try
         {
             Movies = await Http.GetFromJsonAsync<MovieDto[]>("/api/Movies");
-            allMovies = Movies.ToList();
+            allMovies = Movies;
+
+            languages = Movies.Select(m => m.Language).Distinct().ToArray();
+            categories = Movies.Select(m => m.Category).Distinct().ToArray();
+
         }
         catch (AccessTokenNotAvailableException exception)
         {
