@@ -1,4 +1,4 @@
-﻿@page "/movie/{id}"
+﻿@page "/movie/{id:long}"
 @using FilmFlow.Shared.Dto
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
@@ -7,73 +7,69 @@
 @using System.Web
 @inject HttpClient Http
 
-
-
-
-<div class="d-flex p-3 ">
-    <div class="d-block w-25 ">
-        <div class="card m-4" style="width: 18rem; border: 0px; background-color: #ffffff96; padding: 0px !important;">
-            <img src="@Movies.ImageUrl" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">@Movies.Title</h5>
-                <ul>
-                    <li>Categorie: @Movies.Category</li>
-                    <li>Leeftijd: @Movies.MinAge</li>
-                    <li>Taal: @Movies.Language</li>
-                </ul
-                <p class="card-text">@Movies.Description</p>
+@if (Movie != null)
+{
+    <div class="d-flex p-3">
+        <div class="d-block w-25 ">
+            <div class="card m-4" style="width: 18rem; border: 0px; background-color: #ffffff96; padding: 0px !important;">
+                <img src="@Movie.ImageUrl" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">@Movie.Title</h5>
+                    <ul>
+                        <li>Categorie: @Movie.Category</li>
+                        <li>Leeftijd: @Movie.MinAge</li>
+                        <li>Taal: @Movie.Language</li>
+                    </ul>
+                    <p class="card-text">@Movie.Description</p>
+                </div>
+            </div>
+        </div>
+        <div class="d-block w-75">
+            <div class="d-flex justify-content-center p-3">
+                <div class="d-block text-center">
+                    <h3>opkomende zalen/tijden</h3>
+                    @if (Shows != null)
+                    {
+                        <div class="row">
+                            @foreach (var show in Shows)
+                            {
+                                <div class="card p-3 m-3" style="width: 18rem; border: 0px; background-color: #ffffff96;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Zaal @show.CinemaHallId</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">@show.Start.ToString()</h6>
+                                        <p class="card-text">Some quick example text to build on the Zaal 1 and make up the bulk of the card's content.</p>
+                                        <a href="cinemashow/@show.Id" class="btn btn-danger">Reserveer nu</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else {
+                        <h4>Loading...</h4>
+                    }
+                </div>
             </div>
         </div>
     </div>
-    <div class="d-block  w-75">
-       <div class="d-flex justify-content-center p-3">
-            <div class="d-block text-center">
-                <h3>opkomende zalen/tijden</h3>
-                <div class="d-flex">
-                    <div class="card p-3" style="width: 18rem; border: 0px; background-color: #ffffff96;">
-                        <div class="card-body">
-                            <h5 class="card-title">Zaal 1</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">28-02-2023 19:40</h6>
-                            <p class="card-text">Some quick example text to build on the Zaal 1 and make up the bulk of the card's content.</p>
-                            <button class="btn btn-danger">Reverveer nu</button>
-                        </div>
-                    </div>
-                    <div class="card p-3" style="width: 18rem; border: 0px; background-color: #ffffff96;">
-                        <div class="card-body">
-                            <h5 class="card-title">Zaal 1</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">28-02-2023 19:40</h6>
-                            <p class="card-text">Some quick example text to build on the Zaal 1 and make up the bulk of the card's content.</p>
-                            <button class="btn btn-danger">Reverveer nu</button>
-                        </div>
-                    </div>
-                    <div class="card  p-3" style="width: 18rem; border: 0px; background-color: #ffffff96;">
-                        <div class="card-body">
-                            <h5 class="card-title">Zaal 1</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">28-02-2023 19:40</h6>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <button class="btn btn-danger">Reverveer nu</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div 
-    </div>
-</div>
-
+}
+else
+{
+    <h4>Loading...</h4>
+}
 
 @code {
-
     [Parameter]
-    public string id { get; set; }
+    public long id { get; set; }
 
-    private MovieDto? Movies;
-
+    private MovieDto? Movie;
+    private CinemaShowDto[]? Shows;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            Movies = await Http.GetFromJsonAsync<MovieDto>($"/api/Movies/{id}");
+            Movie = await Http.GetFromJsonAsync<MovieDto>($"/api/Movies/{id}");
+            Shows = await Http.GetFromJsonAsync<CinemaShowDto[]>($"/api/Movies/{id}/shows");
         }
         catch (AccessTokenNotAvailableException exception)
         {
