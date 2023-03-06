@@ -6,132 +6,139 @@
 @inject HttpClient Http
 
 <div class="p-3">
-    <h3 class="d-flex">Movies</h3>
-    <input type="search" id="movieSearch" class="form-control" placeholder="Search for movies..." aria-label="Search" @bind="searchText" />
-    <div class="row mt-3">
-        <div class="col-md-3">
-            <label for="ageFilter">Age Rating: </label>
-            <select id="ageFilter" class="form-select" @bind="ageFilter">
-                <option value="">Select Age Rating</option>
-                @foreach (var age in ageOptions)
-                {
-                    <option value="@age">@age+</option>
-                }
-            </select>
-        </div>
-        <div class="col-md-3">
-            <label for="languageFilter">Language: </label>
-            <select id="languageFilter" class="form-select" @bind="languageFilter">
-                <option value="">Select Language</option>
-                @if(languages != null) {
-                    @foreach (var lang in languages)
-                    {
-                        <option value="@lang">@lang</option>
-                    }
-                }
-            </select>
-        </div>
-        <div class="col-md-3">
-            <label for="categoryFilter">Category: </label>
-            <select id="categoryFilter" class="form-select" @bind="categoryFilter">
-                <option value="">Select Category</option>
-                @if(categories != null) {
-                    @foreach (var cat in categories)
-                    {
-                        <option value="@cat">@cat</option>
-                    }
-                }
-            </select>
-        </div>
-    </div>
+	<h3 class="d-flex">Movies</h3>
+	<input type="search" id="movieSearch" class="form-control" placeholder="Search for movies..." aria-label="Search" @bind="searchText" />
+	<div class="row mt-3">
+		<div class="col-md-3">
+			<label for="ageFilter">Age Rating: </label>
+			<select id="ageFilter" class="form-select" @bind="ageFilter">
+				<option value="">Select Age Rating</option>
+				@foreach (var age in ageOptions)
+				{
+					<option value="@age">@age+</option>
+				}
+			</select>
+		</div>
+		<div class="col-md-3">
+			<label for="languageFilter">Language: </label>
+			<select id="languageFilter" class="form-select" @bind="languageFilter">
+				<option value="">Select Language</option>
+				@if (allLanguages != null)
+				{
+					@foreach (var lang in allLanguages)
+					{
+						<option value="@lang">@lang</option>
+					}
+				}
+			</select>
+		</div>
+		<div class="col-md-3">
+			<label for="categoryFilter">Category: </label>
+			<select id="categoryFilter" class="form-select" @bind="categoryFilter">
+				<option value="">Select Category</option>
+				@if (allCategories != null)
+				{
+					@foreach (var cat in allCategories)
+					{
+						<option value="@cat">@cat</option>
+					}
+				}
+			</select>
+		</div>
+	</div>
 </div>
 
 
-@if (Movies != null)
+@if (movies != null)
 {
-    <div class="d-flex p-3 row">
-        @foreach (MovieDto movie in filteredMovies)
-        {
-            <div class="card m-4" style="width: 18rem; border: 0px;">
-                <img src="@movie.ImageUrl" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">@movie.Title</h5>
-                    <p class="card-text">@movie.Description</p>
-                    <a href="movie/@movie.Id" class="btn btn-primary">More about this movie</a>
-                </div>
-            </div>
-        }
-    </div>
-    @if (!filteredMovies.Any())
-    {
-        <h3 class="p-3">No movies matching your search criterea!</h3>
-    }
+
+	<div class="d-flex p-3 row">
+		@foreach (MovieDto movie in filteredMovies)
+		{
+			<div class="card m-4" style="width: 18rem; border: 0px; background-color: #ffffff96; padding: 0px !important;">
+				<img src="@movie.ImageUrl" class="card-img-top" alt="...">
+				<div class="card-body">
+					<h5 class="card-title">@movie.Title</h5>
+					<ul>
+						<li>Categorie: @movie.Category</li>
+						<li>Leeftijd: @movie.MinAge</li>
+						<li>Taal: @movie.Language</li>
+					</ul>
+					<p class="card-text">@movie.Description</p>
+					<a href="movie/@movie.Id" class="btn btn-danger">More about this movie</a>
+				</div>
+			</div>
+		}
+	</div>
+	@if (!filteredMovies.Any())
+	{
+		<h3 class="p-3">No movies matching your search criterea!</h3>
+	}
 }
 else
 {
-    <p>Loading...</p>
+	<p>Loading...</p>
 }
 
 @code {
-    IEnumerable<MovieDto> allMovies = Enumerable.Empty<MovieDto>();
-    string searchText = "";
-    int minAge = 0;
-    string ageFilter = "";
-    string languageFilter = "";
-    string categoryFilter = "";
-    private MovieDto[]? Movies;
+	string searchText = "";
+	int minAge = 0;
+	string ageFilter = "";
+	string languageFilter = "";
+	string categoryFilter = "";
+	private List<MovieDto> movies = new List<MovieDto>();
+	string[] allLanguages = new string[0];
+	string[] allCategories = new string[0];
+	int[] ageOptions = new[] { 6, 12, 16, 18 };
 
-    string[] languages;
-    string[] categories;
-    int[] ageOptions = new[] { 6, 12, 16, 18 };
+	private IEnumerable<MovieDto> filteredMovies
+	{
+		get
+		{
+			var query = movies.AsEnumerable();
+			if (!string.IsNullOrEmpty(searchText))
+			{
+				query = query.Where(m => m.Title.Contains(searchText, StringComparison.InvariantCultureIgnoreCase));
+			}
+			if (!string.IsNullOrEmpty(ageFilter))
+			{
+				int minAge = int.Parse(ageFilter);
+				query = query.Where(m => m.MinAge >= minAge);
+			}
+			if (!string.IsNullOrEmpty(languageFilter))
+			{
+				query = query.Where(m => m.Language == languageFilter);
+			}
+			if (!string.IsNullOrEmpty(categoryFilter))
+			{
+				query = query.Where(m => m.Category == categoryFilter);
+			}
+			return query;
+		}
+	}
+	private bool hasMatchingMovies
+	{
+		get
+		{
+			return filteredMovies.Any();
+		}
+	}
 
-    private IEnumerable<MovieDto> filteredMovies
-    {
-        get
-        {
-            var query = allMovies.AsEnumerable();
-            if (!string.IsNullOrEmpty(searchText))
-            {
-                query = query.Where(m => m.Title.Contains(searchText, StringComparison.InvariantCultureIgnoreCase));
-            }
-            if (!string.IsNullOrEmpty(ageFilter)) 
-            {
-                int minAge = int.Parse(ageFilter);
-                query = query.Where(m => m.MinAge >= minAge);
-            }
-            if (!string.IsNullOrEmpty(languageFilter))
-            {
-                query = query.Where(m => m.Language == languageFilter);
-            }
-            if (!string.IsNullOrEmpty(categoryFilter))
-            {
-                query = query.Where(m => m.Category == categoryFilter);
-            }
-            return query;
-        }
-    }
-    private bool hasMatchingMovies
-    {
-        get
-        {
-            return filteredMovies.Any();
-        }
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            Movies = await Http.GetFromJsonAsync<MovieDto[]>("/api/Movies");
-            allMovies = Movies;
-
-            languages = Movies.Select(m => m.Language).Distinct().ToArray();
-            categories = Movies.Select(m => m.Category).Distinct().ToArray();
-
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			var movies = await Http.GetFromJsonAsync<MovieDto[]>("/api/Movies");
+			if (movies != null)
+			{
+				this.movies = movies.ToList<MovieDto>();
+				allLanguages = movies.Select(m => m.Language).Distinct().ToArray();
+				allCategories = movies.Select(m => m.Category).Distinct().ToArray();
+			}
+		}
+		catch (AccessTokenNotAvailableException exception)
+		{
+			exception.Redirect();
+		}
+	}
 }
