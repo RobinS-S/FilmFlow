@@ -5,78 +5,133 @@
 @using FilmFlow.Shared
 @inject HttpClient Http
 
-<h3>Movies</h3>
+<div class="p-3">
+    <h3 class="d-flex">Movies</h3>
+    <input type="search" id="movieSearch" class="form-control" placeholder="Search for movies..." aria-label="Search" @bind="searchText" />
+    <div class="row mt-3">
+        <div class="col-md-3">
+            <label for="ageFilter">Age Rating: </label>
+            <select id="ageFilter" class="form-select" @bind="ageFilter">
+                <option value="">Select Age Rating</option>
+                @foreach (var age in ageOptions)
+                {
+                    <option value="@age">@age+</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="languageFilter">Language: </label>
+            <select id="languageFilter" class="form-select" @bind="languageFilter">
+                <option value="">Select Language</option>
+                @if(languages != null) {
+                    @foreach (var lang in languages)
+                    {
+                        <option value="@lang">@lang</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="categoryFilter">Category: </label>
+            <select id="categoryFilter" class="form-select" @bind="categoryFilter">
+                <option value="">Select Category</option>
+                @if(categories != null) {
+                    @foreach (var cat in categories)
+                    {
+                        <option value="@cat">@cat</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+</div>
 
-@if(Movies != null)
+
+@if (Movies != null)
 {
     <div class="d-flex p-3 row">
-    @foreach (MovieDto movie in Movies)
-    {
+        @foreach (MovieDto movie in filteredMovies)
+        {
             <div class="card m-4" style="width: 18rem; border: 0px;">
                 <img src="@movie.ImageUrl" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">@movie.Title</h5>
                     <p class="card-text">@movie.Description</p>
-                    <a href="movie/1" class="btn btn-primary">Meer over deze film</a>
+                    <a href="movie/@movie.Id" class="btn btn-primary">More about this movie</a>
                 </div>
             </div>
-    }
+        }
     </div>
+    @if (!filteredMovies.Any())
+    {
+        <h3 class="p-3">No movies matching your search criterea!</h3>
+    }
+}
+else
+{
+    <p>Loading...</p>
 }
 
-    @*<div class="d-flex p-3 row">
-        <div class="card m-4" style="width: 18rem; border: 0px;">
-            <img src="https://i0.wp.com/jennyalvares.com/wp-content/uploads/2016/09/phpk4bgvjPM.jpg?fit=760%2C508&ssl=1" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="movie/1" class="btn btn-primary">Meer over deze film</a>
-            </div>
-        </div>
-         <div class="card m-4" style="width: 18rem; border: 0px;">
-            <img src="https://i0.wp.com/jennyalvares.com/wp-content/uploads/2016/09/phpk4bgvjPM.jpg?fit=760%2C508&ssl=1" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="movie/1" class="btn btn-primary">Meer over deze film</a>
-            </div>
-        </div>
-        <div class="card m-4" style="width: 18rem; border: 0px;">
-            <img src="https://i0.wp.com/jennyalvares.com/wp-content/uploads/2016/09/phpk4bgvjPM.jpg?fit=760%2C508&ssl=1" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="movie/1" class="btn btn-primary">Meer over deze film</a>
-            </div>
-        </div>
-        <div class="card m-4" style="width: 18rem; border: 0px;">
-            <img src="https://i0.wp.com/jennyalvares.com/wp-content/uploads/2016/09/phpk4bgvjPM.jpg?fit=760%2C508&ssl=1" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="movie/1" class="btn btn-primary">Meer over deze film</a>
-            </div>
-        </div>
-    </div>*@
-
-   
-
 @code {
-    List<MovieDto> allMovies = new List<MovieDto>();        
-
-
+    IEnumerable<MovieDto> allMovies = Enumerable.Empty<MovieDto>();
+    string searchText = "";
+    int minAge = 0;
+    string ageFilter = "";
+    string languageFilter = "";
+    string categoryFilter = "";
     private MovieDto[]? Movies;
+
+    string[] languages;
+    string[] categories;
+    int[] ageOptions = new[] { 6, 12, 16, 18 };
+
+    private IEnumerable<MovieDto> filteredMovies
+    {
+        get
+        {
+            var query = allMovies.AsEnumerable();
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                query = query.Where(m => m.Title.Contains(searchText, StringComparison.InvariantCultureIgnoreCase));
+            }
+            if (!string.IsNullOrEmpty(ageFilter)) 
+            {
+                int minAge = int.Parse(ageFilter);
+                query = query.Where(m => m.MinAge >= minAge);
+            }
+            if (!string.IsNullOrEmpty(languageFilter))
+            {
+                query = query.Where(m => m.Language == languageFilter);
+            }
+            if (!string.IsNullOrEmpty(categoryFilter))
+            {
+                query = query.Where(m => m.Category == categoryFilter);
+            }
+            return query;
+        }
+    }
+    private bool hasMatchingMovies
+    {
+        get
+        {
+            return filteredMovies.Any();
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             Movies = await Http.GetFromJsonAsync<MovieDto[]>("/api/Movies");
+            allMovies = Movies;
+
+            languages = Movies.Select(m => m.Language).Distinct().ToArray();
+            categories = Movies.Select(m => m.Category).Distinct().ToArray();
+
         }
         catch (AccessTokenNotAvailableException exception)
         {
             exception.Redirect();
         }
     }
-
 }
