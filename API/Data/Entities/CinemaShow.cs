@@ -10,7 +10,11 @@ namespace FilmFlow.API.Data.Entities
 
         public Movie Movie { get; set; } = null!;
 
+        public long MovieId { get; set; }
+
         public CinemaHall CinemaHall { get; set; } = null!;
+
+        public long CinemaHallId { get; set; }
 
         public ICollection<Reservation> Reservations { get; set; } = new HashSet<Reservation>();
 
