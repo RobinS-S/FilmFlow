@@ -23,6 +23,13 @@ namespace FilmFlow.API.Services
             return await context.CinemaShows.FindAsync(id);
         }
 
+        public async Task<List<CinemaShow>> GetByMovieId(long movieId)
+        {
+            return await context.CinemaShows
+                .Where(cs => cs.MovieId == movieId)
+                .ToListAsync();
+        }
+
         public async Task Create(CinemaShow cinemaShow)
         {
             await context.CinemaShows.AddAsync(cinemaShow);

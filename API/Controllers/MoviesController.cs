@@ -16,15 +16,17 @@ namespace FilmFlow.API.Controllers
     {
         private readonly MovieService movieService;
         private readonly MovieReviewService movieReviewService;
+        private readonly CinemaShowService cinemaShowService;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IMapper mapper;
 
-        public MovieController(MovieService movieService, MovieReviewService movieReviewService, UserManager<ApplicationUser> userManager, IMapper mapper)
+        public MovieController(MovieService movieService, MovieReviewService movieReviewService, UserManager<ApplicationUser> userManager, CinemaShowService cinemaShowService, IMapper mapper)
         {
             this.movieService = movieService;
             this.movieReviewService = movieReviewService;
             this.userManager = userManager;
             this.mapper = mapper;
+            this.cinemaShowService = cinemaShowService;
         }
 
         [HttpGet]
@@ -246,6 +248,25 @@ namespace FilmFlow.API.Controllers
             await movieReviewService.Delete(id);
 
             return NoContent();
+        }
+    }
+
+    public partial class MovieController
+    {
+        [HttpGet("{id}/shows")]
+        [ProducesResponseType(typeof(MovieDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetMovieShowsById(long movieId)
+        {
+            var movies = await cinemaShowService.GetByMovieId(movieId);
+
+            if (movies == null)
+            {
+                return NotFound();
+            }
+
+            var movieDto = mapper.Map<List<CinemaShowDto>>(movies);
+            return Ok(movieDto);
         }
     }
 }
