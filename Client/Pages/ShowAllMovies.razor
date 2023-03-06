@@ -9,18 +9,21 @@
 
 @if(Movies != null)
 {
+ 
     <div class="d-flex p-3 row">
     @foreach (MovieDto movie in Movies)
     {
-            <div class="card m-4" style="width: 18rem; border: 0px;">
+            <div class="card m-4" style="width: 18rem; border: 0px; background-color: #ffffff96; padding: 0px !important;">
                 <img src="@movie.ImageUrl" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">@movie.Title</h5>
-                    <p>Categorie: @movie.Category </p>
-                    <p>Leeftijd: @movie.MinAge </p>
-                    <p>Taal: @movie.Language </p>
+                    <ul>
+                        <li>Categorie: @movie.Category</li>
+                        <li>Leeftijd: @movie.MinAge</li>
+                        <li>Taal: @movie.Language</li>
+                    </ul
                     <p class="card-text">@movie.Description</p>
-                    <a href="movie/@movie.Id" class="btn btn-primary">Meer over deze film</a>
+                    <a href="movie/@movie.Id" class="btn btn-danger">Meer over deze film</a>
                 </div>
             </div>
     }
