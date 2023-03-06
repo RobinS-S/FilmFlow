@@ -8,18 +8,18 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace FilmFlow.API.Data.Migrations
+namespace FilmFlow.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230216234603_Initial")]
-    partial class Initial
+    [Migration("20230228143243_Images")]
+    partial class Images
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.2")
+                .HasAnnotation("ProductVersion", "7.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -163,7 +163,7 @@ namespace FilmFlow.API.Data.Migrations
                     b.ToTable("PersistedGrants", (string)null);
                 });
 
-            modelBuilder.Entity("FilmFlow.API.Data.Models.ApplicationUser", b =>
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(95)");
@@ -180,9 +180,6 @@ namespace FilmFlow.API.Data.Migrations
                         .HasColumnType("varchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsKioskUser")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -228,6 +225,226 @@ namespace FilmFlow.API.Data.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.CinemaHall", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsThreeDimensional")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsWheelchairFriendly")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CinemaHalls");
+                });
+
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.CinemaHallRow", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("HallId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("RowChairsTotal")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RowId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("HallId", "RowId");
+
+                    b.ToTable("CinemaHallRows");
+                });
+
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.CinemaShow", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("CinemaHallId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("End")
+                        .HasColumnType("datetime");
+
+                    b.Property<long>("MovieId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Start")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CinemaHallId");
+
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("CinemaShows");
+                });
+
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.Movie", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .IsUnicode(true)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .IsUnicode(true)
+                        .HasColumnType("varchar(1024)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .IsUnicode(true)
+                        .HasColumnType("varchar(512)");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .IsUnicode(true)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<int>("MinAge")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReleaseDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .IsUnicode(true)
+                        .HasColumnType("varchar(128)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Movies");
+                });
+
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.MovieReview", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("MovieId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Stars")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .IsUnicode(true)
+                        .HasColumnType("varchar(1024)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(95)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MovieId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MovieReviews");
+                });
+
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.Reservation", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("CinemaShowId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<long>("RowId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("SeatId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TarriffType")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("TicketId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(95)");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("CinemaShowId", "RowId", "SeatId");
+
+                    b.HasIndex("Code");
+
+                    b.HasIndex("RowId");
+
+                    b.HasIndex("TicketId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reservations");
+                });
+
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.ShowTicket", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<string>("SoldBy")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code");
+
+                    b.ToTable("ShowTickets");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -358,6 +575,86 @@ namespace FilmFlow.API.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.CinemaHallRow", b =>
+                {
+                    b.HasOne("FilmFlow.API.Data.Entities.CinemaHall", "Hall")
+                        .WithMany("Rows")
+                        .HasForeignKey("HallId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Hall");
+                });
+
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.CinemaShow", b =>
+                {
+                    b.HasOne("FilmFlow.API.Data.Entities.CinemaHall", "CinemaHall")
+                        .WithMany()
+                        .HasForeignKey("CinemaHallId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FilmFlow.API.Data.Entities.Movie", "Movie")
+                        .WithMany("CinemaShows")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CinemaHall");
+
+                    b.Navigation("Movie");
+                });
+
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.MovieReview", b =>
+                {
+                    b.HasOne("FilmFlow.API.Data.Entities.Movie", "Movie")
+                        .WithMany("MovieReviews")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FilmFlow.API.Data.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.Reservation", b =>
+                {
+                    b.HasOne("FilmFlow.API.Data.Entities.CinemaShow", "CinemaShow")
+                        .WithMany("Reservations")
+                        .HasForeignKey("CinemaShowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FilmFlow.API.Data.Entities.CinemaHallRow", "Row")
+                        .WithMany()
+                        .HasForeignKey("RowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FilmFlow.API.Data.Entities.ShowTicket", "Ticket")
+                        .WithOne("Reservation")
+                        .HasForeignKey("FilmFlow.API.Data.Entities.Reservation", "TicketId");
+
+                    b.HasOne("FilmFlow.API.Data.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("CinemaShow");
+
+                    b.Navigation("Row");
+
+                    b.Navigation("Ticket");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -369,7 +666,7 @@ namespace FilmFlow.API.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("FilmFlow.API.Data.Models.ApplicationUser", null)
+                    b.HasOne("FilmFlow.API.Data.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -378,7 +675,7 @@ namespace FilmFlow.API.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("FilmFlow.API.Data.Models.ApplicationUser", null)
+                    b.HasOne("FilmFlow.API.Data.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -393,7 +690,7 @@ namespace FilmFlow.API.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FilmFlow.API.Data.Models.ApplicationUser", null)
+                    b.HasOne("FilmFlow.API.Data.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -402,10 +699,33 @@ namespace FilmFlow.API.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("FilmFlow.API.Data.Models.ApplicationUser", null)
+                    b.HasOne("FilmFlow.API.Data.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.CinemaHall", b =>
+                {
+                    b.Navigation("Rows");
+                });
+
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.CinemaShow", b =>
+                {
+                    b.Navigation("Reservations");
+                });
+
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.Movie", b =>
+                {
+                    b.Navigation("CinemaShows");
+
+                    b.Navigation("MovieReviews");
+                });
+
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.ShowTicket", b =>
+                {
+                    b.Navigation("Reservation")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618
