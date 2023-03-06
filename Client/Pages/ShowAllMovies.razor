@@ -86,7 +86,7 @@ else
 	string ageFilter = "";
 	string languageFilter = "";
 	string categoryFilter = "";
-	private List<MovieDto> movies = new List<MovieDto>();
+	private List<MovieDto>? movies;
 	string[] allLanguages = new string[0];
 	string[] allCategories = new string[0];
 	int[] ageOptions = new[] { 6, 12, 16, 18 };
@@ -95,6 +95,7 @@ else
 	{
 		get
 		{
+			if (movies == null) return Enumerable.Empty<MovieDto>();
 			var query = movies.AsEnumerable();
 			if (!string.IsNullOrEmpty(searchText))
 			{

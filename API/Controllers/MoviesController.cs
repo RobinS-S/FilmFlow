@@ -253,19 +253,19 @@ namespace FilmFlow.API.Controllers
 
     public partial class MovieController
     {
-        [HttpGet("{id}/shows")]
+        [HttpGet("{movieId}/shows")]
         [ProducesResponseType(typeof(MovieDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetMovieShowsById(long movieId)
         {
-            var movies = await cinemaShowService.GetByMovieId(movieId);
+            var shows = await cinemaShowService.GetByMovieId(movieId);
 
-            if (movies == null)
+            if (shows == null)
             {
                 return NotFound();
             }
 
-            var movieDto = mapper.Map<List<CinemaShowDto>>(movies);
+            var movieDto = mapper.Map<IEnumerable<CinemaShowDto>>(shows);
             return Ok(movieDto);
         }
     }
