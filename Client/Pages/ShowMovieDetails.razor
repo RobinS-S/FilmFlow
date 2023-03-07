@@ -17,7 +17,7 @@
                     <h5 class="card-title">@Movie.Title</h5>
                     <ul>
                         <li>Categorie: @Movie.Category</li>
-                        <li>Leeftijd: @Movie.MinAge</li>
+                        <li>Minimale leeftijd: @Movie.MinAge</li>
                         <li>Taal: @Movie.Language</li>
                     </ul>
                     <p class="card-text">@Movie.Description</p>
@@ -36,8 +36,8 @@
                                 <div class="card p-3 m-3" style="width: 18rem; border: 0px; background-color: #ffffff96;">
                                     <div class="card-body">
                                         <h5 class="card-title">Zaal @show.CinemaHallId</h5>
-                                        <h6 class="card-subtitle mb-2 text-muted">@show.Start.ToString()</h6>
-                                        <p class="card-text">Some quick example text to build on the Zaal 1 and make up the bulk of the card's content.</p>
+                                        <h6 class="card-subtitle mb-2 text-muted">@show.Start.ToShortDateString()</h6>
+                                        <p class="card-text">@show.Start.ToShortTimeString() - @show.End.ToShortTimeString()</p>
                                         <a href="cinemashow/@show.Id" class="btn btn-danger">Reserveer nu</a>
                                     </div>
                                 </div>
@@ -69,7 +69,8 @@ else
         try
         {
             Movie = await Http.GetFromJsonAsync<MovieDto>($"/api/Movies/{id}");
-            Shows = await Http.GetFromJsonAsync<CinemaShowDto[]>($"/api/Movies/{id}/shows");
+            var shows = await Http.GetFromJsonAsync<CinemaShowDto[]>($"/api/Movies/{id}/shows");
+            if (shows != null) Shows = shows.OrderBy(s => s.Start).ToArray();
         }
         catch (AccessTokenNotAvailableException exception)
         {
