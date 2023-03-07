@@ -42,24 +42,25 @@
             if(Show != null)
             {
                 Hall = await Http.GetFromJsonAsync<CinemaHallDto>($"/api/cinemahalls/{Show.CinemaHallId}");
-                // if hall not null foreaCH BLABLA
             }
         }
         catch (AccessTokenNotAvailableException exception)
         {
             exception.Redirect();
         }
-
-        int row = 1;
-        foreach (CinemaHallRowDto rows in Hall.Rows)
+        if (Hall != null)
         {
-            seats.Add(row, new Dictionary<int, string>());
-            for (int i = 0; i < rows.RowChairsTotal; i++)
+            int row = 1;
+            foreach (CinemaHallRowDto rows in Hall.Rows)
             {
-                int seat = i + 1;
-                seats[row].Add(i, "");
+                seats.Add(row, new Dictionary<int, string>());
+                for (int i = 0; i < rows.RowChairsTotal; i++)
+                {
+                    int seat = i + 1;
+                    seats[row].Add(i, "");
+                }
+                row++;
             }
-            row++;
         }
     }
 
@@ -69,7 +70,7 @@
         {
             return "img/seat-available.png";
         }
-        else if (seatNumbers[seat] == "selected") // is seatNumbers not null and selected
+        else if (seatNumbers?[seat] == "selected")
         {
             return "img/seat-selected.png";
         }
@@ -94,15 +95,33 @@
                 seatsPlanned--;
             }
             StateHasChanged();
-            Console.WriteLine(seatsPlanned);
+            Console.WriteLine($"Seats planned: {seatsPlanned}");
         }
     }
 
     private async Task Pay()
     {
-        //naar betaalmodule
+        string[] selectedSeats = new string[seats.Count];
+        int index = 0;
+        foreach (KeyValuePair<int, Dictionary<int, string>> row in seats)
+        {
+            foreach (KeyValuePair<int, string> seat in row.Value)
+            {
+                if (seat.Value != "")
+                {
+                    Console.WriteLine($"Row {row.Key} Seat {seat.Key}: {seat.Value}");
+                    string seatInfo = $"Row {row.Key}, Seat {seat.Key}";
+                    selectedSeats[index] = seatInfo;
+                    index++;
+                }
+            }
+        }
+        string[] selectedSeatsArray = selectedSeats.ToArray(); //occupiedseats array to pass trough paymodule
+
+        //to paymodule
         if (JSRuntime != null)
         {
+            Console.WriteLine($"Selectedseats {selectedSeatsArray}");
             await JSRuntime.InvokeVoidAsync("alert", "Betaald!");
         }
     }
