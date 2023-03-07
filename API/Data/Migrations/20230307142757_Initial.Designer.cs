@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FilmFlow.API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230306230635_Initial")]
+    [Migration("20230307142757_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

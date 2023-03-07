@@ -14,7 +14,7 @@
     
     @foreach (var row in seats)
     {
-            <div class="d-flex flex-row justify-content-center align-items-center">
+        <div class="d-flex flex-row justify-content-center align-items-center">
             @foreach (var seat in row.Value)
             {
                 <img src="@GetSeatImage(row.Key, seat.Key)" @onclick="() => ToggleSelected(row.Key, seat.Key)" />
@@ -22,7 +22,7 @@
         </div>
     }
     </div>
-    <button @onclick="Pay" disabled="@(seatsPlanned == 0)">Pay</button>
+    <button @onclick="CreateReservation" disabled="@(seatsPlanned == 0)">Create reservation</button>
 }
 
 @code {
@@ -61,6 +61,7 @@
                 }
                 row++;
             }
+            StateHasChanged();
         }
     }
 
@@ -99,30 +100,16 @@
         }
     }
 
-    private async Task Pay()
+    private async Task CreateReservation()
     {
-        string[] selectedSeats = new string[seats.Count];
-        int index = 0;
-        foreach (KeyValuePair<int, Dictionary<int, string>> row in seats)
-        {
-            foreach (KeyValuePair<int, string> seat in row.Value)
-            {
-                if (seat.Value != "")
-                {
-                    Console.WriteLine($"Row {row.Key} Seat {seat.Key}: {seat.Value}");
-                    string seatInfo = $"Row {row.Key}, Seat {seat.Key}";
-                    selectedSeats[index] = seatInfo;
-                    index++;
-                }
-            }
-        }
-        string[] selectedSeatsArray = selectedSeats.ToArray(); //occupiedseats array to pass trough paymodule
+        var selectedRows = seats.Where(row => row.Value.Any(s => s.Value != ""));
+        var takenSeats = selectedRows.SelectMany(r => r.Value.Select(st => new CreateReservationSeatDto() { CinemaHallRowId = r.Key, SeatNumber = st.Key, Tarriff = FilmFlow.Shared.Enums.TarriffType.NORMAL }));
+        var createReservationDto = new CreateReservationDto() { CinemaShowId = id, Seats = takenSeats.ToList() };
 
-        //to paymodule
         if (JSRuntime != null)
         {
-            Console.WriteLine($"Selectedseats {selectedSeatsArray}");
-            await JSRuntime.InvokeVoidAsync("alert", "Betaald!");
+            await Http.PostAsJsonAsync($"/api/cinemashows/{id}", createReservationDto);
+            await JSRuntime.InvokeVoidAsync("alert", "Gereserveerd!");
         }
     }
 }
