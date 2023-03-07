@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
+using FilmFlow.API.Data.Entities;
 using FilmFlow.API.Services;
 using FilmFlow.Shared.Dto;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FilmFlow.API.Controllers
 {
@@ -12,12 +16,14 @@ namespace FilmFlow.API.Controllers
         private readonly CinemaShowService cinemaShowService;
         private readonly ReservationService reservationService;
         private readonly IMapper mapper;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public CinemaShowController(CinemaShowService cinemaShowService, ReservationService reservationService, IMapper mapper)
+        public CinemaShowController(CinemaShowService cinemaShowService, ReservationService reservationService, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
             this.cinemaShowService = cinemaShowService;
             this.reservationService = reservationService;
             this.mapper = mapper;
+            this.userManager = userManager;
         }
 
         [HttpGet("{id}")]
@@ -25,14 +31,14 @@ namespace FilmFlow.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(long id)
         {
-            var cinemaHall = await cinemaShowService.GetById(id);
+            var cinemaShow = await cinemaShowService.GetById(id);
 
-            if (cinemaHall == null)
+            if (cinemaShow == null)
             {
                 return NotFound();
             }
 
-            var cinemaHallDto = mapper.Map<CinemaShowDto>(cinemaHall);
+            var cinemaHallDto = mapper.Map<CinemaShowDto>(cinemaShow);
             return Ok(cinemaHallDto);
         }
 
@@ -50,6 +56,43 @@ namespace FilmFlow.API.Controllers
 
             var cinemaHallDto = mapper.Map<IEnumerable<ReservationSeatDto>>(seats);
             return Ok(cinemaHallDto);
+        }
+
+        [HttpPost("{id}/reservation")]
+        [ProducesResponseType(typeof(ReservationDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [Authorize]
+        public async Task<IActionResult> CreateReservationForShow(long id, [FromBody] CreateReservationDto reservationDto)
+        {
+            var cinemaShow = await cinemaShowService.GetById(id);
+
+            if (cinemaShow == null)
+            {
+                return NotFound();
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return BadRequest();
+            }
+
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            reservationDto.CinemaShowId = id;
+            var reservation = reservationService.Create(reservationDto, user);
+            if(reservation == null)
+            {
+                return Conflict();
+            }
+
+            var createdReservation = mapper.Map<ReservationDto>(reservation);
+            return Ok(createdReservation);
         }
     }
 
