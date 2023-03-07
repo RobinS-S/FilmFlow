@@ -1,8 +1,8 @@
 ﻿using FilmFlow.API.Data.Entities.Helpers;
-using FilmFlow.API.Data.Enums;
 
 namespace FilmFlow.API.Data.Entities
 {
+
     public class Reservation : Entity
     {
         public string Code { get; set; } = null!;
@@ -15,34 +15,22 @@ namespace FilmFlow.API.Data.Entities
 
         public string? UserId { get; set; }
 
-        public ShowTicket? Ticket { get; set; }
-
-        public long? TicketId { get; set; }
-
         public bool IsPaid { get; set; }
 
-        public TarriffType TarriffType { get; set; }
-
-        public int SeatId { get; set; }
-
-        public CinemaHallRow Row { get; set; } = null!;
-
-        public long RowId { get; set; }
+        public ICollection<ReservationSeat> ReservedSeats { get; set; } = null!;
 
         public DateTime CreatedAt { get; set; }
 
         public Reservation() { }
 
-        public Reservation(CinemaShow cinemaShow, CinemaHallRow row, ApplicationUser? user, bool isPaid, TarriffType tarriffType, int seatId)
+        public Reservation(CinemaShow cinemaShow, ICollection<ReservationSeat> reservedSeats, bool isPaid = false,  ApplicationUser? user = null)
         {
             Code = Misc.Crypto.GenerateHash(Misc.Crypto.GenerateRandomBaseEncodedString());
-            Row = row;
-            CinemaShow = cinemaShow;
-            User = user;
-            IsPaid = isPaid;
-            TarriffType = tarriffType;
-            SeatId = seatId;
             CreatedAt = DateTime.UtcNow;
+            CinemaShow = cinemaShow;
+            ReservedSeats = reservedSeats;
+            IsPaid = isPaid;
+            User = user;
         }
     }
 }

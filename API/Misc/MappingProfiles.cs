@@ -24,6 +24,8 @@ namespace FilmFlow.API.Misc
                 .ReverseMap();
 
             CreateMap<ApplicationUser, UserProfileDto>();
+
+            CreateMap<ReservationSeat, ReservationSeatDto>();
         }
     }
 }

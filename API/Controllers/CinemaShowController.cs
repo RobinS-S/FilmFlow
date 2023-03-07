@@ -10,11 +10,13 @@ namespace FilmFlow.API.Controllers
     public class CinemaShowController : ControllerBase
     {
         private readonly CinemaShowService cinemaShowService;
+        private readonly ReservationService reservationService;
         private readonly IMapper mapper;
 
-        public CinemaShowController(CinemaShowService cinemaShowService, IMapper mapper)
+        public CinemaShowController(CinemaShowService cinemaShowService, ReservationService reservationService, IMapper mapper)
         {
             this.cinemaShowService = cinemaShowService;
+            this.reservationService = reservationService;
             this.mapper = mapper;
         }
 
@@ -31,6 +33,22 @@ namespace FilmFlow.API.Controllers
             }
 
             var cinemaHallDto = mapper.Map<CinemaShowDto>(cinemaHall);
+            return Ok(cinemaHallDto);
+        }
+
+        [HttpGet("{id}/reserved")]
+        [ProducesResponseType(typeof(CinemaHallDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetReservedSeatsByShowId(long id)
+        {
+            var seats = await reservationService.GetReservedSeatsForCinemaShow(id);
+
+            if (seats == null)
+            {
+                return NotFound();
+            }
+
+            var cinemaHallDto = mapper.Map<IEnumerable<ReservationSeatDto>>(seats);
             return Ok(cinemaHallDto);
         }
     }

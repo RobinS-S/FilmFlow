@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace FilmFlow.API.Migrations
+namespace FilmFlow.API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -250,9 +250,6 @@ namespace FilmFlow.API.Migrations
                     b.Property<long>("HallId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("RowChairsTotal")
-                        .HasColumnType("int");
-
                     b.Property<int>("RowId")
                         .HasColumnType("int");
 
@@ -260,7 +257,26 @@ namespace FilmFlow.API.Migrations
 
                     b.HasAlternateKey("HallId", "RowId");
 
-                    b.ToTable("CinemaHallsRows");
+                    b.ToTable("CinemaHallRows");
+                });
+
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.CinemaHallRowSeat", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ParentRowId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("SeatNumber")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentRowId");
+
+                    b.ToTable("CinemaHallRowSeats");
                 });
 
             modelBuilder.Entity("FilmFlow.API.Data.Entities.CinemaShow", b =>
@@ -389,11 +405,31 @@ namespace FilmFlow.API.Migrations
                     b.Property<bool>("IsPaid")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<long>("RowId")
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(95)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CinemaShowId");
+
+                    b.HasIndex("Code");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reservations");
+                });
+
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.ReservationSeat", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    b.Property<int>("SeatId")
-                        .HasColumnType("int");
+                    b.Property<long>("ReservationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("SeatId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("TarriffType")
                         .HasColumnType("int");
@@ -401,23 +437,16 @@ namespace FilmFlow.API.Migrations
                     b.Property<long?>("TicketId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("varchar(95)");
-
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("CinemaShowId", "RowId", "SeatId");
+                    b.HasIndex("ReservationId");
 
-                    b.HasIndex("Code");
-
-                    b.HasIndex("RowId");
+                    b.HasIndex("SeatId");
 
                     b.HasIndex("TicketId")
                         .IsUnique();
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Reservations");
+                    b.ToTable("ReservationSeat");
                 });
 
             modelBuilder.Entity("FilmFlow.API.Data.Entities.ShowTicket", b =>
@@ -583,6 +612,17 @@ namespace FilmFlow.API.Migrations
                     b.Navigation("Hall");
                 });
 
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.CinemaHallRowSeat", b =>
+                {
+                    b.HasOne("FilmFlow.API.Data.Entities.CinemaHallRow", "ParentRow")
+                        .WithMany("Seats")
+                        .HasForeignKey("ParentRowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ParentRow");
+                });
+
             modelBuilder.Entity("FilmFlow.API.Data.Entities.CinemaShow", b =>
                 {
                     b.HasOne("FilmFlow.API.Data.Entities.CinemaHall", "CinemaHall")
@@ -629,27 +669,38 @@ namespace FilmFlow.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FilmFlow.API.Data.Entities.CinemaHallRow", "Row")
-                        .WithMany()
-                        .HasForeignKey("RowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FilmFlow.API.Data.Entities.ShowTicket", "Ticket")
-                        .WithOne("Reservation")
-                        .HasForeignKey("FilmFlow.API.Data.Entities.Reservation", "TicketId");
-
                     b.HasOne("FilmFlow.API.Data.Entities.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("CinemaShow");
 
-                    b.Navigation("Row");
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.ReservationSeat", b =>
+                {
+                    b.HasOne("FilmFlow.API.Data.Entities.Reservation", "Reservation")
+                        .WithMany("ReservedSeats")
+                        .HasForeignKey("ReservationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FilmFlow.API.Data.Entities.CinemaHallRowSeat", "Seat")
+                        .WithMany()
+                        .HasForeignKey("SeatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FilmFlow.API.Data.Entities.ShowTicket", "Ticket")
+                        .WithOne("Seat")
+                        .HasForeignKey("FilmFlow.API.Data.Entities.ReservationSeat", "TicketId");
+
+                    b.Navigation("Reservation");
+
+                    b.Navigation("Seat");
 
                     b.Navigation("Ticket");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -708,6 +759,11 @@ namespace FilmFlow.API.Migrations
                     b.Navigation("Rows");
                 });
 
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.CinemaHallRow", b =>
+                {
+                    b.Navigation("Seats");
+                });
+
             modelBuilder.Entity("FilmFlow.API.Data.Entities.CinemaShow", b =>
                 {
                     b.Navigation("Reservations");
@@ -720,9 +776,14 @@ namespace FilmFlow.API.Migrations
                     b.Navigation("MovieReviews");
                 });
 
+            modelBuilder.Entity("FilmFlow.API.Data.Entities.Reservation", b =>
+                {
+                    b.Navigation("ReservedSeats");
+                });
+
             modelBuilder.Entity("FilmFlow.API.Data.Entities.ShowTicket", b =>
                 {
-                    b.Navigation("Reservation")
+                    b.Navigation("Seat")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

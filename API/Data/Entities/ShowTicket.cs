@@ -8,13 +8,14 @@ namespace FilmFlow.API.Data.Entities
 
         public string SoldBy { get; set; } = null!;
 
-        public Reservation Reservation { get; set; } = null!;
+        public ReservationSeat Seat { get; set; } = null!;
 
         public ShowTicket() { }
 
-        public ShowTicket(string soldBy)
+        public ShowTicket(ReservationSeat seat, string soldBy)
         {
             Code = Misc.Crypto.GenerateHash(Misc.Crypto.GenerateRandomBaseEncodedString());
+            Seat = seat;
             SoldBy = soldBy;
         }
     }
