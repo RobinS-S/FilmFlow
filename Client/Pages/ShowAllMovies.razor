@@ -7,15 +7,17 @@
 
 <div class="p-3">
 	<h3 class="d-flex">Movies</h3>
-	<input type="search" id="movieSearch" class="form-control" placeholder="Search for movies..." aria-label="Search" @bind="searchText" />
+	<input type="search" id="movieSearch" class="form-control" placeholder="Search for movies..." aria-label="Search" @bind="searchText" @oninput="UpdateOnSearch" />
 	<div class="row mt-3">
 		<div class="col-md-3">
 			<label for="ageFilter">Age Rating: </label>
 			<select id="ageFilter" class="form-select" @bind="ageFilter">
 				<option value="">Select Age Rating</option>
-				@foreach (var age in ageOptions)
-				{
-					<option value="@age">@age+</option>
+				@if (ageOptions != null) {
+					@foreach (var age in ageOptions)
+					{
+						<option value="@age">@age+</option>
+					}
 				}
 			</select>
 		</div>
@@ -82,14 +84,13 @@ else
 
 @code {
 	string searchText = "";
-	int minAge = 0;
 	string ageFilter = "";
 	string languageFilter = "";
 	string categoryFilter = "";
 	private List<MovieDto>? movies;
 	string[] allLanguages = new string[0];
 	string[] allCategories = new string[0];
-	int[] ageOptions = new[] { 6, 12, 16, 18 };
+	int[] ageOptions = new int[0];
 
 	private IEnumerable<MovieDto> filteredMovies
 	{
@@ -133,6 +134,7 @@ else
 			if (movies != null)
 			{
 				this.movies = movies.ToList<MovieDto>();
+				ageOptions = movies.Select(m => m.MinAge).Distinct().ToArray();
 				allLanguages = movies.Select(m => m.Language).Distinct().ToArray();
 				allCategories = movies.Select(m => m.Category).Distinct().ToArray();
 			}
@@ -141,5 +143,9 @@ else
 		{
 			exception.Redirect();
 		}
+	}
+	private void UpdateOnSearch(ChangeEventArgs args)
+	{
+		searchText = args.Value.ToString();
 	}
 }
