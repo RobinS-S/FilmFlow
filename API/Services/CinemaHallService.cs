@@ -16,7 +16,8 @@ namespace FilmFlow.API.Services
         public async Task<List<CinemaHall>> GetAll()
         {
             return await context.CinemaHalls
-                .Include(ch => ch.Rows.OrderBy(r => r.RowId))
+                .Include(ch => ch.Rows)
+                .ThenInclude(r => r.Seats.OrderBy(s => s.SeatNumber))
                 .ToListAsync();
         }
 
@@ -24,6 +25,7 @@ namespace FilmFlow.API.Services
         {
             return await context.CinemaHalls
                 .Include(ch => ch.Rows.OrderBy(r => r.RowId))
+                .ThenInclude(r => r.Seats.OrderBy(s => s.SeatNumber))
                 .SingleOrDefaultAsync(ch => ch.Id == id);
         }
 

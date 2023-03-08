@@ -1,7 +1,7 @@
 ﻿using FilmFlow.API.Auth;
 using FilmFlow.API.Data.Entities;
-using FilmFlow.API.Data.Enums;
 using FilmFlow.API.Misc;
+using FilmFlow.Shared.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace FilmFlow.API.Data
@@ -99,7 +99,7 @@ namespace FilmFlow.API.Data
             var show = shows.ElementAt(0);
             var reservations = new List<Reservation>
             {
-                new Reservation(show, new List<ReservationSeat>() { new ReservationSeat(new CinemaHallRowSeat(3, show.CinemaHall.Rows.ElementAt(1)), TarriffType.NORMAL) }, false, user)
+                new Reservation(show, new List<ReservationSeat>() { new ReservationSeat(show.CinemaHall.Rows.ElementAt(1).Seats.ElementAt(3), TarriffType.NORMAL) }, false, user)
             };
 
             dbContext.CinemaHalls.AddRange(halls);

@@ -1,5 +1,6 @@
 ﻿@page "/cinemashow/{id:long}"
 @using FilmFlow.Shared.Dto
+@using FilmFlow.Shared.Enums;
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using FilmFlow.Shared
@@ -17,7 +18,7 @@
         <div class="d-flex flex-row justify-content-center align-items-center">
             @foreach (var seat in row.Value)
             {
-                <img src="@GetSeatImage(row.Key, seat.Key)" @onclick="() => ToggleSelected(row.Key, seat.Key)" />
+                <img src="@GetSeatImage(row.Key, seat.Key)" @onclick="() => ToggleSelected(row.Key, seat.Key)" class="cinema-show-seat"/>
             }
         </div>
     }
@@ -42,26 +43,23 @@
             if(Show != null)
             {
                 Hall = await Http.GetFromJsonAsync<CinemaHallDto>($"/api/cinemahalls/{Show.CinemaHallId}");
+
+                if (Hall != null)
+                {
+                    foreach (CinemaHallRowDto row in Hall.Rows)
+                    {
+                        seats.Add(row.RowId, new Dictionary<int, string>());
+                        foreach(var chair in row.Seats)
+                        {
+                            seats[row.RowId].Add(chair.SeatNumber, "");
+                        }
+                    }
+                }
             }
         }
         catch (AccessTokenNotAvailableException exception)
         {
             exception.Redirect();
-        }
-        if (Hall != null)
-        {
-            int row = 1;
-            foreach (CinemaHallRowDto rows in Hall.Rows)
-            {
-                seats.Add(row, new Dictionary<int, string>());
-                for (int i = 0; i < rows.RowChairsTotal; i++)
-                {
-                    int seat = i + 1;
-                    seats[row].Add(i, "");
-                }
-                row++;
-            }
-            StateHasChanged();
         }
     }
 
@@ -103,13 +101,21 @@
     private async Task CreateReservation()
     {
         var selectedRows = seats.Where(row => row.Value.Any(s => s.Value != ""));
-        var takenSeats = selectedRows.SelectMany(r => r.Value.Select(st => new CreateReservationSeatDto() { CinemaHallRowId = r.Key, SeatNumber = st.Key, Tarriff = FilmFlow.Shared.Enums.TarriffType.NORMAL }));
+        var takenSeats = selectedRows.SelectMany(r => r.Value.Select(st => new CreateReservationSeatDto() { CinemaHallRowId = r.Key, SeatNumber = st.Key, Tarriff = TarriffType.NORMAL }));
         var createReservationDto = new CreateReservationDto() { CinemaShowId = id, Seats = takenSeats.ToList() };
 
         if (JSRuntime != null)
         {
-            await Http.PostAsJsonAsync($"/api/cinemashows/{id}", createReservationDto);
-            await JSRuntime.InvokeVoidAsync("alert", "Gereserveerd!");
+            var response = await Http.PostAsJsonAsync($"/api/cinemashows/{id}/reservation", createReservationDto);
+            var createdReservation = await response.Content.ReadFromJsonAsync<ReservationDto>();
+            if(createdReservation == null)
+            {
+                await JSRuntime.InvokeVoidAsync("alert", $"Gereserveerd onder id {createdReservation.Id}");
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("alert", "Reservering mislukt");
+            }
         }
     }
 }

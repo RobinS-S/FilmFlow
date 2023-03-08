@@ -72,20 +72,20 @@ namespace FilmFlow.API.Controllers
                 return NotFound();
             }
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.Identity?.Name;
             if (userId == null)
             {
                 return BadRequest();
             }
 
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await userManager.FindByNameAsync(userId);
             if (user == null)
             {
                 return BadRequest();
             }
 
             reservationDto.CinemaShowId = id;
-            var reservation = reservationService.Create(reservationDto, user);
+            var reservation = await reservationService.Create(reservationDto, user);
             if(reservation == null)
             {
                 return Conflict();

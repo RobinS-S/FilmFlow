@@ -1,6 +1,5 @@
 ﻿using FilmFlow.API.Data;
 using FilmFlow.API.Data.Entities;
-using FilmFlow.API.Data.Enums;
 using FilmFlow.Shared.Dto;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,7 +42,7 @@ namespace FilmFlow.API.Services
         {
             // retrieve movie, decide tarriff, check if seat not taken, place reservation
             var existingReservation = await context.Reservations.Include(r => r.ReservedSeats)
-                .SingleOrDefaultAsync(r => r.CinemaShowId == reservationDto.CinemaShowId && r.ReservedSeats.Any(rs => reservationDto.Seats.Any(s => s.CinemaHallRowId == rs.Seat.ParentRowId && s.SeatNumber == rs.SeatId))); 
+                .SingleOrDefaultAsync(r => r.CinemaShowId == reservationDto.CinemaShowId && r.ReservedSeats.Any(rs => reservationDto.Seats.Any(s => s.CinemaHallRowId == rs.Seat.ParentRowId && s.SeatNumber == rs.Seat.SeatNumber))); 
             if (existingReservation != null) return null;
 
             var cinemaShow = await context.CinemaShows.
@@ -54,7 +53,7 @@ namespace FilmFlow.API.Services
             var seats = await context.CinemaHallRowSeats.Where(chrs => reservationDto.Seats.Any(s => chrs.SeatNumber == s.SeatNumber && chrs.ParentRowId == s.CinemaHallRowId))
                 .ToListAsync();
 
-            var reservation = new Reservation(cinemaShow, reservationDto.Seats.Select(s => new ReservationSeat(seats.Single(fs => fs.SeatNumber == s.SeatNumber && fs.ParentRowId == s.CinemaHallRowId), TarriffType.NORMAL)).ToList(), false, user);
+            var reservation = new Reservation(cinemaShow, reservationDto.Seats.Select(s => new ReservationSeat(seats.Single(fs => fs.SeatNumber == s.SeatNumber && fs.ParentRowId == s.CinemaHallRowId), s.Tarriff)).ToList(), false, user);
             await context.Reservations.AddAsync(reservation);
             await context.SaveChangesAsync();
             return reservation;

@@ -1,4 +1,4 @@
-﻿using FilmFlow.API.Data.Enums;
+﻿using FilmFlow.Shared.Enums;
 
 namespace FilmFlow.API.Misc
 {
