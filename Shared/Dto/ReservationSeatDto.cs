@@ -4,8 +4,8 @@
     {
         public long Id { get; set; }
 
-        public long CinemaHallRowId { get; set; }
+        public CinemaHallRowSeatDto Seat { get; set; } = null!;
 
-        public int SeatNumber { get; set; }
+        public long SeatId { get; set; }
     }
 }

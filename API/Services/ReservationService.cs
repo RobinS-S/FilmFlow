@@ -24,6 +24,13 @@ namespace FilmFlow.API.Services
             return await context.Reservations.FindAsync(id);
         }
 
+        public async Task<List<Reservation>> GetByUserId(string id)
+        {
+            return await context.Reservations
+                .Where(r => r.UserId != null && r.UserId == id)
+                .ToListAsync();
+        }
+
         public async Task<Reservation?> GetByCode(string code)
         {
             return await context.Reservations.SingleOrDefaultAsync(r => r.Code == code);
@@ -34,6 +41,7 @@ namespace FilmFlow.API.Services
             return await context.Reservations
                 .Where(r => r.CinemaShowId == cinemaShowId)
                 .Include(r => r.ReservedSeats)
+                .ThenInclude(rs => rs.Seat)
                 .SelectMany(r => r.ReservedSeats)
                 .ToListAsync();
         }
@@ -41,8 +49,9 @@ namespace FilmFlow.API.Services
         public async Task<Reservation?> Create(CreateReservationDto reservationDto, ApplicationUser? user = null)
         {
             // retrieve movie, decide tarriff, check if seat not taken, place reservation
+            var attemptedSeatIdsToReserve = reservationDto.Seats.Select(s => s.SeatId);
             var existingReservation = await context.Reservations.Include(r => r.ReservedSeats)
-                .SingleOrDefaultAsync(r => r.CinemaShowId == reservationDto.CinemaShowId && r.ReservedSeats.Any(rs => reservationDto.Seats.Any(s => s.CinemaHallRowId == rs.Seat.ParentRowId && s.SeatNumber == rs.Seat.SeatNumber))); 
+                .SingleOrDefaultAsync(r => r.CinemaShowId == reservationDto.CinemaShowId && r.ReservedSeats.Any(rs => attemptedSeatIdsToReserve.Contains(rs.SeatId))); 
             if (existingReservation != null) return null;
 
             var cinemaShow = await context.CinemaShows.
@@ -50,10 +59,10 @@ namespace FilmFlow.API.Services
                 .SingleOrDefaultAsync(cs => cs.Id == reservationDto.CinemaShowId);
             if (cinemaShow == null) return null;
 
-            var seats = await context.CinemaHallRowSeats.Where(chrs => reservationDto.Seats.Any(s => chrs.SeatNumber == s.SeatNumber && chrs.ParentRowId == s.CinemaHallRowId))
+            var seats = await context.CinemaHallRowSeats.Where(chrs => attemptedSeatIdsToReserve.Contains(chrs.Id))
                 .ToListAsync();
 
-            var reservation = new Reservation(cinemaShow, reservationDto.Seats.Select(s => new ReservationSeat(seats.Single(fs => fs.SeatNumber == s.SeatNumber && fs.ParentRowId == s.CinemaHallRowId), s.Tarriff)).ToList(), false, user);
+            var reservation = new Reservation(cinemaShow, reservationDto.Seats.Select(s => new ReservationSeat(seats.Single(fs => fs.Id == s.SeatId), s.Tarriff)).ToList(), false, user);
             await context.Reservations.AddAsync(reservation);
             await context.SaveChangesAsync();
             return reservation;

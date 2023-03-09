@@ -6,6 +6,12 @@
 
         public long CinemaShowId { get; set; }
 
-        public ICollection<ReservationSeatDto> Seats { get; set; } = null!;
+        public ICollection<ReservationSeatDto> ReservedSeats { get; set; } = null!;
+
+        public string Code { get; set; } = null!;
+
+        public bool IsPaid { get; set; }
+
+        public DateTime CreatedAt { get; set; }
     }
 }

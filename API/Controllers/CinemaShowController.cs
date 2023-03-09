@@ -72,13 +72,7 @@ namespace FilmFlow.API.Controllers
                 return NotFound();
             }
 
-            var userId = User.Identity?.Name;
-            if (userId == null)
-            {
-                return BadRequest();
-            }
-
-            var user = await userManager.FindByNameAsync(userId);
+            var user = User.Identity?.Name != null ? await userManager.FindByNameAsync(User.Identity.Name) : null;
             if (user == null)
             {
                 return BadRequest();

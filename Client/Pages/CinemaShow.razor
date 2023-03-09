@@ -7,7 +7,7 @@
 @inject HttpClient Http
 @inject IJSRuntime JSRuntime
 
-@if (Hall != null)
+@if (hall != null && seats != null)
 {
     <h3>Choose your seats</h3>
     <p>Seats planned: @seatsPlanned</p>
@@ -30,23 +30,26 @@
     [Parameter]
     public long id { get; set; }
 
-    private CinemaHallDto? Hall;
-    private CinemaShowDto? Show;
+    private CinemaHallDto? hall;
+    private CinemaShowDto? show;
     private int seatsPlanned;
-    private Dictionary<int, Dictionary<int, string>> seats = new Dictionary<int, Dictionary<int, string>>();
+    private Dictionary<int, Dictionary<int, string>>? seats;
+    private List<ReservationSeatDto>? reservedSeats;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            Show = await Http.GetFromJsonAsync<CinemaShowDto>($"/api/cinemashows/{id}");
-            if(Show != null)
+            show = await Http.GetFromJsonAsync<CinemaShowDto>(ApiCallUrls.CinemaShowById(id));
+            reservedSeats = await Http.GetFromJsonAsync<List<ReservationSeatDto>>(ApiCallUrls.ReservedSeatsForShow(id));
+            if(show != null)
             {
-                Hall = await Http.GetFromJsonAsync<CinemaHallDto>($"/api/cinemahalls/{Show.CinemaHallId}");
+                hall = await Http.GetFromJsonAsync<CinemaHallDto>(ApiCallUrls.CinemaHallById(show.CinemaHallId));
 
-                if (Hall != null)
+                if (hall != null)
                 {
-                    foreach (CinemaHallRowDto row in Hall.Rows)
+                    seats = new Dictionary<int, Dictionary<int, string>>();
+                    foreach (CinemaHallRowDto row in hall.Rows)
                     {
                         seats.Add(row.RowId, new Dictionary<int, string>());
                         foreach(var chair in row.Seats)
@@ -65,7 +68,11 @@
 
     private string GetSeatImage(int row, int seat)
     {
-        if (seats.TryGetValue(row, out var seatNumbers) && seatNumbers[seat] == "")
+        if (seats == null || reservedSeats == null)
+        {
+            return "";
+        }
+        if (seats.TryGetValue(row, out var seatNumbers) && seatNumbers[seat] == "" && !reservedSeats.Any(rs => rs.Seat.ParentRowId == row && rs.Seat.SeatNumber == seat))
         {
             return "img/seat-available.png";
         }
@@ -81,6 +88,10 @@
 
     private void ToggleSelected(int row, int seat)
     {
+        if (seats == null || reservedSeats == null || reservedSeats.Any(rs => rs.Seat.ParentRowId == row && rs.Seat.SeatNumber == seat))
+        {
+            return;
+        }
         if (seats.TryGetValue(row, out var seatNumbers) && seatNumbers.TryGetValue(seat, out var isSelected))
         {
             if (isSelected == "")
@@ -94,21 +105,24 @@
                 seatsPlanned--;
             }
             StateHasChanged();
-            Console.WriteLine($"Seats planned: {seatsPlanned}");
         }
     }
 
     private async Task CreateReservation()
     {
+        if (hall == null || seats == null)
+        {
+            return;
+        }
         var selectedRows = seats.Where(row => row.Value.Any(s => s.Value != ""));
-        var takenSeats = selectedRows.SelectMany(r => r.Value.Select(st => new CreateReservationSeatDto() { CinemaHallRowId = r.Key, SeatNumber = st.Key, Tarriff = TarriffType.NORMAL }));
+        var takenSeats = selectedRows.SelectMany(r => r.Value.Where(rv => rv.Value != "").Select(st => new CreateReservationSeatDto() { SeatId = hall.Rows.Single(hr => hr.RowId == r.Key).Seats.Single(hs => hs.SeatNumber == st.Key).Id, Tarriff = TarriffType.NORMAL }));
         var createReservationDto = new CreateReservationDto() { CinemaShowId = id, Seats = takenSeats.ToList() };
 
         if (JSRuntime != null)
         {
-            var response = await Http.PostAsJsonAsync($"/api/cinemashows/{id}/reservation", createReservationDto);
+            var response = await Http.PostAsJsonAsync(ApiCallUrls.ReservationForCinemaShow(id), createReservationDto);
             var createdReservation = await response.Content.ReadFromJsonAsync<ReservationDto>();
-            if(createdReservation == null)
+            if(createdReservation != null)
             {
                 await JSRuntime.InvokeVoidAsync("alert", $"Gereserveerd onder id {createdReservation.Id}");
             }
