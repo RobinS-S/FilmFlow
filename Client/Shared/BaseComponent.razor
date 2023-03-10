@@ -1,0 +1,11 @@
+﻿@using Microsoft.Extensions.Localization;
+@inject IStringLocalizerFactory localizerFactory
+
+@code {
+    public IStringLocalizer Localizer = null!;
+
+    protected override void OnInitialized()
+    {
+        Localizer = localizerFactory.Create("FilmFlow.Client.Resources", "FilmFlow.Client");
+    }
+}
