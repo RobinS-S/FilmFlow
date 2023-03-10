@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FilmFlow.API.Data.Entities;
+using FilmFlow.API.Misc;
 using FilmFlow.API.Services;
 using FilmFlow.Shared.Dto;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FilmFlow.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/reservations")]
     public class ReservationController : ControllerBase
     {
         private readonly ReservationService reservationService;
@@ -37,6 +38,60 @@ namespace FilmFlow.API.Controllers
             var reservations = await reservationService.GetByUserId(user.Id);
             var reservationDtos = mapper.Map<IEnumerable<ReservationDto>>(reservations);
             return Ok(reservationDtos);
+        }
+
+        [Authorize]
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(IEnumerable<ReservationDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetById(long id)
+        {
+            var user = User.Identity?.Name != null ? await userManager.FindByNameAsync(User.Identity.Name) : null;
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            var reservation = await reservationService.GetById(id);
+            if(reservation == null)
+            {
+                return NotFound();
+            }
+
+            if(reservation.UserId != user.Id)
+            {
+                return Forbid();
+            }
+
+            var reservationDtos = mapper.Map<IEnumerable<ReservationDto>>(reservation);
+            return Ok(reservationDtos);
+        }
+
+        [Authorize]
+        [HttpGet("{id}/qrcode")]
+        [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetQrCode(long id)
+        {
+            var user = User.Identity?.Name != null ? await userManager.FindByNameAsync(User.Identity.Name) : null;
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            var reservation = await reservationService.GetById(id);
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            if (reservation.UserId != user.Id)
+            {
+                return Forbid();
+            }
+
+            byte[] imageData = QrCodeEncoding.GenerateQrCodeAsPngFromText(reservation.Code);
+            return File(imageData, "image/png");
         }
     }
 }
