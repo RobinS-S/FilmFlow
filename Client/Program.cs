@@ -18,8 +18,8 @@ namespace FilmFlow.Client
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("FilmFlow.Client"));
             builder.Services.AddApiAuthorization();
 
-            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");          
-
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");     
+            
             await builder.Build().RunAsync();
         }
     }

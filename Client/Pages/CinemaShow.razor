@@ -11,10 +11,8 @@
 
 @if (Hall != null)
 {
-
-    <p>The current culture is: @CultureInfo.CurrentCulture</p>
     <h3>@Localizer["ChooseYourSeats"]</h3>
-    <p>Seats planned: @seatsPlanned</p>
+    <p>@Localizer["SeatsPlanned"]: @seatsPlanned</p>
     <div class="card-body">
 
         @foreach (var row in seats)
@@ -27,7 +25,7 @@
             </div>
         }
     </div>
-    <button @onclick="Pay" disabled="@(seatsPlanned == 0)">Pay</button>
+    <button @onclick="Pay" disabled="@(seatsPlanned == 0)">@Localizer["Pay"]</button>
 }
 
 @code {

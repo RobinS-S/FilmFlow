@@ -4,15 +4,16 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using FilmFlow.Shared
 @inject HttpClient Http
+@inherits BaseComponent
 
 <div class="p-3">
-	<h3 class="d-flex">Movies</h3>
-	<input type="search" id="movieSearch" class="form-control" placeholder="Search for movies..." aria-label="Search" @bind="searchText" @oninput="UpdateOnSearch" />
+	<h3 class="d-flex">@Localizer["Movies"]</h3>
+	<input type="search" id="movieSearch" class="form-control" placeholder="@Localizer["SearchForMovies"]" aria-label="Search" @bind="searchText" @oninput="UpdateOnSearch" />
 	<div class="row mt-3">
 		<div class="col-md-3">
-			<label for="ageFilter">Age Rating: </label>
+			<label for="ageFilter">@Localizer["AgeRating"]: </label>
 			<select id="ageFilter" class="form-select" @bind="ageFilter">
-				<option value="">Select Age Rating</option>
+				<option value="">@Localizer["SelectAgeRating"]</option>
 				@if (ageOptions != null) {
 					@foreach (var age in ageOptions)
 					{
@@ -22,9 +23,9 @@
 			</select>
 		</div>
 		<div class="col-md-3">
-			<label for="languageFilter">Language: </label>
+			<label for="languageFilter">@Localizer["Language"]: </label>
 			<select id="languageFilter" class="form-select" @bind="languageFilter">
-				<option value="">Select Language</option>
+				<option value="">@Localizer["SelectLanguage"]</option>
 				@if (allLanguages != null)
 				{
 					@foreach (var lang in allLanguages)
@@ -35,9 +36,9 @@
 			</select>
 		</div>
 		<div class="col-md-3">
-			<label for="categoryFilter">Category: </label>
+			<label for="categoryFilter">@Localizer["Category"]: </label>
 			<select id="categoryFilter" class="form-select" @bind="categoryFilter">
-				<option value="">Select Category</option>
+				<option value="">@Localizer["SelectCategory"]</option>
 				@if (allCategories != null)
 				{
 					@foreach (var cat in allCategories)
@@ -62,24 +63,24 @@
 				<div class="card-body">
 					<h5 class="card-title">@movie.Title</h5>
 					<ul>
-						<li>Categorie: @movie.Category</li>
-						<li>Leeftijd: @movie.MinAge</li>
-						<li>Taal: @movie.Language</li>
+						<li>@Localizer["Category"]: @movie.Category</li>
+						<li>@Localizer["AgeRating"]: @movie.MinAge</li>
+						<li>@Localizer["Language"]: @movie.Language</li>
 					</ul>
 					<p class="card-text">@movie.Description</p>
-					<a href="movie/@movie.Id" class="btn btn-danger">More about this movie</a>
+					<a href="movie/@movie.Id" class="btn btn-danger">@Localizer["MoreAboutThisMovie"]</a>
 				</div>
 			</div>
 		}
 	</div>
 	@if (!filteredMovies.Any())
 	{
-		<h3 class="p-3">No movies matching your search criterea!</h3>
+		<h3 class="p-3">@Localizer["NoMoviesMatchinYourSearchCriterea"]!</h3>
 	}
 }
 else
 {
-	<p>Loading...</p>
+	<p>@Localizer["Loading"]...</p>
 }
 
 @code {
