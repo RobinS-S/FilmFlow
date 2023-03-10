@@ -40,7 +40,7 @@ namespace FilmFlow.API.Swagger
                         TokenUrl = new Uri(discoveryDocument.TokenEndpoint),
                         Scopes = new Dictionary<string, string>
                     {
-                        { "FilmFlowAPI", "API access" }
+                        { "FilmFlow.APIAPI", "API access" }
                     }
                     }
                 },

@@ -46,7 +46,10 @@ namespace FilmFlow
                 }
             }).AddApiAuthorization<ApplicationUser, ApplicationDbContext>(o =>
             {
-                if (builder.Environment.IsDevelopment()) o.Clients[0].RedirectUris.Add("/swagger/oauth2-redirect.html");
+                if (builder.Environment.IsDevelopment())
+                {
+                    o.Clients[0].RedirectUris.Add("/swagger/oauth2-redirect.html");
+                }
             });
 
             builder.Services.AddAuthentication()
@@ -105,7 +108,7 @@ namespace FilmFlow
                 {
                     setup.SwaggerEndpoint("/swagger/v1/swagger.json", "Version 1.0");
                     setup.OAuthClientId("FilmFlow.Client");
-                    setup.OAuthAppName("FilmFlow API");
+                    setup.OAuthAppName("FilmFlow.Client");
                     setup.OAuthScopeSeparator(" ");
                     setup.OAuthUsePkce();
                 });
