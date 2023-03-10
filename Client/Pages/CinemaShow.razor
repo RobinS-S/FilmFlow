@@ -3,12 +3,16 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using FilmFlow.Shared
+@using Microsoft.Extensions.Localization;
 @inject HttpClient Http
 @inject IJSRuntime JSRuntime
+@using System.Globalization
 @inherits BaseComponent
 
 @if (Hall != null)
 {
+
+    <p>The current culture is: @CultureInfo.CurrentCulture</p>
     <h3>@Localizer["ChooseYourSeats"]</h3>
     <p>Seats planned: @seatsPlanned</p>
     <div class="card-body">

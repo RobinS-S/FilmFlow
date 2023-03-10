@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Localization;
-using System.Globalization;
-using System.Resources;
 
 namespace FilmFlow.Client
 {
@@ -21,7 +18,7 @@ namespace FilmFlow.Client
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("FilmFlow.Client"));
             builder.Services.AddApiAuthorization();
 
-            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");          
 
             await builder.Build().RunAsync();
         }
