@@ -73,6 +73,7 @@ namespace FilmFlow
             builder.Services.AddScoped<MovieService>();
             builder.Services.AddScoped<ReservationService>();
             builder.Services.AddScoped<ShowTicketService>();
+            builder.Services.AddScoped<EmailService>();
             builder.Services.AddScoped<SocialService>();
 
             var app = builder.Build();
