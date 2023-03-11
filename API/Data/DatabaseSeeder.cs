@@ -102,13 +102,21 @@ namespace FilmFlow.API.Data
                 new Reservation(show, new List<ReservationSeat>() { new ReservationSeat(show.CinemaHall.Rows.ElementAt(1).Seats.ElementAt(3), TarriffType.NORMAL) }, false, user)
             };
 
+            var socials = new List<Social>
+            {
+                new Social("Instagram", "https://www.instagram.com/avanshogeschool/", "https://cdn-icons-png.flaticon.com/512/174/174855.png"),
+                new Social("Facebook", "https://www.facebook.com/avans/?locale=nl_NL", "https://cdn-icons-png.flaticon.com/512/733/733547.png"),
+				new Social("Linkedin", "https://nl.linkedin.com/school/avans-hogeschool/", "https://cdn-icons-png.flaticon.com/512/3536/3536505.png")
+			};
+
             dbContext.CinemaHalls.AddRange(halls);
             dbContext.Movies.AddRange(movies);
             dbContext.MovieReviews.AddRange(reviews);
             dbContext.CinemaShows.AddRange(shows);
             dbContext.Reservations.AddRange(reservations);
+            dbContext.Socials.AddRange(socials);
 
-            await dbContext.SaveChangesAsync();
+			await dbContext.SaveChangesAsync();
         }
     }
 }
