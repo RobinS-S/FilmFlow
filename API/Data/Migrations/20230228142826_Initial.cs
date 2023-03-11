@@ -634,6 +634,9 @@ namespace FilmFlow.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Movies");
+
+            migrationBuilder.DropTable(
+                name: "Socials");
         }
     }
 }
