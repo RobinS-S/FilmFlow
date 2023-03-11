@@ -1,19 +1,13 @@
 ﻿@page "/movie/{id:long}"
 @using FilmFlow.Shared.Dto
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-@using FilmFlow.Shared
-@inject NavigationManager NavigationHelper
-@using System.Web
-@inject HttpClient Http
 @inherits BaseComponent
 
 @if (Movie != null)
 {
 	<div class="row p-3">
 		<div class="col-sm-12 col-md-6 col-lg-3">
-			<div class="card m-4" style="width: 18rem; border: 0px; background-color: #ffffff96; padding: 0px !important;">
-				<img src="@Movie.ImageUrl" class="card-img-top" alt="...">
+			<div class="card m-4 p-0" style="background-color: #ffffff96">
+				<img src="@Movie.ImageUrl" class="card-img-top img-fluid" alt="...">
 				<div class="card-body">
 					<h5 class="card-title">@Movie.Title</h5>
 					<ul>
@@ -66,15 +60,8 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		try
-		{
-			Movie = await Http.GetFromJsonAsync<MovieDto>($"/api/Movies/{id}");
-			var shows = await Http.GetFromJsonAsync<CinemaShowDto[]>($"/api/Movies/{id}/shows");
-			if (shows != null) Shows = shows.OrderBy(s => s.Start).ToArray();
-		}
-		catch (AccessTokenNotAvailableException exception)
-		{
-			exception.Redirect();
-		}
+		Movie = await AnonymousHttpClient.Client.GetFromJsonAsync<MovieDto>($"/api/Movies/{id}");
+		var shows = await AnonymousHttpClient.Client.GetFromJsonAsync<CinemaShowDto[]>($"/api/Movies/{id}/shows");
+		if (shows != null) Shows = shows.OrderBy(s => s.Start).ToArray();
 	}
 }

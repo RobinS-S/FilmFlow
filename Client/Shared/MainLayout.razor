@@ -1,72 +1,13 @@
 ﻿@inherits LayoutComponentBase
-@inject HttpClient Http
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-@using FilmFlow.Shared.Dto
 
-<nav class="navbar d-flex navbar-expand sticky-top navbar-dark" style="background: #050505;">
-    <div class="container-fluid px-5">
-        <a class="navbar-brand text-uppercase fw-bold" href="#">FilmFlow</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
-                <a class="nav-link" href="/movies">Movies</a>
-                <a class="nav-link" href="#">About</a>
-            </div>
-        </div>
-    </div>
-</nav>
+<Header/>
 <main class="flex-shrink-0">
     <div class="page container-fluid">
         <main>
-
             <article class="content px-4">
                 @Body
             </article>
         </main>
     </div>
 </main>
-
-<footer class="text-center text-white py-3 footer mt-auto" style="background: #050505;">
-    <div class="container">
-        <div class="row justify-content-center align-items-center">
-            <div class="col-md-6">
-                <ul class="list-inline mb-0">
-                    @if (socials != null)
-                    {
-                        @foreach (var social in socials)
-                        {
-                            <li class="list-inline-item">
-                                <a href="@social.Url" target="_blank">
-                                    <img style="width: 24px;" src="@social.Icon" alt="@social.SocialName" />
-                                </a>
-                            </li>
-                        }
-                    }
-                </ul>
-            </div>
-        </div>
-    </div>
-</footer>
-
-
-@code {
-    private SocialDto[]? socials;
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            socials = await Http.GetFromJsonAsync<SocialDto[]>("api/Socials");
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
-
-    }
-
-}
+<Footer/>
