@@ -10,72 +10,71 @@
 
 @if (Movie != null)
 {
-    <div class="d-flex p-3">
-        <div class="d-block w-25 ">
-            <div class="card m-4" style="width: 18rem; border: 0px; background-color: #ffffff96; padding: 0px !important;">
-                <img src="@Movie.ImageUrl" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">@Movie.Title</h5>
-                    <ul>
-                        <li>@Localizer["Category"]: @Movie.Category</li>
-                        <li>@Localizer["AgeRating"]: @Movie.MinAge</li>
-                        <li>@Localizer["Language"]: @Movie.Language</li>
-                    </ul>
-                    <p class="card-text">@Movie.Description</p>
-                </div>
-            </div>
-        </div>
-        <div class="d-block w-75">
-            <div class="d-flex justify-content-center p-3">
-                <div class="d-block text-center">
-                    <h3>@Localizer["UpcomingShow"]</h3>
-                    @if (Shows != null)
-                    {
-                        <div class="row">
-                            @foreach (var show in Shows)
-                            {
-                                <div class="card p-3 m-3" style="width: 18rem; border: 0px; background-color: #ffffff96;">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Zaal @show.CinemaHallId</h5>
-                                        <h6 class="card-subtitle mb-2 text-muted">@show.Start.ToShortDateString()</h6>
-                                        <p class="card-text">@show.Start.ToShortTimeString() - @show.End.ToShortTimeString()</p>
-                                        <a href="cinemashow/@show.Id" class="btn btn-danger">@Localizer["ReserveNow"]</a>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    }
-                    else {
-                        <h4>@Localizer["Loading"]...</h4>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="row p-3">
+		<div class="col-sm-12 col-md-6 col-lg-3">
+			<div class="card m-4" style="width: 18rem; border: 0px; background-color: #ffffff96; padding: 0px !important;">
+				<img src="@Movie.ImageUrl" class="card-img-top" alt="...">
+				<div class="card-body">
+					<h5 class="card-title">@Movie.Title</h5>
+					<ul>
+						<li>@Localizer["Category"]: @Movie.Category</li>
+						<li>@Localizer["AgeRating"]: @Movie.MinAge</li>
+						<li>@Localizer["Language"]: @Movie.Language</li>
+					</ul>
+					<p class="card-text">@Movie.Description</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-12 col-md-6 col-lg-9">
+			<div class="text-center row p-3">
+				<div class="col-12"><h3>@Localizer["UpcomingShow"]</h3></div>
+				@if (Shows != null)
+				{
+					@foreach (var show in Shows)
+					{
+						<div class="col-sm-12 col-md-12 col-lg-4">
+							<div class="card p-3 m-3" style="width: 18rem; border: 0px; background-color: #ffffff96;">
+								<div class="card-body">
+									<h5 class="card-title">Zaal @show.CinemaHallId</h5>
+									<h6 class="card-subtitle mb-2 text-muted">@show.Start.ToShortDateString()</h6>
+									<p class="card-text">@show.Start.ToShortTimeString() - @show.End.ToShortTimeString()</p>
+									<a href="cinemashow/@show.Id" class="btn btn-danger">@Localizer["ReserveNow"]</a>
+								</div>
+							</div>
+						</div>
+					}
+				}
+				else
+				{
+					<h4>@Localizer["Loading"]...</h4>
+				}
+			</div>
+		</div>
+	</div>
 }
 else
 {
-    <h4>@Localizer["Loading"]...</h4>
+	<h4>@Localizer["Loading"]...</h4>
 }
 
 @code {
-    [Parameter]
-    public long id { get; set; }
+	[Parameter]
+	public long id { get; set; }
 
-    private MovieDto? Movie;
-    private CinemaShowDto[]? Shows;
+	private MovieDto? Movie;
+	private CinemaShowDto[]? Shows;
 
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            Movie = await Http.GetFromJsonAsync<MovieDto>($"/api/Movies/{id}");
-            var shows = await Http.GetFromJsonAsync<CinemaShowDto[]>($"/api/Movies/{id}/shows");
-            if (shows != null) Shows = shows.OrderBy(s => s.Start).ToArray();
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			Movie = await Http.GetFromJsonAsync<MovieDto>($"/api/Movies/{id}");
+			var shows = await Http.GetFromJsonAsync<CinemaShowDto[]>($"/api/Movies/{id}/shows");
+			if (shows != null) Shows = shows.OrderBy(s => s.Start).ToArray();
+		}
+		catch (AccessTokenNotAvailableException exception)
+		{
+			exception.Redirect();
+		}
+	}
 }
