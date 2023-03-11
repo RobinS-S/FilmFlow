@@ -97,6 +97,15 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create reservation.
+        /// </summary>
+        public static string CreateReservation {
+            get {
+                return ResourceManager.GetString("CreateReservation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Experience the magic of cinema like never before at FilmFlow, where every frame tells a story and every moment takes you on a journey..
         /// </summary>
         public static string IntroText1 {
@@ -147,15 +156,6 @@ namespace FilmFlow.Client.Resources {
         public static string NoMoviesMatchinYourSearchCriterea {
             get {
                 return ResourceManager.GetString("NoMoviesMatchinYourSearchCriterea", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Pay.
-        /// </summary>
-        public static string Pay {
-            get {
-                return ResourceManager.GetString("Pay", resourceCulture);
             }
         }
         

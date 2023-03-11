@@ -1,7 +1,7 @@
 ﻿using FilmFlow.API.Auth;
 using FilmFlow.API.Data.Entities;
-using FilmFlow.API.Data.Enums;
 using FilmFlow.API.Misc;
+using FilmFlow.Shared.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace FilmFlow.API.Data
@@ -96,47 +96,10 @@ namespace FilmFlow.API.Data
                 }
             }
 
+            var show = shows.ElementAt(0);
             var reservations = new List<Reservation>
             {
-                // Reservations for show 1 (cinema hall 1)
-                new Reservation(shows[0], halls[0].Rows.ElementAt(1), null, true, TarriffType.NORMAL, 1),
-                new Reservation(shows[0], halls[0].Rows.ElementAt(2), null, false, TarriffType.CHILDREN, 2),
-    
-                // Reservations for show 2 (cinema hall 2)
-                new Reservation(shows[1], halls[1].Rows.ElementAt(3), null, true, TarriffType.NORMAL, 3),
-                new Reservation(shows[1], halls[1].Rows.ElementAt(2), null, false, TarriffType.CHILDREN, 4),
-    
-                // Reservations for show 3 (cinema hall 3)
-                new Reservation(shows[2], halls[2].Rows.ElementAt(3), null, true, TarriffType.NORMAL, 5),
-                new Reservation(shows[2], halls[2].Rows.ElementAt(8), null, false, TarriffType.CHILDREN, 4),
-    
-                // Reservations for show 4 (cinema hall 1)
-                new Reservation(shows[3], halls[0].Rows.ElementAt(2), null, true, TarriffType.NORMAL, 5),
-                new Reservation(shows[3], halls[0].Rows.ElementAt(2), null, false, TarriffType.CHILDREN, 4),
-        
-                // Reservations for show 5 (cinema hall 2)
-                new Reservation(shows[4], halls[1].Rows.ElementAt(2), null, true, TarriffType.NORMAL, 5),
-                new Reservation(shows[4], halls[1].Rows.ElementAt(4), null, false, TarriffType.CHILDREN, 4),
-    
-                // Reservations for show 6 (cinema hall 3)
-                new Reservation(shows[5], halls[2].Rows.ElementAt(2), null, true, TarriffType.NORMAL, 5),
-                new Reservation(shows[5], halls[2].Rows.ElementAt(5), null, false, TarriffType.CHILDREN, 4),
-        
-                // Reservations for show 7 (cinema hall 1)
-                new Reservation(shows[6], halls[0].Rows.ElementAt(2), null, true, TarriffType.NORMAL, 5),
-                new Reservation(shows[6], halls[0].Rows.ElementAt(2), null, false, TarriffType.CHILDREN, 4),
-    
-                // Reservations for show 8 (cinema hall 2)
-                new Reservation(shows[7], halls[1].Rows.ElementAt(2), null, true, TarriffType.NORMAL, 5),
-                new Reservation(shows[7], halls[1].Rows.ElementAt(4), null, false, TarriffType.CHILDREN, 4),
-    
-                // Reservations for show 9 (cinema hall 3)
-                new Reservation(shows[8], halls[2].Rows.ElementAt(2), null, true, TarriffType.NORMAL, 5),
-                new Reservation(shows[8], halls[2].Rows.ElementAt(5), null, false, TarriffType.CHILDREN, 4),
-    
-                // Reservations for show 10 (cinema hall 1)
-                new Reservation(shows[9], halls[0].Rows.ElementAt(2), null, true, TarriffType.NORMAL, 5),
-                new Reservation(shows[9], halls[0].Rows.ElementAt(2), null, false, TarriffType.CHILDREN, 4)
+                new Reservation(show, new List<ReservationSeat>() { new ReservationSeat(show.CinemaHall.Rows.ElementAt(1).Seats.ElementAt(3), TarriffType.NORMAL) }, false, user)
             };
 
             var socials = new List<Social>
@@ -145,20 +108,6 @@ namespace FilmFlow.API.Data
                 new Social("Facebook", "https://www.facebook.com/avans/?locale=nl_NL", "https://cdn-icons-png.flaticon.com/512/733/733547.png"),
 				new Social("Linkedin", "https://nl.linkedin.com/school/avans-hogeschool/", "https://cdn-icons-png.flaticon.com/512/3536/3536505.png")
 			};
-
-            var random = new Random();
-            foreach (Reservation r in reservations)
-            {
-                if(random.Next(100) > 70)
-                {
-                    r.Ticket = new ShowTicket("Kiosk");
-                }
-                else
-                {
-                    r.Ticket = new ShowTicket("Kassiere Baas");
-                    r.User = user;
-                }
-            }
 
             dbContext.CinemaHalls.AddRange(halls);
             dbContext.Movies.AddRange(movies);

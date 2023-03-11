@@ -16,6 +16,9 @@ namespace FilmFlow.API.Data.Configuration
 
             builder.HasOne(chr => chr.Hall)
                 .WithMany(ch => ch.Rows);
+
+            builder.HasMany(chr => chr.Seats)
+                .WithOne(chrs => chrs.ParentRow);
         }
     }
 }

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System.Reflection.Emit;
 using System.Reflection;
 using FilmFlow.API.Data.Entities;
 
@@ -17,7 +16,10 @@ namespace FilmFlow.API.Data
         }
 
         public DbSet<CinemaHall> CinemaHalls { get; set; } = null!;
-        public DbSet<CinemaHallRow> CinemaHallsRows { get; set; } = null!;
+
+        public DbSet<CinemaHallRow> CinemaHallRows { get; set; } = null!;
+
+        public DbSet<CinemaHallRowSeat> CinemaHallRowSeats { get; set; } = null!;
 
         public DbSet<CinemaShow> CinemaShows { get; set; } = null!;
 

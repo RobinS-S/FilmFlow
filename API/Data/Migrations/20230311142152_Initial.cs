@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FilmFlow.API.Migrations
+namespace FilmFlow.API.Data.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -150,7 +150,7 @@ namespace FilmFlow.API.Migrations
                     MinAge = table.Column<int>(type: "int", nullable: false),
                     Language = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ImageUrl = table.Column<string>(type: "longtext", nullable: false)
+                    ImageUrl = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -201,6 +201,25 @@ namespace FilmFlow.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ShowTickets", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Socials",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    SocialName = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Url = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Icon = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Socials", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -337,7 +356,6 @@ namespace FilmFlow.API.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    RowChairsTotal = table.Column<int>(type: "int", nullable: false),
                     RowId = table.Column<int>(type: "int", nullable: false),
                     HallId = table.Column<long>(type: "bigint", nullable: false)
                 },
@@ -415,6 +433,27 @@ namespace FilmFlow.API.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "CinemaHallRowSeats",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ParentRowId = table.Column<long>(type: "bigint", nullable: false),
+                    SeatNumber = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CinemaHallRowSeats", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CinemaHallRowSeats_CinemaHallRows_ParentRowId",
+                        column: x => x.ParentRowId,
+                        principalTable: "CinemaHallRows",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Reservations",
                 columns: table => new
                 {
@@ -425,36 +464,54 @@ namespace FilmFlow.API.Migrations
                     CinemaShowId = table.Column<long>(type: "bigint", nullable: false),
                     UserId = table.Column<string>(type: "varchar(95)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TicketId = table.Column<long>(type: "bigint", nullable: true),
                     IsPaid = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    TarriffType = table.Column<int>(type: "int", nullable: false),
-                    SeatId = table.Column<int>(type: "int", nullable: false),
-                    RowId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reservations", x => x.Id);
-                    table.UniqueConstraint("AK_Reservations_CinemaShowId_RowId_SeatId", x => new { x.CinemaShowId, x.RowId, x.SeatId });
                     table.ForeignKey(
                         name: "FK_Reservations_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Reservations_CinemaHallRows_RowId",
-                        column: x => x.RowId,
-                        principalTable: "CinemaHallRows",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Reservations_CinemaShows_CinemaShowId",
                         column: x => x.CinemaShowId,
                         principalTable: "CinemaShows",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "ReservationSeat",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ReservationId = table.Column<long>(type: "bigint", nullable: false),
+                    SeatId = table.Column<long>(type: "bigint", nullable: false),
+                    TarriffType = table.Column<int>(type: "int", nullable: false),
+                    TicketId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReservationSeat", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reservations_ShowTickets_TicketId",
+                        name: "FK_ReservationSeat_CinemaHallRowSeats_SeatId",
+                        column: x => x.SeatId,
+                        principalTable: "CinemaHallRowSeats",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReservationSeat_Reservations_ReservationId",
+                        column: x => x.ReservationId,
+                        principalTable: "Reservations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReservationSeat_ShowTickets_TicketId",
                         column: x => x.TicketId,
                         principalTable: "ShowTickets",
                         principalColumn: "Id");
@@ -497,6 +554,11 @@ namespace FilmFlow.API.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CinemaHallRowSeats_ParentRowId",
+                table: "CinemaHallRowSeats",
+                column: "ParentRowId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CinemaShows_CinemaHallId",
@@ -555,25 +617,35 @@ namespace FilmFlow.API.Migrations
                 columns: new[] { "SubjectId", "SessionId", "Type" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reservations_CinemaShowId",
+                table: "Reservations",
+                column: "CinemaShowId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reservations_Code",
                 table: "Reservations",
                 column: "Code");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservations_RowId",
-                table: "Reservations",
-                column: "RowId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reservations_TicketId",
-                table: "Reservations",
-                column: "TicketId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Reservations_UserId",
                 table: "Reservations",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReservationSeat_ReservationId",
+                table: "ReservationSeat",
+                column: "ReservationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReservationSeat_SeatId",
+                table: "ReservationSeat",
+                column: "SeatId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReservationSeat_TicketId",
+                table: "ReservationSeat",
+                column: "TicketId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShowTickets_Code",
@@ -612,31 +684,37 @@ namespace FilmFlow.API.Migrations
                 name: "PersistedGrants");
 
             migrationBuilder.DropTable(
-                name: "Reservations");
+                name: "ReservationSeat");
+
+            migrationBuilder.DropTable(
+                name: "Socials");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "CinemaHallRowSeats");
+
+            migrationBuilder.DropTable(
+                name: "Reservations");
+
+            migrationBuilder.DropTable(
+                name: "ShowTickets");
 
             migrationBuilder.DropTable(
                 name: "CinemaHallRows");
 
             migrationBuilder.DropTable(
-                name: "CinemaShows");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "ShowTickets");
+                name: "CinemaShows");
 
             migrationBuilder.DropTable(
                 name: "CinemaHalls");
 
             migrationBuilder.DropTable(
                 name: "Movies");
-
-            migrationBuilder.DropTable(
-                name: "Socials");
         }
     }
 }

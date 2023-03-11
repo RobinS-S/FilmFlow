@@ -64,6 +64,7 @@ namespace FilmFlow
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             builder.Services.AddScoped<CinemaHallService>();
+            builder.Services.AddScoped<CinemaHallRowService>();
             builder.Services.AddScoped<CinemaShowService>();
             builder.Services.AddScoped<MovieReviewService>();
             builder.Services.AddScoped<MovieService>();

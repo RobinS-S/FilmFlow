@@ -1,4 +1,4 @@
-﻿namespace FilmFlow.API.Data.Enums
+﻿namespace FilmFlow.Shared.Enums
 {
     public enum TarriffType
     {

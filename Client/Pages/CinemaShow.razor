@@ -1,5 +1,6 @@
 ﻿@page "/cinemashow/{id:long}"
 @using FilmFlow.Shared.Dto
+@using FilmFlow.Shared.Enums;
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using FilmFlow.Shared
@@ -9,7 +10,7 @@
 @using System.Globalization
 @inherits BaseComponent
 
-@if (Hall != null)
+@if (hall != null && seats != null)
 {
     <h3>@Localizer["ChooseYourSeats"]</h3>
     <p>@Localizer["SeatsPlanned"]: @seatsPlanned</p>
@@ -17,59 +18,64 @@
 
         @foreach (var row in seats)
         {
-            <div class="d-flex flex-row justify-content-center align-items-center">
+        <div class="d-flex flex-row justify-content-center align-items-center">
                 @foreach (var seat in row.Value)
                 {
-                    <img src="@GetSeatImage(row.Key, seat.Key)" @onclick="() => ToggleSelected(row.Key, seat.Key)" />
+                <img src="@GetSeatImage(row.Key, seat.Key)" @onclick="() => ToggleSelected(row.Key, seat.Key)" class="cinema-show-seat"/>
                 }
             </div>
         }
     </div>
-    <button @onclick="Pay" disabled="@(seatsPlanned == 0)">@Localizer["Pay"]</button>
+    <button @onclick="CreateReservation" disabled="@(seatsPlanned == 0)">@Localizer["CreateReservation"]</button>
 }
 
 @code {
     [Parameter]
     public long id { get; set; }
 
-    private CinemaHallDto? Hall;
-    private CinemaShowDto? Show;
+    private CinemaHallDto? hall;
+    private CinemaShowDto? show;
     private int seatsPlanned;
-    private Dictionary<int, Dictionary<int, string>> seats = new Dictionary<int, Dictionary<int, string>>();
+    private Dictionary<int, Dictionary<int, string>>? seats;
+    private List<ReservationSeatDto>? reservedSeats;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            Show = await Http.GetFromJsonAsync<CinemaShowDto>($"/api/cinemashows/{id}");
-            if (Show != null)
+            show = await Http.GetFromJsonAsync<CinemaShowDto>(ApiCallUrls.CinemaShowById(id));
+            reservedSeats = await Http.GetFromJsonAsync<List<ReservationSeatDto>>(ApiCallUrls.ReservedSeatsForShow(id));
+            if(show != null)
             {
-                Hall = await Http.GetFromJsonAsync<CinemaHallDto>($"/api/cinemahalls/{Show.CinemaHallId}");
+                hall = await Http.GetFromJsonAsync<CinemaHallDto>(ApiCallUrls.CinemaHallById(show.CinemaHallId));
+
+                if (hall != null)
+                {
+                    seats = new Dictionary<int, Dictionary<int, string>>();
+                    foreach (CinemaHallRowDto row in hall.Rows)
+                    {
+                        seats.Add(row.RowId, new Dictionary<int, string>());
+                        foreach(var chair in row.Seats)
+                        {
+                            seats[row.RowId].Add(chair.SeatNumber, "");
+                        }
+                    }
+                }
             }
         }
         catch (AccessTokenNotAvailableException exception)
         {
             exception.Redirect();
         }
-        if (Hall != null)
-        {
-            int row = 1;
-            foreach (CinemaHallRowDto rows in Hall.Rows)
-            {
-                seats.Add(row, new Dictionary<int, string>());
-                for (int i = 0; i < rows.RowChairsTotal; i++)
-                {
-                    int seat = i + 1;
-                    seats[row].Add(i, "");
-                }
-                row++;
-            }
-        }
     }
 
     private string GetSeatImage(int row, int seat)
     {
-        if (seats.TryGetValue(row, out var seatNumbers) && seatNumbers[seat] == "")
+        if (seats == null || reservedSeats == null)
+        {
+            return "";
+        }
+        if (seats.TryGetValue(row, out var seatNumbers) && seatNumbers[seat] == "" && !reservedSeats.Any(rs => rs.Seat.ParentRowId == row && rs.Seat.SeatNumber == seat))
         {
             return "img/seat-available.png";
         }
@@ -85,6 +91,10 @@
 
     private void ToggleSelected(int row, int seat)
     {
+        if (seats == null || reservedSeats == null || reservedSeats.Any(rs => rs.Seat.ParentRowId == row && rs.Seat.SeatNumber == seat))
+        {
+            return;
+        }
         if (seats.TryGetValue(row, out var seatNumbers) && seatNumbers.TryGetValue(seat, out var isSelected))
         {
             if (isSelected == "")
@@ -98,34 +108,31 @@
                 seatsPlanned--;
             }
             StateHasChanged();
-            Console.WriteLine($"Seats planned: {seatsPlanned}");
         }
     }
 
-    private async Task Pay()
+    private async Task CreateReservation()
     {
-        string[] selectedSeats = new string[seats.Count];
-        int index = 0;
-        foreach (KeyValuePair<int, Dictionary<int, string>> row in seats)
+        if (hall == null || seats == null)
         {
-            foreach (KeyValuePair<int, string> seat in row.Value)
-            {
-                if (seat.Value != "")
-                {
-                    Console.WriteLine($"Row {row.Key} Seat {seat.Key}: {seat.Value}");
-                    string seatInfo = $"Row {row.Key}, Seat {seat.Key}";
-                    selectedSeats[index] = seatInfo;
-                    index++;
-                }
-            }
+            return;
         }
-        string[] selectedSeatsArray = selectedSeats.ToArray(); //occupiedseats array to pass trough paymodule
+        var selectedRows = seats.Where(row => row.Value.Any(s => s.Value != ""));
+        var takenSeats = selectedRows.SelectMany(r => r.Value.Where(rv => rv.Value != "").Select(st => new CreateReservationSeatDto() { SeatId = hall.Rows.Single(hr => hr.RowId == r.Key).Seats.Single(hs => hs.SeatNumber == st.Key).Id, Tarriff = TarriffType.NORMAL }));
+        var createReservationDto = new CreateReservationDto() { CinemaShowId = id, Seats = takenSeats.ToList() };
 
-        //to paymodule
         if (JSRuntime != null)
         {
-            Console.WriteLine($"Selectedseats {selectedSeatsArray}");
-            await JSRuntime.InvokeVoidAsync("alert", "Betaald!");
+            var response = await Http.PostAsJsonAsync(ApiCallUrls.ReservationForCinemaShow(id), createReservationDto);
+            var createdReservation = await response.Content.ReadFromJsonAsync<ReservationDto>();
+            if(createdReservation != null)
+            {
+                await JSRuntime.InvokeVoidAsync("alert", $"Gereserveerd onder id {createdReservation.Id}");
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("alert", "Reservering mislukt");
+            }
         }
     }
 

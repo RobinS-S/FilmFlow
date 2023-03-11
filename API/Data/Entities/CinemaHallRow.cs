@@ -4,7 +4,7 @@ namespace FilmFlow.API.Data.Entities
 {
     public class CinemaHallRow : Entity
     {
-        public int RowChairsTotal { get; set; }
+        public ICollection<CinemaHallRowSeat> Seats { get; set; } = null!;
 
         public int RowId { get; set; }
 
@@ -18,7 +18,7 @@ namespace FilmFlow.API.Data.Entities
 
         public CinemaHallRow(int rowChairsTotal, int rowId)
         {
-            RowChairsTotal = rowChairsTotal;
+            Seats = Enumerable.Range(1, rowChairsTotal).Select(i => new CinemaHallRowSeat(i, this)).ToList();
             RowId = rowId;
         }
     }

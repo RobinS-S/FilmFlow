@@ -8,24 +8,24 @@ namespace FilmFlow.API.Misc
     {
         public MappingProfiles()
         {
-            CreateMap<MovieReview, MovieReviewDto>()
-                .ReverseMap();
+            CreateMap<MovieReview, MovieReviewDto>();
 
-            CreateMap<Movie, MovieDto>()
-                .ReverseMap();
+            CreateMap<Movie, MovieDto>();
 
-            CreateMap<CinemaHall, CinemaHallDto>()
-                .ReverseMap();
+            CreateMap<CinemaHall, CinemaHallDto>();
 
-            CreateMap<CinemaHallRow, CinemaHallRowDto>()
-                .ReverseMap();
+            CreateMap<CinemaHallRowSeat, CinemaHallRowSeatDto>();
 
-            CreateMap<CinemaShow, CinemaShowDto>()
-                .ReverseMap();
+            CreateMap<CinemaHallRow, CinemaHallRowDto>();
+
+            CreateMap<CinemaShow, CinemaShowDto>();
 
             CreateMap<ApplicationUser, UserProfileDto>();
 
+            CreateMap<ReservationSeat, ReservationSeatDto>();
             CreateMap<Social, SocialDto>();
+
+            CreateMap<Reservation, ReservationDto>();
         }
     }
 }

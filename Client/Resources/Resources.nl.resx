@@ -129,6 +129,9 @@
   <data name="ChooseYourSeats" xml:space="preserve">
     <value>Kies je stoelen</value>
   </data>
+  <data name="CreateReservation" xml:space="preserve">
+    <value>Plaats reservering</value>
+  </data>
   <data name="IntroText1" xml:space="preserve">
     <value>Ervaar de magie van film als nooit tevoren bij FilmFlow, waar elk beeld een verhaal vertelt en elk moment u meeneemt als een reis.</value>
   </data>
@@ -146,9 +149,6 @@
   </data>
   <data name="NoMoviesMatchinYourSearchCriterea" xml:space="preserve">
     <value>Er zijn geen films gevonden</value>
-  </data>
-  <data name="Pay" xml:space="preserve">
-    <value>Betaal</value>
   </data>
   <data name="ReserveNow" xml:space="preserve">
     <value>Reserveer nu</value>
