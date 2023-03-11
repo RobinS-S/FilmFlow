@@ -1,4 +1,3 @@
-using FilmFlow.Client;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -16,11 +15,11 @@ namespace FilmFlow.Client
             builder.Services.AddHttpClient("FilmFlow.Client", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
                 .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
-            // Supply HttpClient instances that include access tokens when making requests to the server project
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("FilmFlow.Client"));
-
             builder.Services.AddApiAuthorization();
 
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");     
+            
             await builder.Build().RunAsync();
         }
     }

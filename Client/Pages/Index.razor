@@ -1,17 +1,21 @@
 ﻿@page "/"
+@inherits BaseComponent
+@using System.Globalization
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Home</PageTitle>
 
 <div class="p-5">
     <div style="border-left: 7px solid #050505;">
         <div class="mx-4">
             <h2 class="fw-bold text-uppercase ">FilmFlow</h2>
             <p class="fw-normal">
-                Experience the magic of cinema like never before at FilmFlow, <br /> where every frame tells a story and every moment takes you on a journey.
+                @Localizer["IntroText1"]
             </p>
         </div>
     </div>
     <a class="btn btn-danger fw-bold text-uppercase" type="button" href="/movies">
-        Browse movies 
-    </a>
+        @Localizer["BrowseMovies"]
+    </a>    
 </div>
+
+<p>Language: @CultureInfo.CurrentCulture</p>

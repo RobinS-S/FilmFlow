@@ -3,26 +3,29 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using FilmFlow.Shared
+@using Microsoft.Extensions.Localization;
 @inject HttpClient Http
 @inject IJSRuntime JSRuntime
+@using System.Globalization
+@inherits BaseComponent
 
 @if (Hall != null)
 {
-    <h3>Choose your seats</h3>
-    <p>Seats planned: @seatsPlanned</p>
+    <h3>@Localizer["ChooseYourSeats"]</h3>
+    <p>@Localizer["SeatsPlanned"]: @seatsPlanned</p>
     <div class="card-body">
-    
-    @foreach (var row in seats)
-    {
+
+        @foreach (var row in seats)
+        {
             <div class="d-flex flex-row justify-content-center align-items-center">
-            @foreach (var seat in row.Value)
-            {
-                <img src="@GetSeatImage(row.Key, seat.Key)" @onclick="() => ToggleSelected(row.Key, seat.Key)" />
-            }
-        </div>
-    }
+                @foreach (var seat in row.Value)
+                {
+                    <img src="@GetSeatImage(row.Key, seat.Key)" @onclick="() => ToggleSelected(row.Key, seat.Key)" />
+                }
+            </div>
+        }
     </div>
-    <button @onclick="Pay" disabled="@(seatsPlanned == 0)">Pay</button>
+    <button @onclick="Pay" disabled="@(seatsPlanned == 0)">@Localizer["Pay"]</button>
 }
 
 @code {
@@ -39,7 +42,7 @@
         try
         {
             Show = await Http.GetFromJsonAsync<CinemaShowDto>($"/api/cinemashows/{id}");
-            if(Show != null)
+            if (Show != null)
             {
                 Hall = await Http.GetFromJsonAsync<CinemaHallDto>($"/api/cinemahalls/{Show.CinemaHallId}");
             }
@@ -75,10 +78,10 @@
             return "img/seat-selected.png";
         }
         else
-        {            
+        {
             return "img/seat-not-available.png";
         }
-    }    
+    }
 
     private void ToggleSelected(int row, int seat)
     {
@@ -86,7 +89,7 @@
         {
             if (isSelected == "")
             {
-                seats[row][seat] = "selected";                
+                seats[row][seat] = "selected";
                 seatsPlanned++;
             }
             else if (isSelected == "selected")
@@ -125,4 +128,5 @@
             await JSRuntime.InvokeVoidAsync("alert", "Betaald!");
         }
     }
+
 }
