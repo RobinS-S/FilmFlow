@@ -1,4 +1,8 @@
 ﻿@inherits LayoutComponentBase
+@inject HttpClient Http
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using FilmFlow.Shared.Dto
 
 <nav class="navbar d-flex navbar-expand sticky-top navbar-dark" style="background: #050505;">
     <div class="container-fluid px-5">
@@ -23,3 +27,46 @@
         </article>
     </main>
 </div>
+
+<footer class="bg-dark text-center text-white py-3">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-6 mb-3 mb-md-0">
+                <h5 class="text-uppercase">Follow us on:</h5>
+            </div>
+            <div class="col-md-6">
+                <ul class="list-inline mb-0">
+                    @if(Socials != null)
+                    {
+                        @foreach (var social in socials)
+                        {
+                        <li class="list-inline-item">
+                            <a href="@social.Url" target="_blank">
+                                <i class="@social.Icon"></i>
+                            </a>
+                        </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+@code {
+    private List<SocialDto>? Socials;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var socials = await Http.GetFromJsonAsync<CinemaShowDto[]>($"/api/Socials");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+
+    }
+
+}
