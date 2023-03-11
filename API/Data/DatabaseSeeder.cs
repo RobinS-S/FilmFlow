@@ -139,6 +139,13 @@ namespace FilmFlow.API.Data
                 new Reservation(shows[9], halls[0].Rows.ElementAt(2), null, false, TarriffType.CHILDREN, 4)
             };
 
+            var socials = new List<Social>
+            {
+                new Social("Instagram", "https://www.instagram.com/avanshogeschool/", "https://cdn-icons-png.flaticon.com/512/174/174855.png"),
+                new Social("Facebook", "https://www.facebook.com/avans/?locale=nl_NL", "https://cdn-icons-png.flaticon.com/512/733/733547.png"),
+				new Social("Linkedin", "https://nl.linkedin.com/school/avans-hogeschool/", "https://cdn-icons-png.flaticon.com/512/3536/3536505.png")
+			};
+
             var random = new Random();
             foreach (Reservation r in reservations)
             {
@@ -158,8 +165,9 @@ namespace FilmFlow.API.Data
             dbContext.MovieReviews.AddRange(reviews);
             dbContext.CinemaShows.AddRange(shows);
             dbContext.Reservations.AddRange(reservations);
+            dbContext.Socials.AddRange(socials);
 
-            await dbContext.SaveChangesAsync();
+			await dbContext.SaveChangesAsync();
         }
     }
 }
