@@ -6,6 +6,7 @@
 @inject NavigationManager NavigationHelper
 @using System.Web
 @inject HttpClient Http
+@inherits BaseComponent
 
 @if (Movie != null)
 {
@@ -16,9 +17,9 @@
                 <div class="card-body">
                     <h5 class="card-title">@Movie.Title</h5>
                     <ul>
-                        <li>Categorie: @Movie.Category</li>
-                        <li>Minimale leeftijd: @Movie.MinAge</li>
-                        <li>Taal: @Movie.Language</li>
+                        <li>@Localizer["Category"]: @Movie.Category</li>
+                        <li>@Localizer["AgeRating"]: @Movie.MinAge</li>
+                        <li>@Localizer["Language"]: @Movie.Language</li>
                     </ul>
                     <p class="card-text">@Movie.Description</p>
                 </div>
@@ -27,7 +28,7 @@
         <div class="d-block w-75">
             <div class="d-flex justify-content-center p-3">
                 <div class="d-block text-center">
-                    <h3>opkomende zalen/tijden</h3>
+                    <h3>@Localizer["UpcomingShow"]</h3>
                     @if (Shows != null)
                     {
                         <div class="row">
@@ -38,14 +39,14 @@
                                         <h5 class="card-title">Zaal @show.CinemaHallId</h5>
                                         <h6 class="card-subtitle mb-2 text-muted">@show.Start.ToShortDateString()</h6>
                                         <p class="card-text">@show.Start.ToShortTimeString() - @show.End.ToShortTimeString()</p>
-                                        <a href="cinemashow/@show.Id" class="btn btn-danger">Reserveer nu</a>
+                                        <a href="cinemashow/@show.Id" class="btn btn-danger">@Localizer["ReserveNow"]</a>
                                     </div>
                                 </div>
                             }
                         </div>
                     }
                     else {
-                        <h4>Loading...</h4>
+                        <h4>@Localizer["Loading"]...</h4>
                     }
                 </div>
             </div>
@@ -54,7 +55,7 @@
 }
 else
 {
-    <h4>Loading...</h4>
+    <h4>@Localizer["Loading"]...</h4>
 }
 
 @code {

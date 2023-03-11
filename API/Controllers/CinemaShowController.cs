@@ -43,7 +43,7 @@ namespace FilmFlow.API.Controllers
         }
 
         [HttpGet("{id}/reserved")]
-        [ProducesResponseType(typeof(CinemaHallDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<ReservationSeatDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetReservedSeatsByShowId(long id)
         {
@@ -51,7 +51,7 @@ namespace FilmFlow.API.Controllers
 
             if (seats == null)
             {
-                return NotFound();
+                return Ok(new List<ReservationSeatDto>());
             }
 
             var cinemaHallDto = mapper.Map<IEnumerable<ReservationSeatDto>>(seats);

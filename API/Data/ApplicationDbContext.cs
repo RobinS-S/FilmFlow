@@ -31,7 +31,9 @@ namespace FilmFlow.API.Data
 
         public DbSet<MovieReview> MovieReviews { get; set; } = null!;
 
-        protected override void OnModelCreating(ModelBuilder builder)
+		public DbSet<Social> Socials { get; set; } = null!;
+
+		protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
