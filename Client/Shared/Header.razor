@@ -1,4 +1,7 @@
 ﻿@inherits BaseComponent
+@using System.Globalization;
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 <nav class="navbar d-flex navbar-expand sticky-top navbar-dark" style="background: #050505;">
     <div class="container-fluid px-5">
@@ -11,7 +14,40 @@
                 <a class="nav-link active" aria-current="page" href="#">@Localizer["Home"]</a>
                 <a class="nav-link" href="/movies">@Localizer["Movies"]</a>
                 <a class="nav-link" href="#">About</a>
+                <div class="d-flex align-items-center ms-auto">
+                    <select class="form-select form-select-sm text-light" aria-label="Language" @bind="selectedLanguage" style="background-color: #050505;">
+                        <option value="en-US">English</option>
+                        <option value="nl-NL">Nederlands</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
 </nav>
+
+@code {
+    private string browserLanguage = "en-US";
+    private string selectedLanguage
+    {
+        get => browserLanguage;
+        set
+        {
+            if (value == browserLanguage) return;
+            #pragma warning disable
+            ChangeLanguage(value);
+            #pragma warning restore
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var lang = await JSRuntime.InvokeAsync<string?>("localStorage.getItem", "language") ?? "en-US";
+        browserLanguage = lang ?? CultureInfo.CurrentCulture.ToString();
+    }
+
+    private async Task ChangeLanguage(string value)
+    {
+        await JSRuntime.InvokeVoidAsync("localStorage.setItem", "language", value ?? "en-US");
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+}
