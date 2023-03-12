@@ -129,6 +129,9 @@
   <data name="ChooseYourSeats" xml:space="preserve">
     <value>Kies je stoelen</value>
   </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Contact</value>
+  </data>
   <data name="CreateReservation" xml:space="preserve">
     <value>Plaats reservering</value>
   </data>
@@ -149,6 +152,9 @@
   </data>
   <data name="Movies" xml:space="preserve">
     <value>Films</value>
+  </data>
+  <data name="NavigateToFilmFlow" xml:space="preserve">
+    <value>Navigeer naar FilmFlow</value>
   </data>
   <data name="NoMoviesMatchinYourSearchCriterea" xml:space="preserve">
     <value>Er zijn geen films gevonden</value>

@@ -97,6 +97,15 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Contact.
+        /// </summary>
+        public static string Contact {
+            get {
+                return ResourceManager.GetString("Contact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create reservation.
         /// </summary>
         public static string CreateReservation {
@@ -156,6 +165,15 @@ namespace FilmFlow.Client.Resources {
         public static string Movies {
             get {
                 return ResourceManager.GetString("Movies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Navigate to FilmFlow.
+        /// </summary>
+        public static string NavigateToFilmFlow {
+            get {
+                return ResourceManager.GetString("NavigateToFilmFlow", resourceCulture);
             }
         }
         
