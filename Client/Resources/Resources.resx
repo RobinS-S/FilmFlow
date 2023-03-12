@@ -130,6 +130,9 @@
     <value>Choose your seats</value>
     <comment>show</comment>
   </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Contact</value>
+  </data>
   <data name="CreateReservation" xml:space="preserve">
     <value>Create reservation</value>
   </data>
@@ -150,6 +153,9 @@
   </data>
   <data name="Movies" xml:space="preserve">
     <value>Movies</value>
+  </data>
+  <data name="NavigateToFilmFlow" xml:space="preserve">
+    <value>Navigate to FilmFlow</value>
   </data>
   <data name="NoMoviesMatchinYourSearchCriterea" xml:space="preserve">
     <value>No movies matching your search criterea</value>
