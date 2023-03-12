@@ -1,11 +1,18 @@
-﻿@using Microsoft.Extensions.Localization;
+﻿@using FilmFlow.Client.Auth.Interfaces;
+@using Microsoft.Extensions.Localization;
 @inject IStringLocalizerFactory localizerFactory
+@inject IAnonymousHttpClient anonymousHttpClient
+@inject IAuthorizedHttpClient authorizedHttpClient
 
 @code {
     public IStringLocalizer Localizer = null!;
+    public IAnonymousHttpClient AnonymousHttpClient = null!;
+    public IAuthorizedHttpClient AuthorizedHttpClient = null!;
 
     protected override void OnInitialized()
     {
         Localizer = localizerFactory.Create("FilmFlow.Client.Resources", "FilmFlow.Client");
+        AnonymousHttpClient = anonymousHttpClient;
+        AuthorizedHttpClient = authorizedHttpClient;
     }
 }

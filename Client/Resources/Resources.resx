@@ -133,6 +133,9 @@
   <data name="CreateReservation" xml:space="preserve">
     <value>Create reservation</value>
   </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
   <data name="IntroText1" xml:space="preserve">
     <value>Experience the magic of cinema like never before at FilmFlow, where every frame tells a story and every moment takes you on a journey.</value>
   </data>
@@ -150,6 +153,12 @@
   </data>
   <data name="NoMoviesMatchinYourSearchCriterea" xml:space="preserve">
     <value>No movies matching your search criterea</value>
+  </data>
+  <data name="ReservationCreated" xml:space="preserve">
+    <value>Reservation created with ID {0}</value>
+  </data>
+  <data name="ReservationCreationFailed" xml:space="preserve">
+    <value>Creation of reservation failed</value>
   </data>
   <data name="ReserveNow" xml:space="preserve">
     <value>Reserve now</value>

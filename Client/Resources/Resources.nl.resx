@@ -132,8 +132,11 @@
   <data name="CreateReservation" xml:space="preserve">
     <value>Plaats reservering</value>
   </data>
+  <data name="Home" xml:space="preserve">
+    <value>Hoofdpagina</value>
+  </data>
   <data name="IntroText1" xml:space="preserve">
-    <value>Ervaar de magie van film als nooit tevoren bij FilmFlow, waar elk beeld een verhaal vertelt en elk moment u meeneemt als een reis.</value>
+    <value>Ervaar de magie van films als nooit tevoren bij FilmFlow, waar elk beeld een verhaal vertelt en elk moment u meeneemt als een reis.</value>
   </data>
   <data name="Language" xml:space="preserve">
     <value>Taal</value>
@@ -149,6 +152,12 @@
   </data>
   <data name="NoMoviesMatchinYourSearchCriterea" xml:space="preserve">
     <value>Er zijn geen films gevonden</value>
+  </data>
+  <data name="ReservationCreated" xml:space="preserve">
+    <value>Reservering gemaakt met ID {0}</value>
+  </data>
+  <data name="ReservationCreationFailed" xml:space="preserve">
+    <value>Reservering maken mislukt</value>
   </data>
   <data name="ReserveNow" xml:space="preserve">
     <value>Reserveer nu</value>

@@ -1,14 +1,11 @@
 ﻿@page "/cinemashow/{id:long}"
-@using FilmFlow.Shared.Dto
+@using FilmFlow.Shared.Dto;
 @using FilmFlow.Shared.Enums;
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-@using FilmFlow.Shared
-@using Microsoft.Extensions.Localization;
-@inject HttpClient Http
-@inject IJSRuntime JSRuntime
-@using System.Globalization
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 @inherits BaseComponent
+@inject IJSRuntime JSRuntime
+@attribute [Authorize]
 
 @if (hall != null && seats != null)
 {
@@ -18,7 +15,7 @@
 
         @foreach (var row in seats)
         {
-        <div class="d-flex flex-row justify-content-center align-items-center">
+            <div class="d-flex flex-row justify-content-center align-items-center">
                 @foreach (var seat in row.Value)
                 {
                 <img src="@GetSeatImage(row.Key, seat.Key)" @onclick="() => ToggleSelected(row.Key, seat.Key)" class="cinema-show-seat"/>
@@ -41,31 +38,24 @@
 
     protected override async Task OnInitializedAsync()
     {
-        try
+        show = await AnonymousHttpClient.Client.GetFromJsonAsync<CinemaShowDto>(ApiCallUrls.CinemaShowById(id));
+        reservedSeats = await AnonymousHttpClient.Client.GetFromJsonAsync<List<ReservationSeatDto>>(ApiCallUrls.ReservedSeatsForShow(id));
+        if(show != null)
         {
-            show = await Http.GetFromJsonAsync<CinemaShowDto>(ApiCallUrls.CinemaShowById(id));
-            reservedSeats = await Http.GetFromJsonAsync<List<ReservationSeatDto>>(ApiCallUrls.ReservedSeatsForShow(id));
-            if(show != null)
-            {
-                hall = await Http.GetFromJsonAsync<CinemaHallDto>(ApiCallUrls.CinemaHallById(show.CinemaHallId));
+            hall = await AnonymousHttpClient.Client.GetFromJsonAsync<CinemaHallDto>(ApiCallUrls.CinemaHallById(show.CinemaHallId));
 
-                if (hall != null)
+            if (hall != null)
+            {
+                seats = new Dictionary<int, Dictionary<int, string>>();
+                foreach (CinemaHallRowDto row in hall.Rows)
                 {
-                    seats = new Dictionary<int, Dictionary<int, string>>();
-                    foreach (CinemaHallRowDto row in hall.Rows)
+                    seats.Add(row.RowId, new Dictionary<int, string>());
+                    foreach(var chair in row.Seats)
                     {
-                        seats.Add(row.RowId, new Dictionary<int, string>());
-                        foreach(var chair in row.Seats)
-                        {
-                            seats[row.RowId].Add(chair.SeatNumber, "");
-                        }
+                        seats[row.RowId].Add(chair.SeatNumber, "");
                     }
                 }
             }
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
         }
     }
 
@@ -123,17 +113,23 @@
 
         if (JSRuntime != null)
         {
-            var response = await Http.PostAsJsonAsync(ApiCallUrls.ReservationForCinemaShow(id), createReservationDto);
-            var createdReservation = await response.Content.ReadFromJsonAsync<ReservationDto>();
-            if(createdReservation != null)
+            try
             {
-                await JSRuntime.InvokeVoidAsync("alert", $"Gereserveerd onder id {createdReservation.Id}");
+                var response = await AuthorizedHttpClient.Client.PostAsJsonAsync(ApiCallUrls.ReservationForCinemaShow(id), createReservationDto);
+                var createdReservation = await response.Content.ReadFromJsonAsync<ReservationDto>();
+                if (createdReservation != null)
+                {
+                    await JSRuntime.InvokeVoidAsync("alert", Localizer["ReservationCreated", createdReservation.Id]);
+                }
+                else
+                {
+                    await JSRuntime.InvokeVoidAsync("alert", Localizer["ReservationCreationFailed"]);
+                }
             }
-            else
+            catch (AccessTokenNotAvailableException exception)
             {
-                await JSRuntime.InvokeVoidAsync("alert", "Reservering mislukt");
+                exception.Redirect();
             }
         }
     }
-
 }

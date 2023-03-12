@@ -1,0 +1,34 @@
+﻿@using FilmFlow.Shared.Dto;
+@inherits BaseComponent
+
+<footer class="text-center text-white py-3 footer mt-auto" style="background: #050505;">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-6">
+                <ul class="list-inline mb-0">
+                    @if (socials != null)
+                    {
+                        @foreach (var social in socials)
+                        {
+                            <li class="list-inline-item">
+                                <a href="@social.Url" target="_blank">
+                                    <img style="width: 24px;" src="@social.Icon" alt="@social.SocialName" />
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+@code {
+    private SocialDto[]? socials;
+
+    protected override async Task OnInitializedAsync()
+    {
+        socials = await AnonymousHttpClient.Client.GetFromJsonAsync<SocialDto[]>("api/Socials");
+    }
+}

@@ -1,9 +1,5 @@
 ﻿@page "/movies"
 @using FilmFlow.Shared.Dto
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-@using FilmFlow.Shared
-@inject HttpClient Http
 @inherits BaseComponent
 
 <div class="p-3">
@@ -51,24 +47,24 @@
 	</div>
 </div>
 
-
 @if (movies != null)
 {
-
-	<div class="d-flex p-3 row">
+	<div class="row p-3">
 		@foreach (MovieDto movie in filteredMovies)
 		{
-			<div class="card m-4" style="width: 18rem; border: 0px; background-color: #ffffff96; padding: 0px !important;">
-				<img src="@movie.ImageUrl" class="card-img-top" alt="...">
-				<div class="card-body">
-					<h5 class="card-title">@movie.Title</h5>
-					<ul>
-						<li>@Localizer["Category"]: @movie.Category</li>
-						<li>@Localizer["AgeRating"]: @movie.MinAge</li>
-						<li>@Localizer["Language"]: @movie.Language</li>
-					</ul>
-					<p class="card-text">@movie.Description</p>
-					<a href="movie/@movie.Id" class="btn btn-danger">@Localizer["MoreAboutThisMovie"]</a>
+			<div class="col-sm-12 col-md-6 col-lg-3">
+				<div class="card m-4 p-0" style="background-color: #ffffff96; max-width: 400px;">
+					<img src="@movie.ImageUrl" class="card-img-top img-fluid" alt="...">
+					<div class="card-body">
+						<h5 class="card-title">@movie.Title</h5>
+						<ul>
+							<li>@Localizer["Category"]: @movie.Category</li>
+							<li>@Localizer["AgeRating"]: @movie.MinAge</li>
+							<li>@Localizer["Language"]: @movie.Language</li>
+						</ul>
+						<p class="card-text">@movie.Description</p>
+						<a href="movie/@movie.Id" class="btn btn-danger">@Localizer["MoreAboutThisMovie"]</a>
+					</div>
 				</div>
 			</div>
 		}
@@ -129,22 +125,16 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		try
+		var movies = await AnonymousHttpClient.Client.GetFromJsonAsync<MovieDto[]>("/api/Movies");
+		if (movies != null)
 		{
-			var movies = await Http.GetFromJsonAsync<MovieDto[]>("/api/Movies");
-			if (movies != null)
-			{
-				this.movies = movies.ToList<MovieDto>();
-				ageOptions = movies.Select(m => m.MinAge).Distinct().ToArray();
-				allLanguages = movies.Select(m => m.Language).Distinct().ToArray();
-				allCategories = movies.Select(m => m.Category).Distinct().ToArray();
-			}
-		}
-		catch (AccessTokenNotAvailableException exception)
-		{
-			exception.Redirect();
+			this.movies = movies.ToList<MovieDto>();
+			ageOptions = movies.Select(m => m.MinAge).Distinct().ToArray();
+			allLanguages = movies.Select(m => m.Language).Distinct().ToArray();
+			allCategories = movies.Select(m => m.Category).Distinct().ToArray();
 		}
 	}
+
 	private void UpdateOnSearch(ChangeEventArgs args)
 	{
 		searchText = args.Value.ToString();
