@@ -119,11 +119,11 @@
                 var createdReservation = await response.Content.ReadFromJsonAsync<ReservationDto>();
                 if (createdReservation != null)
                 {
-                    await JSRuntime.InvokeVoidAsync("alert", Localizer["ReservationCreated", createdReservation.Id]);
+                    await JSRuntime.InvokeVoidAsync("alert", Localizer["ReservationCreated", createdReservation.Id].ToString());
                 }
                 else
                 {
-                    await JSRuntime.InvokeVoidAsync("alert", Localizer["ReservationCreationFailed"]);
+                    await JSRuntime.InvokeVoidAsync("alert", Localizer["ReservationCreationFailed"].ToString());
                 }
             }
             catch (AccessTokenNotAvailableException exception)
