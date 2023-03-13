@@ -57,12 +57,22 @@ namespace FilmFlow.API.Data
         {
             if (dbContext.Movies.Any()) return; // If the database has been touched, don't seed any more data
 
-            var halls = new List<CinemaHall>
-            {
-                new CinemaHall(Enumerable.Range(1, 5).Select(i => new CinemaHallRow(8, i)).ToList(), false, false),
-                new CinemaHall(Enumerable.Range(1, 8).Select(i => new CinemaHallRow(10, i)).ToList(), false, true),
-                new CinemaHall(Enumerable.Range(1, 12).Select(i => new CinemaHallRow(12, i)).ToList(), true, true),
-            };
+            var halls = new List<CinemaHall>();
+            halls.AddRange(Enumerable.Range(1, 2).Select(_ => new CinemaHall(
+                    Enumerable.Range(1, 8).Select(i => new CinemaHallRow(15, i)).ToList(),
+                    true, true)));
+
+            halls.Add(new CinemaHall(
+                    Enumerable.Range(1, 8).Select(i => new CinemaHallRow(15, i)).ToList(),
+                    false, true));
+
+            halls.Add(new CinemaHall(Enumerable.Range(1, 6).Select(i => new CinemaHallRow(10, i)).ToList(),
+                    false, true));
+
+            halls.AddRange(Enumerable.Range(1, 2).Select(_ => new CinemaHall(
+                    Enumerable.Range(1, 2).Select(i => new CinemaHallRow(10, i)).Concat(
+                        Enumerable.Range(3, 4).Select(i => new CinemaHallRow(15, i))).ToList(),
+                    false, false)));
 
             var movies = new List<Movie>
             {
@@ -83,18 +93,21 @@ namespace FilmFlow.API.Data
             };
 
             var shows = new List<CinemaShow>();
+            var random = new Random();
             foreach (var hall in halls)
             {
                 foreach (var movie in movies)
                 {
-                    for (int i = 0; i < 2; i++)
+                    for (int i = 1; i < 4; i++)
                     {
-                        var start = DateTime.Today.AddDays(i).AddHours(10);
+                        var start = DateTime.Today.AddDays(i).AddHours(2);
                         var end = start.AddHours(2);
                         shows.Add(new CinemaShow(start, end, movie, hall));
                     }
                 }
             }
+            shows.First().IsSecret = true;
+            shows.ElementAt(random.Next(0, shows.Count - 1)).IsSecret = true;
 
             var show = shows.ElementAt(0);
             var reservations = new List<Reservation>

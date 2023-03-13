@@ -6,9 +6,6 @@
         CHILDREN,
         STUDENTS,
         SENIORS,
-        GIFTCARD,
-        THREEDIMENSIONAL,
-        SECRET,
-        FREE
+        SECRET
     }
 }

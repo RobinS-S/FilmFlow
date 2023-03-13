@@ -193,6 +193,9 @@
   <data name="SeatsPlanned" xml:space="preserve">
     <value>Seats planned</value>
   </data>
+  <data name="SecretMovie" xml:space="preserve">
+    <value>Secret movie</value>
+  </data>
   <data name="SelectAgeRating" xml:space="preserve">
     <value>Select Age Rating</value>
   </data>
@@ -202,7 +205,22 @@
   <data name="SelectLanguage" xml:space="preserve">
     <value>Select Language</value>
   </data>
+  <data name="TarriffType.CHILDREN" xml:space="preserve">
+    <value>Children</value>
+  </data>
+  <data name="TarriffType.NORMAL" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="TarriffType.SECRET" xml:space="preserve">
+    <value>Secret</value>
+  </data>
+  <data name="TarriffType.STUDENTS" xml:space="preserve">
+    <value>Students</value>
+  </data>
   <data name="UpcomingShow" xml:space="preserve">
     <value>Upcoming show</value>
+  </data>
+  <data name="TarriffType.SENIORS" xml:space="preserve">
+    <value>65+</value>
   </data>
 </root>

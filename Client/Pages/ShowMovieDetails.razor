@@ -26,6 +26,8 @@
 				{
 					@foreach (var show in Shows)
 					{
+						@if(!show.IsSecret && show.Start > DateTime.Now)
+						{
 						<div class="col-sm-12 col-md-6 col-lg-4">
 							<div class="card p-3 m-3" style="background-color: #ffffff96;">
 								<div class="card-body">
@@ -36,6 +38,7 @@
 								</div>
 							</div>
 						</div>
+						}
 					}
 				}
 				else

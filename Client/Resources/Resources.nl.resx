@@ -129,9 +129,9 @@
   <data name="ChooseYourSeats" xml:space="preserve">
     <value>Kies je stoelen</value>
   </data>
-	<data name="Contact" xml:space="preserve">
+  <data name="Contact" xml:space="preserve">
     <value>Contact</value>
-	  </data>
+  </data>
   <data name="CinemaHall" xml:space="preserve">
     <value>Zaal</value>
   </data>
@@ -192,6 +192,9 @@
   <data name="SeatsPlanned" xml:space="preserve">
     <value>Stoelen gepland</value>
   </data>
+  <data name="SecretMovie" xml:space="preserve">
+    <value>Geheime film</value>
+  </data>
   <data name="SelectAgeRating" xml:space="preserve">
     <value>Selecteer leeftijd</value>
   </data>
@@ -203,5 +206,20 @@
   </data>
   <data name="UpcomingShow" xml:space="preserve">
     <value>Komende shows</value>
+  </data>
+  <data name="TarriffType.CHILDREN" xml:space="preserve">
+    <value>Kinderen</value>
+  </data>
+  <data name="TarriffType.NORMAL" xml:space="preserve">
+    <value>Normaal</value>
+  </data>
+  <data name="TarriffType.SECRET" xml:space="preserve">
+    <value>Geheim</value>
+  </data>
+  <data name="TarriffType.SENIORS" xml:space="preserve">
+    <value>65+</value>
+  </data>
+  <data name="TarriffType.STUDENTS" xml:space="preserve">
+    <value>Studenten</value>
   </data>
 </root>
