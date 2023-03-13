@@ -1,5 +1,10 @@
 ﻿@page "/"
 @inherits BaseComponent
+@using System.Web;
+@using FilmFlow.Shared.Dto;
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+@using static System.Net.WebRequestMethods;
+@using System.Collections;
 
 <PageTitle>FilmFlow</PageTitle>
 
@@ -14,6 +19,52 @@
     </div>
     <a class="btn btn-danger fw-bold text-uppercase" type="button" href="/movies">
         @Localizer["BrowseMovies"]
-    </a>    
+    </a>
 </div>
 
+@if (shows != null)
+{
+	<div class="d-flex p-3 row">
+		@if(shows != null)
+		{
+			@foreach (var show in shows)
+			{
+				<div class="col-sm-6 col-md-4 col-lg-2">
+					<div class="card p-3 m-1 text-center" style="background-color: #ffffff96;">
+						<img src="@show.Movie?.ImageUrl" class="card-img-top mx-auto" alt="..." style="max-width: 200px;">
+						<h6 class="card-title"><strong>@show.Movie?.Title</strong></h6>
+						<div class="card-body">
+							<h6 class="card-subtitle mb-2 text-muted">@show.Start.ToShortDateString()</h6>
+							<p class="card-text">Zaal @show.CinemaHallId, @show.Start.ToShortTimeString() - @show.End.ToShortTimeString()</p>
+							<a href="cinemashow/@show.Id" class="btn btn-danger btn-sm">@Localizer["ReserveNow"]</a>
+						</div>
+					</div>
+				</div>
+			}
+		}
+	</div>
+}
+else
+{
+	<p>Loading upcoming shows...</p>
+}
+
+@code {
+	private List<CinemaShowDto>? shows;
+
+	protected override async Task OnInitializedAsync()
+	{
+		DateTime startDate = DateTime.Now;
+		DateTime endDate = startDate.AddDays(7);
+	
+		try
+		{
+			shows = await AnonymousHttpClient.Client.GetFromJsonAsync<List<CinemaShowDto>>($"/api/cinemashows/byStartEnd?start={HttpUtility.UrlEncode(startDate.ToString("yyyy-MM-ddTHH:mm:ss"))}&end={HttpUtility.UrlEncode(endDate.ToString("yyyy-MM-ddTHH:mm:ss"))}");
+		}
+		catch (AccessTokenNotAvailableException exception)
+		{
+			exception.Redirect();
+		}
+		// laat alle shows gesorteerd zien met filmnaam, start/end en zaal, foto niet nodig?
+	}
+}

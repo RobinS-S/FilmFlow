@@ -56,5 +56,14 @@ namespace FilmFlow.API.Services
             await context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<List<CinemaShow>> GetByStartEndDate(DateTime start, DateTime end)
+        {
+            return await context.CinemaShows
+                .Where(cs => cs.Start >= start && cs.End <= end)
+                .OrderBy(cs => cs.Start)
+                .Include(cs => cs.Movie)
+                .ToListAsync();
+        }
     }
 }

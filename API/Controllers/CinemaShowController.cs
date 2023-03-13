@@ -5,7 +5,6 @@ using FilmFlow.Shared.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace FilmFlow.API.Controllers
 {
@@ -88,6 +87,21 @@ namespace FilmFlow.API.Controllers
             var createdReservation = mapper.Map<ReservationDto>(reservation);
             return Ok(createdReservation);
         }
-    }
 
+        [HttpGet("byStartEnd")]
+        [ProducesResponseType(typeof(List<CinemaShowDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetByStartEndDate([FromQuery] DateTime start, [FromQuery] DateTime end)
+        {
+            var shows = await cinemaShowService.GetByStartEndDate(start, end);
+
+            if (shows == null)
+            {
+                return Ok(new List<CinemaShowDto>());
+            }
+
+            var showsThisWeek = mapper.Map<List<CinemaShowDto>>(shows);
+            return Ok(showsThisWeek);
+        }
+    }
 }
