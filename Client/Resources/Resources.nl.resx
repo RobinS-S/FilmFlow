@@ -129,13 +129,11 @@
   <data name="ChooseYourSeats" xml:space="preserve">
     <value>Kies je stoelen</value>
   </data>
-<<<<<<< HEAD
-  <data name="Contact" xml:space="preserve">
+	<data name="Contact" xml:space="preserve">
     <value>Contact</value>
-=======
+	  </data>
   <data name="CinemaHall" xml:space="preserve">
     <value>Zaal</value>
->>>>>>> Niels/Tickets
   </data>
   <data name="CreateReservation" xml:space="preserve">
     <value>Plaats reservering</value>

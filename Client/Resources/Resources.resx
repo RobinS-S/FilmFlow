@@ -130,13 +130,11 @@
     <value>Choose your seats</value>
     <comment>show</comment>
   </data>
-<<<<<<< HEAD
   <data name="Contact" xml:space="preserve">
     <value>Contact</value>
-=======
+  </data>
   <data name="CinemaHall" xml:space="preserve">
     <value>Cinema Hall</value>
->>>>>>> Niels/Tickets
   </data>
   <data name="CreateReservation" xml:space="preserve">
     <value>Create reservation</value>
