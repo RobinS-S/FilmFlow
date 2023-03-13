@@ -148,7 +148,7 @@
     <value>Laden</value>
   </data>
   <data name="LoadingUpcomingShows" xml:space="preserve">
-    <value>Laden aankomende shows</value>
+    <value>Bezig met laden...</value>
   </data>
   <data name="MoreAboutThisMovie" xml:space="preserve">
     <value>Meer over deze film</value>
