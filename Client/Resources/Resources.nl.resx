@@ -129,8 +129,13 @@
   <data name="ChooseYourSeats" xml:space="preserve">
     <value>Kies je stoelen</value>
   </data>
+<<<<<<< HEAD
   <data name="Contact" xml:space="preserve">
     <value>Contact</value>
+=======
+  <data name="CinemaHall" xml:space="preserve">
+    <value>Zaal</value>
+>>>>>>> Niels/Tickets
   </data>
   <data name="CreateReservation" xml:space="preserve">
     <value>Plaats reservering</value>
@@ -165,11 +170,20 @@
   <data name="ReservationCreationFailed" xml:space="preserve">
     <value>Reservering maken mislukt</value>
   </data>
+  <data name="ReservationNr" xml:space="preserve">
+    <value>Reservering nr.</value>
+  </data>
   <data name="ReserveNow" xml:space="preserve">
     <value>Reserveer nu</value>
   </data>
+  <data name="Row" xml:space="preserve">
+    <value>Rij</value>
+  </data>
   <data name="SearchForMovies" xml:space="preserve">
     <value>Zoek films</value>
+  </data>
+  <data name="Seat" xml:space="preserve">
+    <value>Stoel</value>
   </data>
   <data name="SeatsPlanned" xml:space="preserve">
     <value>Stoelen gepland</value>

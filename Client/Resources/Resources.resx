@@ -130,8 +130,13 @@
     <value>Choose your seats</value>
     <comment>show</comment>
   </data>
+<<<<<<< HEAD
   <data name="Contact" xml:space="preserve">
     <value>Contact</value>
+=======
+  <data name="CinemaHall" xml:space="preserve">
+    <value>Cinema Hall</value>
+>>>>>>> Niels/Tickets
   </data>
   <data name="CreateReservation" xml:space="preserve">
     <value>Create reservation</value>
@@ -166,11 +171,20 @@
   <data name="ReservationCreationFailed" xml:space="preserve">
     <value>Creation of reservation failed</value>
   </data>
+  <data name="ReservationNr" xml:space="preserve">
+    <value>Reservation number</value>
+  </data>
   <data name="ReserveNow" xml:space="preserve">
     <value>Reserve now</value>
   </data>
+  <data name="Row" xml:space="preserve">
+    <value>Row</value>
+  </data>
   <data name="SearchForMovies" xml:space="preserve">
     <value>Search for movies</value>
+  </data>
+  <data name="Seat" xml:space="preserve">
+    <value>Seat</value>
   </data>
   <data name="SeatsPlanned" xml:space="preserve">
     <value>Seats planned</value>

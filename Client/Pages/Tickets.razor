@@ -1,0 +1,59 @@
+﻿@page "/tickets/{id:long}"
+@using FilmFlow.Shared.Dto;
+@using FilmFlow.Shared.Enums;
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+@inherits BaseComponent
+@attribute [Authorize]
+
+@if (true)
+{
+		<div class="row">			
+			@foreach (string reservation in reservations)
+			{
+			<div class="col m-1">
+				<div class="card" style="background-color: #ffffff96; max-width: 600px; width: 18rem;">
+					<div class="card-body">
+						<h5 class="card-title">Movie Title</h5>
+						<ul>
+							<li>@Localizer["CinemaHall"]: 1</li>
+							<li>@Localizer["Row"]: @reservation</li>
+							<li>@Localizer["Seat"]: @reservation</li>
+							<li>@Localizer["ReservationNr"]: @reservation</li>
+						</ul>
+						<div class="d-flex-row">
+							<div class="d-flex justify-content-center">
+								<img src="img/qr.png" width="185" />
+							</div>						
+						</div>
+					</div>
+				</div>
+			</div>
+			}			
+		</div>
+}
+else
+{
+	<h4>@Localizer["Loading"]...</h4>
+}
+
+@code {
+	[Parameter]
+	public long id { get; set; }
+
+	string[] reservations = { "1", "2", "3", "4", "5" }; //temp array
+
+	private ReservationDto? Reservations;
+	private Dictionary<int, Dictionary<int, string>>? tickets;
+	private List<ReservationSeatDto>? reservedSeats;
+
+	protected override async Task OnInitializedAsync()
+	{
+		//Reservations = await AnonymousHttpClient.Client.GetFromJsonAsync<ReservationDto>($"/api/reservations/{id}");
+		//var reservedSeats = await AnonymousHttpClient.Client.GetFromJsonAsync<List<ReservationSeatDto>>(ApiCallUrls.ReservedSeatsForShow(id));
+		//if (Reservations != null)
+		//{
+		//	if (reservedSeats != null) reservedSeats = reservedSeats.ToList();
+		//}
+	}
+}
