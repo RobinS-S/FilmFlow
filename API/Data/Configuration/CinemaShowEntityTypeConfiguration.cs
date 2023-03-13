@@ -25,6 +25,9 @@ namespace FilmFlow.API.Data.Configuration
 
             builder.HasMany(st => st.Reservations)
                 .WithOne(cs => cs.CinemaShow);
+
+            builder.Property(cs => cs.IsSecret)
+                .IsRequired();
         }
     }
 }

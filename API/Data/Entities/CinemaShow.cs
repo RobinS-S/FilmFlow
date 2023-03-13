@@ -16,16 +16,19 @@ namespace FilmFlow.API.Data.Entities
 
         public long CinemaHallId { get; set; }
 
+        public bool IsSecret { get; set; }
+
         public ICollection<Reservation> Reservations { get; set; } = new HashSet<Reservation>();
 
         public CinemaShow() { }
 
-        public CinemaShow(DateTime start, DateTime end, Movie movie, CinemaHall hall)
+        public CinemaShow(DateTime start, DateTime end, Movie movie, CinemaHall hall, bool isSecret = false)
         {
             Start = start;
             End = end;
             Movie = movie;
             CinemaHall = hall;
+            IsSecret = false;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿@page "/cinemashow/{id:long}"
 @using FilmFlow.Shared.Dto;
 @using FilmFlow.Shared.Enums;
+@using FilmFlow.Shared;
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 @inherits BaseComponent
@@ -16,9 +17,39 @@
         @foreach (var row in seats)
         {
             <div class="d-flex flex-row justify-content-center align-items-center">
+                <strong>@Localizer["Row"] @row.Key</strong>
                 @foreach (var seat in row.Value)
                 {
-                <img src="@GetSeatImage(row.Key, seat.Key)" @onclick="() => ToggleSelected(row.Key, seat.Key)" class="cinema-show-seat"/>
+                    <div class="text-center">
+                        <img src="@GetSeatImage(row.Key, seat.Key)" @onclick="() => ToggleSelected(row.Key, seat.Key)" class="cinema-show-seat"/>
+                        <h6>@seat.Key</h6>
+                    </div>
+                }
+            </div>
+        }
+
+
+        @foreach (var row in seats)
+        {
+            <div class="d-flex flex-row justify-content-center align-items-center">
+                @foreach (var seat in row.Value)
+                {
+                    @if (seats[row.Key][seat.Key] != "")
+                    {
+                        <div class="text-center mx-1">
+                            <strong>@Localizer["Row"] @row.Key, Seat @seat.Key</strong>
+                            <strong>Price: €@Tarriffs.GetTarriffPrice(Enum.Parse<TarriffType>(@seat.Value), hall.IsThreeDimensional) @(hall.IsThreeDimensional ? "3D" : "")</strong>
+                            @if (!show?.IsSecret ?? true)
+                            {
+                                <select @bind="seats[row.Key][seat.Key]" class="form-select form-select-sm text-light" style="background-color: #050505;">
+                                    <option value="NORMAL">@Localizer["TarriffType.NORMAL"]</option>
+                                    <option value="CHILDREN">@Localizer["TarriffType.CHILDREN"]</option>
+                                    <option value="STUDENTS">@Localizer["TarriffType.STUDENTS"]</option>
+                                    <option value="SENIORS">@Localizer["TarriffType.SENIORS"]</option>
+                                </select>
+                            }
+                        </div>
+                    }
                 }
             </div>
         }
@@ -69,7 +100,7 @@
         {
             return "img/seat-available.png";
         }
-        else if (seatNumbers?[seat] == "selected")
+        else if (seatNumbers?[seat] != "")
         {
             return "img/seat-selected.png";
         }
@@ -81,7 +112,7 @@
 
     private void ToggleSelected(int row, int seat)
     {
-        if (seats == null || reservedSeats == null || reservedSeats.Any(rs => rs.Seat.ParentRowId == row && rs.Seat.SeatNumber == seat))
+        if (seats == null || reservedSeats == null || reservedSeats.Any(rs => rs.Seat.ParentRowId == row && rs.Seat.SeatNumber == seat) || show == null)
         {
             return;
         }
@@ -89,10 +120,10 @@
         {
             if (isSelected == "")
             {
-                seats[row][seat] = "selected";
+                seats[row][seat] = show.IsSecret ? TarriffType.SECRET.ToString() : TarriffType.NORMAL.ToString();
                 seatsPlanned++;
             }
-            else if (isSelected == "selected")
+            else if (isSelected != "")
             {
                 seats[row][seat] = "";
                 seatsPlanned--;
@@ -108,7 +139,7 @@
             return;
         }
         var selectedRows = seats.Where(row => row.Value.Any(s => s.Value != ""));
-        var takenSeats = selectedRows.SelectMany(r => r.Value.Where(rv => rv.Value != "").Select(st => new CreateReservationSeatDto() { SeatId = hall.Rows.Single(hr => hr.RowId == r.Key).Seats.Single(hs => hs.SeatNumber == st.Key).Id, Tarriff = TarriffType.NORMAL }));
+        var takenSeats = selectedRows.SelectMany(r => r.Value.Where(rv => rv.Value != "").Select(st => new CreateReservationSeatDto() { SeatId = hall.Rows.Single(hr => hr.RowId == r.Key).Seats.Single(hs => hs.SeatNumber == st.Key).Id, Tarriff = Enum.Parse<TarriffType>(st.Value) }));
         var createReservationDto = new CreateReservationDto() { CinemaShowId = id, Seats = takenSeats.ToList() };
 
         if (JSRuntime != null)

@@ -286,6 +286,15 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Secret movie.
+        /// </summary>
+        public static string SecretMovie {
+            get {
+                return ResourceManager.GetString("SecretMovie", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select Age Rating.
         /// </summary>
         public static string SelectAgeRating {
@@ -309,6 +318,51 @@ namespace FilmFlow.Client.Resources {
         public static string SelectLanguage {
             get {
                 return ResourceManager.GetString("SelectLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Children.
+        /// </summary>
+        public static string TarriffType_CHILDREN {
+            get {
+                return ResourceManager.GetString("TarriffType.CHILDREN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Normal.
+        /// </summary>
+        public static string TarriffType_NORMAL {
+            get {
+                return ResourceManager.GetString("TarriffType.NORMAL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Secret.
+        /// </summary>
+        public static string TarriffType_SECRET {
+            get {
+                return ResourceManager.GetString("TarriffType.SECRET", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 65+.
+        /// </summary>
+        public static string TarriffType_SENIORS {
+            get {
+                return ResourceManager.GetString("TarriffType.SENIORS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Students.
+        /// </summary>
+        public static string TarriffType_STUDENTS {
+            get {
+                return ResourceManager.GetString("TarriffType.STUDENTS", resourceCulture);
             }
         }
         
