@@ -97,6 +97,15 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cinema Hall.
+        /// </summary>
+        public static string CinemaHall {
+            get {
+                return ResourceManager.GetString("CinemaHall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Contact.
         /// </summary>
         public static string Contact {
@@ -223,6 +232,15 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reservation number.
+        /// </summary>
+        public static string ReservationNr {
+            get {
+                return ResourceManager.GetString("ReservationNr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reserve now.
         /// </summary>
         public static string ReserveNow {
@@ -232,11 +250,29 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Row.
+        /// </summary>
+        public static string Row {
+            get {
+                return ResourceManager.GetString("Row", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search for movies.
         /// </summary>
         public static string SearchForMovies {
             get {
                 return ResourceManager.GetString("SearchForMovies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Seat.
+        /// </summary>
+        public static string Seat {
+            get {
+                return ResourceManager.GetString("Seat", resourceCulture);
             }
         }
         
