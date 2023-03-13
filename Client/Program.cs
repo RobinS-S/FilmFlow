@@ -12,6 +12,8 @@ namespace FilmFlow.Client
 {
     public class Program
     {
+        public const string LANGUAGE_KEY = "i18nextLng";
+
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -28,18 +30,14 @@ namespace FilmFlow.Client
             var host = builder.Build();
 
             var jsRuntime = host.Services.GetRequiredService<IJSRuntime>();
-            var language = await jsRuntime.InvokeAsync<string?>("localStorage.getItem", "language");
+            var language = await jsRuntime.InvokeAsync<string?>("localStorage.getItem", LANGUAGE_KEY);
             if (!string.IsNullOrEmpty(language))
             {
                 var culture = new CultureInfo(language);
-                var options = new RequestLocalizationOptions
-                {
-                    DefaultRequestCulture = new RequestCulture(culture),
-                    SupportedCultures = new List<CultureInfo> { culture },
-                    SupportedUICultures = new List<CultureInfo> { culture }
-                };
                 CultureInfo.CurrentCulture = culture;
                 CultureInfo.CurrentUICulture = culture;
+                CultureInfo.DefaultThreadCurrentCulture = culture;
+                CultureInfo.DefaultThreadCurrentUICulture = culture;
             }
 
             await host.RunAsync();
