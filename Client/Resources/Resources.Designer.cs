@@ -151,6 +151,15 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading upcoming shows....
+        /// </summary>
+        public static string LoadingUpcomingShows {
+            get {
+                return ResourceManager.GetString("LoadingUpcomingShows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to More about this movie.
         /// </summary>
         public static string MoreAboutThisMovie {
