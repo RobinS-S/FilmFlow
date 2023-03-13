@@ -1,18 +1,48 @@
 ﻿@using FilmFlow.Client.Auth.Interfaces;
+@using Microsoft.AspNetCore.Builder;
+@using Microsoft.AspNetCore.Localization;
 @using Microsoft.Extensions.Localization;
+@using System.Globalization;
 @inject IStringLocalizerFactory localizerFactory
 @inject IAnonymousHttpClient anonymousHttpClient
 @inject IAuthorizedHttpClient authorizedHttpClient
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
 
 @code {
     public IStringLocalizer Localizer = null!;
     public IAnonymousHttpClient AnonymousHttpClient = null!;
     public IAuthorizedHttpClient AuthorizedHttpClient = null!;
 
+    private string browserLanguage = "en-US";
+    public string SelectedLanguage
+    {
+        get => browserLanguage;
+        set
+        {
+            if (value == browserLanguage) return;
+            #pragma warning disable
+            ChangeLanguage(value);
+            #pragma warning restore
+        }
+    }
+
     protected override void OnInitialized()
     {
         Localizer = localizerFactory.Create("FilmFlow.Client.Resources", "FilmFlow.Client");
         AnonymousHttpClient = anonymousHttpClient;
         AuthorizedHttpClient = authorizedHttpClient;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var lang = await JSRuntime.InvokeAsync<string?>("localStorage.getItem", Program.LANGUAGE_KEY) ?? "en-US";
+        browserLanguage = lang ?? CultureInfo.CurrentCulture.ToString();
+    }
+
+    private async Task ChangeLanguage(string value)
+    {
+        await JSRuntime.InvokeVoidAsync("localStorage.setItem", Program.LANGUAGE_KEY, value ?? "en-US");
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }
 }
