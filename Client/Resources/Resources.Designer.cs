@@ -115,6 +115,15 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hall.
+        /// </summary>
+        public static string Hall {
+            get {
+                return ResourceManager.GetString("Hall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Home.
         /// </summary>
         public static string Home {

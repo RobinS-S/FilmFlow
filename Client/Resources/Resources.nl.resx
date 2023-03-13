@@ -135,6 +135,9 @@
   <data name="CreateReservation" xml:space="preserve">
     <value>Plaats reservering</value>
   </data>
+  <data name="Hall" xml:space="preserve">
+    <value>Zaal</value>
+  </data>
   <data name="Home" xml:space="preserve">
     <value>Hoofdpagina</value>
   </data>
