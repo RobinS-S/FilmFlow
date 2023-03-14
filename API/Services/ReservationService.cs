@@ -9,24 +9,37 @@ namespace FilmFlow.API.Services
     {
         private readonly ApplicationDbContext context;
 
-        public ReservationService(ApplicationDbContext dbContext, CinemaHallService cinemaHallService, CinemaHallRowService cinemaHallRowService, CinemaShowService cinemaShowService, MovieService movieService)
+        public ReservationService(ApplicationDbContext dbContext)
         {
             context = dbContext;
         }
 
         public async Task<List<Reservation>> GetAll()
         {
-            return await context.Reservations.ToListAsync();
+            return await context.Reservations
+                .Include(r => r.CinemaShow)
+                .ThenInclude(cs => cs.Movie)
+                .ToListAsync();
         }
 
         public async Task<Reservation?> GetById(long id)
         {
-            return await context.Reservations.FindAsync(id);
+            return await context.Reservations
+                .Where(r => r.Id == id)
+                .Include(r => r.CinemaShow)
+                .ThenInclude(cs => cs.Movie)
+                .Include(r => r.ReservedSeats)
+                .ThenInclude(rs => rs.Seat)
+                .Include(r => r.ReservedSeats)
+                .ThenInclude(rs => rs.Ticket)
+                .SingleOrDefaultAsync();
         }
 
         public async Task<List<Reservation>> GetByUserId(string id)
         {
             return await context.Reservations
+                .Include(r => r.CinemaShow)
+                .ThenInclude(cs => cs.Movie)
                 .Where(r => r.UserId != null && r.UserId == id)
                 .ToListAsync();
         }
@@ -66,6 +79,24 @@ namespace FilmFlow.API.Services
             await context.Reservations.AddAsync(reservation);
             await context.SaveChangesAsync();
             return reservation;
+        }
+
+        public async Task<bool> PayReservation(Reservation reservation, string soldBy = "FilmFlow site")
+        {
+            if(reservation.IsPaid)
+            {
+                return false;
+            }
+
+            foreach(var seat in reservation.ReservedSeats)
+            {
+                seat.Ticket = new ShowTicket(seat, soldBy);
+            }
+            reservation.IsPaid = true;
+
+            await Update(reservation);
+
+            return true;
         }
 
         public async Task CreateRange(IEnumerable<Reservation> reservations)

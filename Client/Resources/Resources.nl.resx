@@ -222,4 +222,52 @@
   <data name="TarriffType.STUDENTS" xml:space="preserve">
     <value>Studenten</value>
   </data>
+  <data name="CardNumber" xml:space="preserve">
+    <value>Kaartnummer</value>
+  </data>
+  <data name="ChairsReserved" xml:space="preserve">
+    <value>Gereserveerde stoelen</value>
+  </data>
+  <data name="CreditCard" xml:space="preserve">
+    <value>Credit card</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="ExpDate" xml:space="preserve">
+    <value>Verloopdatum</value>
+  </data>
+  <data name="NameOnCard" xml:space="preserve">
+    <value>Naam op kaart</value>
+  </data>
+  <data name="PayCreditCard" xml:space="preserve">
+    <value>Betaal met creditcard</value>
+  </data>
+  <data name="PayIdeal" xml:space="preserve">
+    <value>Betaal met iDeal</value>
+  </data>
+  <data name="Payment" xml:space="preserve">
+    <value>Betaling</value>
+  </data>
+  <data name="PayNow" xml:space="preserve">
+    <value>Betaal nu</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Prijs</value>
+  </data>
+  <data name="Reservation" xml:space="preserve">
+    <value>Reservering</value>
+  </data>
+  <data name="ReservationNotPaidYet" xml:space="preserve">
+    <value>Reservering nog niet betaald!</value>
+  </data>
+  <data name="Reservations" xml:space="preserve">
+    <value>Reserveringen</value>
+  </data>
+  <data name="SecurityCode" xml:space="preserve">
+    <value>Verificatiecode</value>
+  </data>
+  <data name="Tickets" xml:space="preserve">
+    <value>Kaartjes</value>
+  </data>
 </root>
