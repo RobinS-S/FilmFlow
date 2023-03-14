@@ -112,7 +112,7 @@ namespace FilmFlow.API.Data
             var show = shows.ElementAt(0);
             var reservations = new List<Reservation>
             {
-                new Reservation(show, new List<ReservationSeat>() { new ReservationSeat(show.CinemaHall.Rows.ElementAt(1).Seats.ElementAt(3), TarriffType.NORMAL) }, false, user)
+                //new Reservation(show, new List<ReservationSeat>() { new ReservationSeat(show.CinemaHall.Rows.ElementAt(1).Seats.ElementAt(3), TarriffType.NORMAL) }, false, user)
             };
 
             var socials = new List<Social>

@@ -58,8 +58,8 @@
 }
 
 @code {
-    [Parameter]
-    public long id { get; set; }
+        [Parameter]
+        public long id { get; set; }
 
     private CinemaHallDto? hall;
     private CinemaShowDto? show;
@@ -92,11 +92,16 @@
 
     private string GetSeatImage(int row, int seat)
     {
-        if (seats == null || reservedSeats == null)
+        if (seats == null || reservedSeats == null || hall == null)
         {
             return "";
         }
-        if (seats.TryGetValue(row, out var seatNumbers) && seatNumbers[seat] == "" && !reservedSeats.Any(rs => rs.Seat.ParentRowId == row && rs.Seat.SeatNumber == seat))
+        if (seats.TryGetValue(row, out var seatNumbers) && seatNumbers[seat] == ""
+            && !reservedSeats.Any(rs => {
+                var hallRow = hall.Rows.Single(hr => hr.RowId == row);
+                var hallSeat = hallRow.Seats.SingleOrDefault(hrs => hrs.Id == rs.SeatId);
+                return hallRow.RowId == row && hallSeat != null && hallSeat.SeatNumber == seat;
+            }))
         {
             return "img/seat-available.png";
         }
@@ -147,14 +152,21 @@
             try
             {
                 var response = await AuthorizedHttpClient.Client.PostAsJsonAsync(ApiCallUrls.ReservationForCinemaShow(id), createReservationDto);
-                var createdReservation = await response.Content.ReadFromJsonAsync<ReservationDto>();
-                if (createdReservation != null)
+                if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
                 {
-                    await JSRuntime.InvokeVoidAsync("alert", Localizer["ReservationCreated", createdReservation.Id].ToString());
+                    await JSRuntime.InvokeVoidAsync("alert", Localizer["ReservationChairsAlreadyTaken"].ToString());
                 }
                 else
                 {
-                    await JSRuntime.InvokeVoidAsync("alert", Localizer["ReservationCreationFailed"].ToString());
+                    var createdReservation = await response.Content.ReadFromJsonAsync<ReservationDto>();
+                    if (createdReservation != null)
+                    {
+                        await JSRuntime.InvokeVoidAsync("alert", Localizer["ReservationCreated", createdReservation.Id].ToString());
+                    }
+                    else
+                    {
+                        await JSRuntime.InvokeVoidAsync("alert", Localizer["ReservationCreationFailed"].ToString());
+                    }
                 }
             }
             catch (AccessTokenNotAvailableException exception)
