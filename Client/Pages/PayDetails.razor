@@ -1,123 +1,154 @@
 ﻿@page "/reservations/{id:long}/pay"
 @using System.Text.RegularExpressions
 @using FilmFlow.Shared.Dto
+@using FilmFlow.Shared;
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 @inherits BaseComponent
+@inject NavigationManager Navigation
 
-<h2 class="text-uppercase fw-bold">Payment Details</h2>
+<h2 class="text-uppercase fw-bold">@Localizer["Payment"] @Localizer["Details"]</h2>
 
-<div class="row my-5">
-    <div class="col-md-6">
-        <h2>Movie details</h2>
-        <p>Title: Titel</p>
-    </div>
-    <div class="col-md-6">
-        <h2>Price</h2>
-        <p>Ticket Price: €15,00</p>
+@if(reservation != null && hall != null) {
+    <div class="row my-5">
+        <div class="col-md-6">
+            <h2>@Localizer["Details"]</h2>
+            <h5>@reservation.CinemaShow?.Movie?.Title</h5>
+            <h6 class="text-muted">@reservation.CinemaShow?.Start.ToShortDateString() @reservation.CinemaShow?.Start.ToShortTimeString() - @reservation.CinemaShow?.End.ToShortTimeString()</h6>
+            <p class="text-muted"><strong>@Localizer["ChairsReserved"]:</strong> @string.Join(", ", reservation.ReservedSeats.Select(rs => $"{Localizer["Row"]} {rs.Seat.ParentRowId} {Localizer["Seat"]} {rs.Seat.SeatNumber}"))</p>
+        </div>
+        <div class="col-md-6">
+            <h2>@Localizer["Price"]</h2>
+            <h6 class="text-muted"><strong>@(hall.IsThreeDimensional ? "3D" : "")</strong></h6>
+            <p>@Localizer["Tickets"] @Localizer["Price"]: €@totalTicketPrice</p>
+            <hr />
+        </div>
         <hr />
     </div>
-</div>
 
-<div class="row">
-    <div class="col-md-6 mt-5">
-        <h2>Credit Card Payment</h2>
-        <hr/>
-
-            <div class="form-group">
-                <label for="cardNumber">Card Number</label>
-                <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="Enter card number">
+    <div class="row">
+        <h2 class="mt-5">Extra Options</h2>
+        <form>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="popcorn" id="popcorn">
+                <label class="form-check-label" for="popcorn">
+                    Popcorn - €5,00
+                </label>
             </div>
-            <div class="form-group">
-                <label for="cardName">Name on Card</label>
-                <input type="text" class="form-control" id="cardName" name="cardName" placeholder="Enter name on card">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="nachos" id="nachos">
+                <label class="form-check-label" for="nachos">
+                    Nacho's - €4.50
+                </label>
             </div>
-            <div class="form-group">
-                <label for="expirationDate">Expiration Date</label>
-                <input type="text" class="form-control" id="expirationDate" name="expirationDate" placeholder="MM/YY">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="mms" id="mms">
+                <label class="form-check-label" for="mms">
+                    M&M's - €3.50
+                </label>
             </div>
-            <div class="form-group">
-                <label for="securityCode">Security Code</label>
-                <input type="text" class="form-control" id="securityCode" name="securityCode" placeholder="Enter security code">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="coke" id="coke">
+                <label class="form-check-label" for="coke">
+                    Coca Cola - €3,00
+                </label>
             </div>
-            <button type="submit" class="btn btn-danger mt-3" onclick="alert('Betaald met credit card')">Pay with Credit Card</button>
-
-    </div>
-
-    <div class="col-md-6 mt-5">
-        <h2>iDeal Payment</h2>
-        <hr/>
-            <div class="form-group">
-                <label for="bank">Select Your Bank</label>
-                <select class="form-control" id="bank" name="bank">
-                    <option>ABN AMRO</option>
-                    <option>ING</option>
-                    <option>Rabobank</option>
-                    <option>SNS Bank</option>
-                    <option>Triodos Bank</option>
-                </select>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="fanta" id="fanta">
+                <label class="form-check-label" for="fanta">
+                    Fanta - €3.00
+                </label>
             </div>
-            <button type="submit" class="btn btn-danger mt-3" onclick="alert('Betaald met iDeal')">Pay with iDeal</button>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="sprite" id="sprite">
+                <label class="form-check-label" for="sprite">
+                    Sprite - €3,00
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="water" id="water">
+                <label class="form-check-label" for="water">
+                    Water - €2.50
+                </label>
+            </div>
+        </form>
     </div>
-</div>
+    <div class="row">
+        <div class="col-md-6 mt-5">
+            <h2>@Localizer["CreditCard"]</h2>
+            <hr/>
 
-<hr/>
+                <div class="form-group">
+                    <label for="cardNumber">@Localizer["CardNumber"]</label>
+                <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="@Localizer["CardNumber"]">
+                </div>
+                <div class="form-group">
+                <label for="cardName">@Localizer["NameOnCard"]</label>
+                <input type="text" class="form-control" id="cardName" name="cardName" placeholder="@Localizer["NameOnCard"]">
+                </div>
+                <div class="form-group">
+                <label for="expirationDate">@Localizer["ExpDate"]</label>
+                    <input type="text" class="form-control" id="expirationDate" name="expirationDate" placeholder="MM/YY">
+                </div>
+                <div class="form-group">
+                <label for="securityCode">@Localizer["SecurityCode"]</label>
+                <input type="text" class="form-control" id="securityCode" name="securityCode" placeholder="@Localizer["SecurityCode"]">
+                </div>
+            <button type="submit" class="btn btn-danger mt-3 btn-lg" @onclick="PayNow">@Localizer["PayCreditCard"]</button>
+        </div>
 
-<h2 class="mt-5">Extra Options</h2>
-
-<form>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="popcorn" id="popcorn">
-        <label class="form-check-label" for="popcorn">
-            Popcorn - €5,00
-        </label>
+        <div class="col-md-6 mt-5">
+            <h2>iDeal @Localizer["Payment"] <img src="https://www.ideal.nl/img/logo/ideal-logo-1024.png" style="max-width: 80px"/></h2>
+            <hr/>
+                <div class="form-group">
+                    <label for="bank">Bank</label>
+                    <select class="form-control" id="bank" name="bank">
+                        <option>ABN AMRO</option>
+                        <option>ING</option>
+                        <option>Rabobank</option>
+                        <option>SNS Bank</option>
+                        <option>Triodos Bank</option>
+                    </select>
+                </div>
+            <button type="submit" class="btn btn-danger mt-3 btn-lg" @onclick="PayNow">@Localizer["PayIdeal"]</button>
+        </div>
     </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="nachos" id="nachos">
-        <label class="form-check-label" for="nachos">
-            Nacho's - €4.50
-        </label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="mms" id="mms">
-        <label class="form-check-label" for="mms">
-            M&M's - €3.50
-        </label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="coke" id="coke">
-        <label class="form-check-label" for="coke">
-            Coke - €3,00
-        </label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="fanta" id="fanta">
-        <label class="form-check-label" for="fanta">
-            Fanta - €3.00
-        </label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="sprite" id="sprite">
-        <label class="form-check-label" for="sprite">
-            Sprite - €3,00
-        </label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="water" id="water">
-        <label class="form-check-label" for="water">
-            Water - €2.50
-        </label>
-    </div>
-    <button type="submit" class="btn btn-danger my-3">Add to Order</button>
-</form>
-
+}
+else
+{
+    <h4>@Localizer["Loading"]...</h4>
+}
 
 @code {
     [Parameter]
     public long id { get; set; }
 
-    private ReservationDto? Reservation;
-    private List<ReservationSeatDto>? reservedSeats;
-    private String MovieTitle = "";
-    private String MovieAge = "";
+    private ReservationDto? reservation;
+    private CinemaHallDto? hall;
+    private decimal totalTicketPrice;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            reservation = await AuthorizedHttpClient.Client.GetFromJsonAsync<ReservationDto>(ApiCallUrls.ReservationById(id));
+            if (reservation != null)
+            {
+                hall = await AnonymousHttpClient.Client.GetFromJsonAsync<CinemaHallDto>(ApiCallUrls.CinemaHallById(reservation.CinemaShow!.CinemaHallId));
+                if (hall != null)
+                {
+                    totalTicketPrice = 0m;
+                    foreach (var seat in reservation.ReservedSeats)
+                    {
+                        totalTicketPrice += Tarriffs.GetTarriffPrice(seat.TarriffType, hall.IsThreeDimensional);
+                    }
+                }
+            }
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
     //private bool popcornSelected = false;
     //private bool nachosSelected = false;
     //private bool mmsSelected = false;
@@ -127,23 +158,19 @@
     //private bool waterSelected = false;
     //private decimal snacksPrice = 0;
 
-    protected override async Task OnInitializedAsync()
+    private async Task PayNow()
     {
-        Reservation = await AnonymousHttpClient.Client.GetFromJsonAsync<ReservationDto>($"/reservations/{id}");
-
-        if (Reservation != null)
+        try
         {
-            //var cinemaShow = await AnonymousHttpClient.Client.GetFromJsonAsync<CinemaShowDto>($"/cinemashows/{Reservation.Id}");
-            //if(cinemaShow != null)
-            //{
-            //    var movie = await AnonymousHttpClient.Client.GetFromJsonAsync<MovieDto>($"/movies/{cinemaShow.MovieId}");
-            //    MovieTitle = movie.Title;
-            //    MovieAge = movie.MinAge.ToString();
-            //}
-
-            var reservationSeats = Reservation.ReservedSeats;
-
-
+            var status = await AuthorizedHttpClient.Client.PostAsJsonAsync<bool>(ApiCallUrls.PayReservationById(this.id), true);
+            if(status.IsSuccessStatusCode)
+            {
+                Navigation.NavigateTo($"reservations/{id}");
+            }
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
         }
     }
 }

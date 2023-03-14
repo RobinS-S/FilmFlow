@@ -197,13 +197,13 @@
     <value>Secret movie</value>
   </data>
   <data name="SelectAgeRating" xml:space="preserve">
-    <value>Select Age Rating</value>
+    <value>Select age rating</value>
   </data>
   <data name="SelectCategory" xml:space="preserve">
-    <value>Select Category</value>
+    <value>Select category</value>
   </data>
   <data name="SelectLanguage" xml:space="preserve">
-    <value>Select Language</value>
+    <value>Select language</value>
   </data>
   <data name="TarriffType.CHILDREN" xml:space="preserve">
     <value>Children</value>
@@ -222,5 +222,53 @@
   </data>
   <data name="TarriffType.SENIORS" xml:space="preserve">
     <value>65+</value>
+  </data>
+  <data name="CardNumber" xml:space="preserve">
+    <value>Card number</value>
+  </data>
+  <data name="ChairsReserved" xml:space="preserve">
+    <value>Reserved chairs</value>
+  </data>
+  <data name="CreditCard" xml:space="preserve">
+    <value>Credit card</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="ExpDate" xml:space="preserve">
+    <value>Expiration date</value>
+  </data>
+  <data name="NameOnCard" xml:space="preserve">
+    <value>Name on card</value>
+  </data>
+  <data name="PayCreditCard" xml:space="preserve">
+    <value>Pay with credit card</value>
+  </data>
+  <data name="PayIdeal" xml:space="preserve">
+    <value>Pay with iDeal</value>
+  </data>
+  <data name="Payment" xml:space="preserve">
+    <value>Payment</value>
+  </data>
+  <data name="PayNow" xml:space="preserve">
+    <value>Pay now</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="Reservation" xml:space="preserve">
+    <value>Reservation</value>
+  </data>
+  <data name="ReservationNotPaidYet" xml:space="preserve">
+    <value>Reservation not paid yet!</value>
+  </data>
+  <data name="Reservations" xml:space="preserve">
+    <value>Reservations</value>
+  </data>
+  <data name="SecurityCode" xml:space="preserve">
+    <value>Security code</value>
+  </data>
+  <data name="Tickets" xml:space="preserve">
+    <value>Tickets</value>
   </data>
 </root>

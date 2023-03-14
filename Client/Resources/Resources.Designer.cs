@@ -79,11 +79,29 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Card number.
+        /// </summary>
+        public static string CardNumber {
+            get {
+                return ResourceManager.GetString("CardNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Category.
         /// </summary>
         public static string Category {
             get {
                 return ResourceManager.GetString("Category", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reserved chairs.
+        /// </summary>
+        public static string ChairsReserved {
+            get {
+                return ResourceManager.GetString("ChairsReserved", resourceCulture);
             }
         }
         
@@ -120,6 +138,33 @@ namespace FilmFlow.Client.Resources {
         public static string CreateReservation {
             get {
                 return ResourceManager.GetString("CreateReservation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Credit card.
+        /// </summary>
+        public static string CreditCard {
+            get {
+                return ResourceManager.GetString("CreditCard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Details.
+        /// </summary>
+        public static string Details {
+            get {
+                return ResourceManager.GetString("Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expiration date.
+        /// </summary>
+        public static string ExpDate {
+            get {
+                return ResourceManager.GetString("ExpDate", resourceCulture);
             }
         }
         
@@ -196,6 +241,15 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name on card.
+        /// </summary>
+        public static string NameOnCard {
+            get {
+                return ResourceManager.GetString("NameOnCard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Navigate to FilmFlow.
         /// </summary>
         public static string NavigateToFilmFlow {
@@ -210,6 +264,60 @@ namespace FilmFlow.Client.Resources {
         public static string NoMoviesMatchinYourSearchCriterea {
             get {
                 return ResourceManager.GetString("NoMoviesMatchinYourSearchCriterea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pay with credit card.
+        /// </summary>
+        public static string PayCreditCard {
+            get {
+                return ResourceManager.GetString("PayCreditCard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pay with iDeal.
+        /// </summary>
+        public static string PayIdeal {
+            get {
+                return ResourceManager.GetString("PayIdeal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payment.
+        /// </summary>
+        public static string Payment {
+            get {
+                return ResourceManager.GetString("Payment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pay now.
+        /// </summary>
+        public static string PayNow {
+            get {
+                return ResourceManager.GetString("PayNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Price.
+        /// </summary>
+        public static string Price {
+            get {
+                return ResourceManager.GetString("Price", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reservation.
+        /// </summary>
+        public static string Reservation {
+            get {
+                return ResourceManager.GetString("Reservation", resourceCulture);
             }
         }
         
@@ -232,11 +340,29 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reservation not paid yet!.
+        /// </summary>
+        public static string ReservationNotPaidYet {
+            get {
+                return ResourceManager.GetString("ReservationNotPaidYet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reservation number.
         /// </summary>
         public static string ReservationNr {
             get {
                 return ResourceManager.GetString("ReservationNr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reservations.
+        /// </summary>
+        public static string Reservations {
+            get {
+                return ResourceManager.GetString("Reservations", resourceCulture);
             }
         }
         
@@ -295,7 +421,16 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select Age Rating.
+        ///   Looks up a localized string similar to Security code.
+        /// </summary>
+        public static string SecurityCode {
+            get {
+                return ResourceManager.GetString("SecurityCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select age rating.
         /// </summary>
         public static string SelectAgeRating {
             get {
@@ -304,7 +439,7 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select Category.
+        ///   Looks up a localized string similar to Select category.
         /// </summary>
         public static string SelectCategory {
             get {
@@ -313,7 +448,7 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select Language.
+        ///   Looks up a localized string similar to Select language.
         /// </summary>
         public static string SelectLanguage {
             get {
@@ -363,6 +498,15 @@ namespace FilmFlow.Client.Resources {
         public static string TarriffType_STUDENTS {
             get {
                 return ResourceManager.GetString("TarriffType.STUDENTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tickets.
+        /// </summary>
+        public static string Tickets {
+            get {
+                return ResourceManager.GetString("Tickets", resourceCulture);
             }
         }
         

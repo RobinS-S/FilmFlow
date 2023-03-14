@@ -2,7 +2,6 @@
 
 namespace FilmFlow.API.Data.Entities
 {
-
     public class Reservation : Entity
     {
         public string Code { get; set; } = null!;

@@ -15,5 +15,12 @@
         public static string CinemaShowById(long id) => $"{apiPrefix}/cinemashows/{id}";
         public static string ReservationForCinemaShow(long id) => $"{apiPrefix}/cinemashows/{id}/reservation";
         public static string ReservedSeatsForShow(long id) => $"{apiPrefix}/cinemashows/{id}/reserved";
-    }
+
+        public static string PayReservationById(long id) => $"{apiPrefix}/reservations/{id}/pay";
+        public static string ReservationById(long id) => $"{apiPrefix}/reservations/{id}";
+        public static string Reservations() => $"{apiPrefix}/reservations";
+
+		public static string TicketByCode(string code) => $"{apiPrefix}/tickets/byCode?code={code}";
+		public static string TicketQrByCode(long reservationId, string code) => $"{apiPrefix}/tickets/qrByCode?reservationId={reservationId}&code={code}";
+	}
 }

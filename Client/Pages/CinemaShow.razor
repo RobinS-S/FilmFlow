@@ -7,6 +7,7 @@
 @inherits BaseComponent
 @inject IJSRuntime JSRuntime
 @attribute [Authorize]
+@inject NavigationManager Navigation
 
 @if (hall != null && seats != null)
 {
@@ -161,7 +162,7 @@
                     var createdReservation = await response.Content.ReadFromJsonAsync<ReservationDto>();
                     if (createdReservation != null)
                     {
-                        await JSRuntime.InvokeVoidAsync("alert", Localizer["ReservationCreated", createdReservation.Id].ToString());
+                        Navigation.NavigateTo($"reservations/{createdReservation.Id}");
                     }
                     else
                     {

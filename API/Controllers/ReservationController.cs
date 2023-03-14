@@ -42,7 +42,7 @@ namespace FilmFlow.API.Controllers
 
         [Authorize]
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(IEnumerable<ReservationDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ReservationDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(long id)
         {
@@ -63,11 +63,43 @@ namespace FilmFlow.API.Controllers
                 return Forbid();
             }
 
-            var reservationDtos = mapper.Map<IEnumerable<ReservationDto>>(reservation);
+            var reservationDtos = mapper.Map<ReservationDto>(reservation);
             return Ok(reservationDtos);
         }
 
-        [Authorize]
+		[Authorize]
+		[HttpPost("{id}/pay")]
+		[ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		public async Task<IActionResult> PayReservation(long id)
+		{
+			var user = User.Identity?.Name != null ? await userManager.FindByNameAsync(User.Identity.Name) : null;
+			if (user == null)
+			{
+				return BadRequest();
+			}
+
+			var reservation = await reservationService.GetById(id);
+			if (reservation == null)
+			{
+				return NotFound();
+			}
+
+			if (reservation.UserId != user.Id)
+			{
+				return Forbid();
+			}
+
+            var paid = await reservationService.PayReservation(reservation);
+            if(!paid)
+            {
+                return Conflict();
+            }
+
+			return Ok(paid);
+		}
+
+		[Authorize]
         [HttpGet("{id}/qrcode")]
         [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -90,7 +122,7 @@ namespace FilmFlow.API.Controllers
                 return Forbid();
             }
 
-            byte[] imageData = QrCodeEncoding.GenerateQrCodeAsPngFromText(reservation.Code);
+            byte[] imageData = await QrCodeEncoding.GenerateQrCodeAsPngFromText(reservation.Code);
             return File(imageData, "image/png");
         }
     }
