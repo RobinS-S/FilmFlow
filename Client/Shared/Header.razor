@@ -9,12 +9,26 @@
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link active" aria-current="page" href="#">@Localizer["Home"]</a>
-                <a class="nav-link" href="/movies">@Localizer["Movies"]</a>
-                <a class="nav-link" href="/contact">@Localizer["Contact"]</a>
-                <a class="nav-link" href="/tickets/1">Tickets</a>
-                <a class="nav-link" href="#">About</a>
-
+                <a class="nav-link active" aria-current="page" href="#">
+                    @Localizer["Home"] <span class="material-icons" style="font-size: 15px;">
+                        home
+                    </span>
+                </a>
+                <a class="nav-link" href="/movies">
+                    @Localizer["Movies"] <span class="material-icons" style="font-size: 15px;">
+                        movie
+                    </span>
+                </a>
+                <a class="nav-link" href="/contact">
+                    @Localizer["Contact"] <span class="material-icons" style="font-size: 15px;">
+                        import_contacts
+                    </span>
+                </a>
+                <a class="nav-link" href="/tickets/1">
+                    Tickets <span class="material-icons" style="font-size: 15px;">
+                        confirmation_number
+                    </span>
+                </a>
                 <div class="d-flex align-items-center ms-auto">
                     <select class="form-select form-select-sm text-light" aria-label="Language" @bind="SelectedLanguage" style="background-color: #050505;">
                         <option value="en-US">English</option>

@@ -63,7 +63,10 @@
 							<li>@Localizer["Language"]: @movie.Language</li>
 						</ul>
 						<p class="card-text">@movie.Description</p>
-						<a href="movie/@movie.Id" class="btn btn-danger">@Localizer["MoreAboutThisMovie"]</a>
+						<a href="movie/@movie.Id" class="btn btn-danger">
+							@Localizer["MoreAboutThisMovie"]<span class="material-icons" style="font-size: 15px;">
+								arrow_forward</span>
+						</a>
 					</div>
 				</div>
 			</div>
