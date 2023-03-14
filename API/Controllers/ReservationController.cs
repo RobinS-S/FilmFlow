@@ -122,7 +122,7 @@ namespace FilmFlow.API.Controllers
                 return Forbid();
             }
 
-            byte[] imageData = QrCodeEncoding.GenerateQrCodeAsPngFromText(reservation.Code);
+            byte[] imageData = await QrCodeEncoding.GenerateQrCodeAsPngFromText(reservation.Code);
             return File(imageData, "image/png");
         }
     }

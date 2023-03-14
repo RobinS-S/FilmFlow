@@ -20,13 +20,13 @@
 				@if(reservedSeat.Ticket != null)
 				{
 					<div class="col m-1">
-						<div class="card" style="background-color: #ffffff96; max-width: 600px; width: 18rem;">
+						<div class="card" style="background-color: #ffffff96;">
 							<div class="card-body">
 								<h6 class="card-subtitle text-muted"><strong>@(hall.IsThreeDimensional ? "3D" : "")</strong></h6>
 								<p class="card-text">@Localizer["Row"] @hall.Rows.Single(hr => hr.Id == reservedSeat.Seat.ParentRowId).RowId, @Localizer["Seat"] @reservedSeat.Seat.SeatNumber</p>
 								<div class="d-flex-row">
 									<div class="d-flex justify-content-center">
-										<img src="@ApiCallUrls.TicketQrByCode(reservedSeat.Ticket.Code)" style="max-width: 250px;" />
+										<img src="@ApiCallUrls.TicketQrByCode(reservation.Id, reservedSeat.Ticket.Code)"/>
 									</div>
 								</div>
 							</div>

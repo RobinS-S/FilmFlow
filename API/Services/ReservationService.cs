@@ -1,6 +1,8 @@
 ﻿using FilmFlow.API.Data;
 using FilmFlow.API.Data.Entities;
+using FilmFlow.API.Misc;
 using FilmFlow.Shared.Dto;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace FilmFlow.API.Services
@@ -8,10 +10,16 @@ namespace FilmFlow.API.Services
     public class ReservationService
     {
         private readonly ApplicationDbContext context;
+        private readonly EmailService emailService;
+        private readonly CinemaHallService cinemaHallService;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public ReservationService(ApplicationDbContext dbContext)
+        public ReservationService(ApplicationDbContext dbContext, EmailService emailService, CinemaHallService cinemaHallService, UserManager<ApplicationUser> userManager)
         {
             context = dbContext;
+            this.emailService = emailService;
+            this.cinemaHallService = cinemaHallService;
+            this.userManager = userManager;
         }
 
         public async Task<List<Reservation>> GetAll()
@@ -81,6 +89,12 @@ namespace FilmFlow.API.Services
             return reservation;
         }
 
+        public async Task<ApplicationUser?> GetUserByReservationId(long id)
+        {
+            var reservation = await context.Reservations.SingleAsync(r => r.Id == id);
+            return await userManager.FindByIdAsync(reservation!.UserId!);
+        }
+
         public async Task<bool> PayReservation(Reservation reservation, string soldBy = "FilmFlow site")
         {
             if(reservation.IsPaid)
@@ -95,6 +109,22 @@ namespace FilmFlow.API.Services
             reservation.IsPaid = true;
 
             await Update(reservation);
+
+            var user = await GetUserByReservationId(reservation.Id);
+            if (user == null) throw new Exception("No user found for reservation");
+            var newReservation = await GetById(reservation.Id);
+            var attachments = new Dictionary<string, byte[]>();
+            var hall = await cinemaHallService.GetById(newReservation!.CinemaShow.CinemaHallId);
+            foreach(var seat in newReservation!.ReservedSeats)
+            {
+                var row = hall!.Rows.Single(hr => hr.Id == seat.Seat.ParentRowId);
+                byte[] imageData = await QrCodeEncoding.GenerateTicket(seat!.Ticket!.Code,
+                    $"FilmFlow: {reservation.CinemaShow.Movie!.Title}", $"{reservation.CinemaShow.Start.ToShortDateString()} {reservation.CinemaShow.Start.ToShortTimeString()} - {reservation.CinemaShow.End.ToShortTimeString()}",
+                    $"Hall {reservation!.CinemaShow.CinemaHall.Id}, row {hall!.Rows.Single(hr => hr.Id == seat.Seat.ParentRowId).RowId}, seat {seat.Seat.SeatNumber} {(hall.IsThreeDimensional ? "3D" : "")}",
+                    "Enjoy the show!");
+                attachments.Add($"{newReservation.CinemaShow!.Movie!.Title.Replace(" ", "").Replace(":", "")}-r{row.RowId}-s{seat.Seat.SeatNumber}", imageData);
+            }
+            await emailService.SendHtmlEmailWithAttachments(user.Email!, user.UserName ?? "FilmFlow user", $"Tickets {newReservation.CinemaShow!.Movie!.Title}", "Thank you for ordering! Your tickets are attached. We hope you enjoy the show!", attachments);
 
             return true;
         }

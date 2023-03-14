@@ -21,6 +21,6 @@
         public static string Reservations() => $"{apiPrefix}/reservations";
 
 		public static string TicketByCode(string code) => $"{apiPrefix}/tickets/byCode?code={code}";
-		public static string TicketQrByCode(string code) => $"{apiPrefix}/tickets/qrByCode?code={code}";
+		public static string TicketQrByCode(long reservationId, string code) => $"{apiPrefix}/tickets/qrByCode?reservationId={reservationId}&code={code}";
 	}
 }
