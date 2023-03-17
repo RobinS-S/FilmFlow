@@ -16,6 +16,21 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
+
+- task: DotNetCoreCLI@2
+  displayName: Manifest for tool
+  inputs:
+    command: custom
+    custom: "new "
+    arguments: tool-manifest
+
+- task: DotNetCoreCLI@2
+  displayName: Install EFTool
+  inputs:
+    command: custom
+    custom: "tool "
+    arguments: install dotnet-ef
+    
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
@@ -29,8 +44,22 @@ steps:
     configuration: '$(buildConfiguration)'
     testSelector: 'testAssemblies'
     testAssemblyVer2: '**/bin/$(BuildConfiguration)/**/*.Tests.dll'
-    
+
+
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
+
+- task: DotNetCoreCLI@2
+  displayName: Create SQL Scripts
+  inputs:
+    command: custom
+    custom: "ef "
+    arguments: migrations script --output SQL/migrations.sql --idempotent --startup-project API/FilmFlow.API.csproj --project API/FilmFlow.API.csproj
+
+- task: PublishBuildArtifacts@1
+  displayName: "Publish Artifact SQLScripts"
+  inputs:
+    PathtoPublish: SQL/migrations.sql
+    ArtifactName: api-sql
