@@ -259,6 +259,15 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No more upcoming shows.
+        /// </summary>
+        public static string NoMoreShows {
+            get {
+                return ResourceManager.GetString("NoMoreShows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No movies matching your search criterea.
         /// </summary>
         public static string NoMoviesMatchinYourSearchCriterea {
@@ -318,6 +327,15 @@ namespace FilmFlow.Client.Resources {
         public static string Reservation {
             get {
                 return ResourceManager.GetString("Reservation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This reservation is already paid for. You can view the tickets..
+        /// </summary>
+        public static string ReservationAlreadyPaid {
+            get {
+                return ResourceManager.GetString("ReservationAlreadyPaid", resourceCulture);
             }
         }
         

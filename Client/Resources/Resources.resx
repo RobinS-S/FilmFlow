@@ -271,4 +271,10 @@
   <data name="Tickets" xml:space="preserve">
     <value>Tickets</value>
   </data>
+  <data name="NoMoreShows" xml:space="preserve">
+    <value>No more upcoming shows</value>
+  </data>
+  <data name="ReservationAlreadyPaid" xml:space="preserve">
+    <value>This reservation is already paid for. You can view the tickets.</value>
+  </data>
 </root>

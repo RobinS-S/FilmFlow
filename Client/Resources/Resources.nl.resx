@@ -270,4 +270,10 @@
   <data name="Tickets" xml:space="preserve">
     <value>Kaartjes</value>
   </data>
+  <data name="NoMoreShows" xml:space="preserve">
+    <value>Geen opkomende voorstellingen</value>
+  </data>
+  <data name="ReservationAlreadyPaid" xml:space="preserve">
+    <value>Deze reservering is al betaald. U kan de kaartjes inzien.</value>
+  </data>
 </root>

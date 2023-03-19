@@ -24,21 +24,25 @@
 				<div class="col-12"><h3>@Localizer["UpcomingShow"]</h3></div>
 				@if (Shows != null)
 				{
-					@foreach (var show in Shows)
+					@if (Shows.Count > 0)
 					{
-						@if(!show.IsSecret && show.Start > DateTime.Now)
+						@foreach (var show in Shows)
 						{
-						<div class="col-sm-12 col-md-6 col-lg-4">
-							<div class="card p-3 m-3" style="background-color: #ffffff96;">
-								<div class="card-body">
-									<h5 class="card-title">Zaal @show.CinemaHallId</h5>
-									<h6 class="card-subtitle mb-2 text-muted">@show.Start.ToShortDateString()</h6>
-									<p class="card-text">@show.Start.ToShortTimeString() - @show.End.ToShortTimeString()</p>
-									<a href="cinemashow/@show.Id" class="btn btn-danger">@Localizer["ReserveNow"]</a>
+							<div class="col-sm-12 col-md-6 col-lg-4">
+								<div class="card p-3 m-3" style="background-color: #ffffff96;">
+									<div class="card-body">
+										<h5 class="card-title">@Localizer["Hall"] @show.CinemaHallId</h5>
+										<h6 class="card-subtitle mb-2 text-muted">@show.Start.ToShortDateString()</h6>
+										<p class="card-text">@show.Start.ToShortTimeString() - @show.End.ToShortTimeString()</p>
+										<a href="cinemashow/@show.Id" class="btn btn-danger">@Localizer["ReserveNow"]</a>
+									</div>
 								</div>
 							</div>
-						</div>
 						}
+					}
+					else
+					{
+						<h4>@Localizer["NoMoreShows"]</h4>
 					}
 				}
 				else
@@ -56,15 +60,18 @@ else
 
 @code {
 	[Parameter]
-	public long id { get; set; }
+	public long Id { get; set; }
 
 	private MovieDto? Movie;
-	private CinemaShowDto[]? Shows;
+	private List<CinemaShowDto>? Shows;
 
 	protected override async Task OnInitializedAsync()
 	{
-		Movie = await AnonymousHttpClient.Client.GetFromJsonAsync<MovieDto>($"/api/Movies/{id}");
-		var shows = await AnonymousHttpClient.Client.GetFromJsonAsync<CinemaShowDto[]>($"/api/Movies/{id}/shows");
-		if (shows != null) Shows = shows.OrderBy(s => s.Start).ToArray();
+		Movie = await AnonymousHttpClient.Client.GetFromJsonAsync<MovieDto>($"/api/Movies/{Id}");
+		var shows = await AnonymousHttpClient.Client.GetFromJsonAsync<List<CinemaShowDto>>($"/api/Movies/{Id}/shows");
+		if (shows != null) Shows = shows
+			.Where(show => !show.IsSecret && show.Start > DateTime.Now)
+			.OrderBy(s => s.Start)
+			.ToList();
 	}
 }
