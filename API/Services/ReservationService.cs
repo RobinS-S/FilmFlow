@@ -69,7 +69,7 @@ namespace FilmFlow.API.Services
 
         public async Task<Reservation?> Create(CreateReservationDto reservationDto, ApplicationUser? user = null)
         {
-            // retrieve movie, decide tarriff, check if seat not taken, place reservation
+            // retrieve movie, decide tariff, check if seat not taken, place reservation
             var attemptedSeatIdsToReserve = reservationDto.Seats.Select(s => s.SeatId);
             var existingReservation = await context.Reservations.Include(r => r.ReservedSeats)
                 .SingleOrDefaultAsync(r => r.CinemaShowId == reservationDto.CinemaShowId && r.ReservedSeats.Any(rs => attemptedSeatIdsToReserve.Contains(rs.SeatId))); 
@@ -83,7 +83,7 @@ namespace FilmFlow.API.Services
             var seats = await context.CinemaHallRowSeats.Where(chrs => attemptedSeatIdsToReserve.Contains(chrs.Id))
                 .ToListAsync();
 
-            var reservation = new Reservation(cinemaShow, reservationDto.Seats.Select(s => new ReservationSeat(seats.Single(fs => fs.Id == s.SeatId), s.Tarriff)).ToList(), false, user);
+            var reservation = new Reservation(cinemaShow, reservationDto.Seats.Select(s => new ReservationSeat(seats.Single(fs => fs.Id == s.SeatId), s.Tariff)).ToList(), false, user);
             await context.Reservations.AddAsync(reservation);
             await context.SaveChangesAsync();
             return reservation;

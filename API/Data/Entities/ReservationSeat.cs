@@ -13,16 +13,16 @@ namespace FilmFlow.API.Data.Entities
 
         public long SeatId { get; set; }
 
-        public TarriffType TarriffType { get; set; }
+        public TariffType TariffType { get; set; }
 
         public ShowTicket? Ticket { get; set; }
 
         public long? TicketId { get; set; }
 
-        public ReservationSeat(CinemaHallRowSeat seat, TarriffType tarriffType)
+        public ReservationSeat(CinemaHallRowSeat seat, TariffType tariffType)
         {
             Seat = seat;
-            TarriffType = tarriffType;
+            TariffType = tariffType;
         }
 
         private ReservationSeat() { }

@@ -238,7 +238,7 @@ namespace FilmFlow.API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CinemaHalls");
+                    b.ToTable("CinemaHalls", (string)null);
                 });
 
             modelBuilder.Entity("FilmFlow.API.Data.Entities.CinemaHallRow", b =>
@@ -257,7 +257,7 @@ namespace FilmFlow.API.Data.Migrations
 
                     b.HasAlternateKey("HallId", "RowId");
 
-                    b.ToTable("CinemaHallRows");
+                    b.ToTable("CinemaHallRows", (string)null);
                 });
 
             modelBuilder.Entity("FilmFlow.API.Data.Entities.CinemaHallRowSeat", b =>
@@ -276,7 +276,7 @@ namespace FilmFlow.API.Data.Migrations
 
                     b.HasIndex("ParentRowId");
 
-                    b.ToTable("CinemaHallRowSeats");
+                    b.ToTable("CinemaHallRowSeats", (string)null);
                 });
 
             modelBuilder.Entity("FilmFlow.API.Data.Entities.CinemaShow", b =>
@@ -306,7 +306,7 @@ namespace FilmFlow.API.Data.Migrations
 
                     b.HasIndex("MovieId");
 
-                    b.ToTable("CinemaShows");
+                    b.ToTable("CinemaShows", (string)null);
                 });
 
             modelBuilder.Entity("FilmFlow.API.Data.Entities.Movie", b =>
@@ -353,7 +353,7 @@ namespace FilmFlow.API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Movies");
+                    b.ToTable("Movies", (string)null);
                 });
 
             modelBuilder.Entity("FilmFlow.API.Data.Entities.MovieReview", b =>
@@ -384,7 +384,7 @@ namespace FilmFlow.API.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("MovieReviews");
+                    b.ToTable("MovieReviews", (string)null);
                 });
 
             modelBuilder.Entity("FilmFlow.API.Data.Entities.Reservation", b =>
@@ -419,7 +419,7 @@ namespace FilmFlow.API.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reservations");
+                    b.ToTable("Reservations", (string)null);
                 });
 
             modelBuilder.Entity("FilmFlow.API.Data.Entities.ReservationSeat", b =>
@@ -434,7 +434,7 @@ namespace FilmFlow.API.Data.Migrations
                     b.Property<long>("SeatId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("TarriffType")
+                    b.Property<int>("TariffType")
                         .HasColumnType("int");
 
                     b.Property<long?>("TicketId")
@@ -449,7 +449,7 @@ namespace FilmFlow.API.Data.Migrations
                     b.HasIndex("TicketId")
                         .IsUnique();
 
-                    b.ToTable("ReservationSeat");
+                    b.ToTable("ReservationSeat", (string)null);
                 });
 
             modelBuilder.Entity("FilmFlow.API.Data.Entities.ShowTicket", b =>
@@ -473,7 +473,7 @@ namespace FilmFlow.API.Data.Migrations
 
                     b.HasIndex("Code");
 
-                    b.ToTable("ShowTickets");
+                    b.ToTable("ShowTickets", (string)null);
                 });
 
             modelBuilder.Entity("FilmFlow.API.Data.Entities.Social", b =>
@@ -499,7 +499,7 @@ namespace FilmFlow.API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Socials");
+                    b.ToTable("Socials", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

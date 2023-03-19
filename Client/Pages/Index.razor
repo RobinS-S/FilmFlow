@@ -1,7 +1,6 @@
 ﻿@page "/"
 @inherits BaseComponent
 @using FilmFlow.Shared.Dto;
-@using System.Collections;
 @using System.Web;
 
 <PageTitle>FilmFlow</PageTitle>
@@ -22,14 +21,14 @@
     </a>
 </div>
 
-@if (shows != null)
+@if (_shows != null)
 {
 	<div class="d-flex p-3 row">
-		@if(shows != null)
+		@if(_shows != null)
 		{
-			@if (shows.Count > 0)
+			@if (_shows.Count > 0)
 			{
-				@foreach (var show in shows)
+				@foreach (var show in _shows)
 				{
 					<div class="col-sm-6 col-md-4 col-lg-2">
 						<div class="card p-3 m-1 text-center" style="background-color: #ffffff96;">
@@ -57,13 +56,13 @@ else
 }
 
 @code {
-	private List<CinemaShowDto>? shows;
+	private List<CinemaShowDto>? _shows;
 
 	protected override async Task OnInitializedAsync()
 	{
-		DateTime startDate = DateTime.Now;
-		DateTime endDate = startDate.AddDays(7);
+		var startDate = DateTime.Now;
+		var endDate = startDate.AddDays(7);
 	
-		shows = await AnonymousHttpClient.Client.GetFromJsonAsync<List<CinemaShowDto>>($"/api/cinemashows/byStartEnd?start={HttpUtility.UrlEncode(startDate.ToString("yyyy-MM-ddTHH:mm:ss"))}&end={HttpUtility.UrlEncode(endDate.ToString("yyyy-MM-ddTHH:mm:ss"))}");
+		_shows = await AnonymousHttpClient.Client.GetFromJsonAsync<List<CinemaShowDto>>($"/api/cinemashows/byStartEnd?start={HttpUtility.UrlEncode(startDate.ToString("yyyy-MM-ddTHH:mm:ss"))}&end={HttpUtility.UrlEncode(endDate.ToString("yyyy-MM-ddTHH:mm:ss"))}");
 	}
 }

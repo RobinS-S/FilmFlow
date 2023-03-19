@@ -1,12 +1,5 @@
 ﻿@page "/contact"
-@using FilmFlow.Shared.Dto
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-@using FilmFlow.Shared
-@using Microsoft.Extensions.Localization;
-@inject HttpClient Http
-@inject IJSRuntime JSRuntime
-@using System.Globalization
+@inject IJSRuntime JsRuntime
 @inherits BaseComponent
 
 <h3>Contact</h3>
@@ -21,24 +14,23 @@
         </div>        
         <div class="col-xl">
             <div class="card m-4 p-0" style="background-color: #ffffff96">
-                <h3>Adres</h3>
+                <h3>@Localizer["Address"]</h3>
                 <h4>FilmFlow</h4>
                 <h4>Hogeschoollaan 1</h4>
                 <h4>4818 CR Breda</h4>
                 <h4>088-525 7500</h4>
-                <a href="https://www.google.com/maps/dir/51.7739596,5.0908276/Avans+Hogeschool,+Hogeschoollaan+1,+4818+CR+Breda" target="_blank" style="text-decoration: none;"> <img src="img/navigate.png" width="50" />@Localizer["NavigateToFilmFlow"]</a>
+                <a href="https://www.google.com/maps/dir/?api=1&destination=Avans+Hogeschool,+Hogeschoollaan+1,+4818+CR+Breda" target="_blank" style="text-decoration: none;"> <img src="img/navigate.png" width="50" />@Localizer["NavigateToFilmFlow"]</a>
             </div>
         </div>
     </div>
 </div>
 
 @code {
-    //https://www.google.com/maps/dir/?api=1&destination=37.7749,-122.4194
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("initializeGoogleMaps", null);
+            await JsRuntime.InvokeVoidAsync("initializeGoogleMaps", null);
         }
     }
 }

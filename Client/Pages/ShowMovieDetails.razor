@@ -2,31 +2,31 @@
 @using FilmFlow.Shared.Dto
 @inherits BaseComponent
 
-@if (Movie != null)
+@if (_movie != null)
 {
 	<div class="row p-3">
 		<div class="col-sm-12 col-md-6 col-lg-3">
 			<div class="card m-4 p-0" style="background-color: #ffffff96">
-				<img src="@Movie.ImageUrl" class="card-img-top img-fluid" alt="...">
+				<img src="@_movie.ImageUrl" class="card-img-top img-fluid" alt="...">
 				<div class="card-body">
-					<h5 class="card-title">@Movie.Title</h5>
+					<h5 class="card-title">@_movie.Title</h5>
 					<ul>
-						<li>@Localizer["Category"]: @Movie.Category</li>
-						<li>@Localizer["AgeRating"]: @Movie.MinAge</li>
-						<li>@Localizer["Language"]: @Movie.Language</li>
+						<li>@Localizer["Category"]: @_movie.Category</li>
+						<li>@Localizer["AgeRating"]: @_movie.MinAge</li>
+						<li>@Localizer["Language"]: @_movie.Language</li>
 					</ul>
-					<p class="card-text">@Movie.Description</p>
+					<p class="card-text">@_movie.Description</p>
 				</div>
 			</div>
 		</div>
 		<div class="col-sm-12 col-md-6 col-lg-9">
 			<div class="text-center row p-3">
 				<div class="col-12"><h3>@Localizer["UpcomingShow"]</h3></div>
-				@if (Shows != null)
+				@if (_shows != null)
 				{
-					@if (Shows.Count > 0)
+					@if (_shows.Count > 0)
 					{
-						@foreach (var show in Shows)
+						@foreach (var show in _shows)
 						{
 							<div class="col-sm-12 col-md-6 col-lg-4">
 								<div class="card p-3 m-3" style="background-color: #ffffff96;">
@@ -62,16 +62,19 @@ else
 	[Parameter]
 	public long Id { get; set; }
 
-	private MovieDto? Movie;
-	private List<CinemaShowDto>? Shows;
+	private MovieDto? _movie;
+	private List<CinemaShowDto>? _shows;
 
 	protected override async Task OnInitializedAsync()
 	{
-		Movie = await AnonymousHttpClient.Client.GetFromJsonAsync<MovieDto>($"/api/Movies/{Id}");
+		_movie = await AnonymousHttpClient.Client.GetFromJsonAsync<MovieDto>($"/api/Movies/{Id}");
 		var shows = await AnonymousHttpClient.Client.GetFromJsonAsync<List<CinemaShowDto>>($"/api/Movies/{Id}/shows");
-		if (shows != null) Shows = shows
-			.Where(show => !show.IsSecret && show.Start > DateTime.Now)
-			.OrderBy(s => s.Start)
-			.ToList();
+		
+		if (shows != null)
+		{
+			_shows = shows.Where(show => !show.IsSecret && show.Start > DateTime.Now)
+				.OrderBy(s => s.Start)
+				.ToList();
+		}
 	}
 }

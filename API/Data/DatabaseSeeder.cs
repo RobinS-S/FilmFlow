@@ -15,7 +15,7 @@ namespace FilmFlow.API.Data
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var configuration = scope.ServiceProvider.GetRequiredService<Config>();
-            var adminRoleName = Roles.Admin;
+            var adminRoleName = Roles.AdminRoleName;
 
             var roleExist = await roleManager.RoleExistsAsync(adminRoleName);
             if (!roleExist) await roleManager.CreateAsync(new IdentityRole(adminRoleName));
@@ -37,14 +37,14 @@ namespace FilmFlow.API.Data
                 var createPowerUser = await userManager.CreateAsync(defaultUser, configuration.AdminUserPassword);
                 if (createPowerUser.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(defaultUser, Roles.Admin);
+                    await userManager.AddToRoleAsync(defaultUser, Roles.AdminRoleName);
                     user = await userManager.FindByEmailAsync(configuration.AdminUserEmail);
                 }
             }
             else
             {
-                var isAdmin = await userManager.IsInRoleAsync(user, Roles.Admin);
-                if (!isAdmin) await userManager.AddToRoleAsync(user, Roles.Admin);
+                var isAdmin = await userManager.IsInRoleAsync(user, Roles.AdminRoleName);
+                if (!isAdmin) await userManager.AddToRoleAsync(user, Roles.AdminRoleName);
             }
 
             if (user != null)
@@ -112,7 +112,7 @@ namespace FilmFlow.API.Data
             var show = shows.ElementAt(0);
             var reservations = new List<Reservation>
             {
-                new Reservation(show, new List<ReservationSeat>() { new ReservationSeat(show.CinemaHall.Rows.ElementAt(1).Seats.ElementAt(3), TarriffType.NORMAL) }, false, user)
+                new Reservation(show, new List<ReservationSeat>() { new ReservationSeat(show.CinemaHall.Rows.ElementAt(1).Seats.ElementAt(3), TariffType.Normal) }, false, user)
             };
 
             var socials = new List<Social>

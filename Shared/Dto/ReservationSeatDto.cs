@@ -12,7 +12,7 @@ namespace FilmFlow.Shared.Dto
 
         public long SeatId { get; set; }
 
-		public TarriffType TarriffType { get; set; }
+		public TariffType TariffType { get; set; }
 
 		public ShowTicketDto? Ticket { get; set; }
 

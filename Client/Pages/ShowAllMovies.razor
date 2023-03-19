@@ -4,14 +4,14 @@
 
 <div class="p-3">
 	<h3 class="d-flex">@Localizer["Movies"]</h3>
-	<input type="search" id="movieSearch" class="form-control" placeholder="@Localizer["SearchForMovies"]" aria-label="Search" @bind="searchText" @oninput="UpdateOnSearch" />
+	<input type="search" id="movieSearch" class="form-control" placeholder="@Localizer["SearchForMovies"]" aria-label="Search" @bind="_searchText" @oninput="UpdateOnSearch" />
 	<div class="row mt-3">
 		<div class="col-md-3">
 			<label for="ageFilter">@Localizer["AgeRating"]: </label>
-			<select id="ageFilter" class="form-select" @bind="ageFilter">
+			<select id="ageFilter" class="form-select" @bind="_ageFilter">
 				<option value="">@Localizer["SelectAgeRating"]</option>
-				@if (ageOptions != null) {
-					@foreach (var age in ageOptions)
+				@if (_ageOptions != null) {
+					@foreach (var age in _ageOptions)
 					{
 						<option value="@age">@age+</option>
 					}
@@ -20,11 +20,11 @@
 		</div>
 		<div class="col-md-3">
 			<label for="languageFilter">@Localizer["Language"]: </label>
-			<select id="languageFilter" class="form-select" @bind="languageFilter">
+			<select id="languageFilter" class="form-select" @bind="_languageFilter">
 				<option value="">@Localizer["SelectLanguage"]</option>
-				@if (allLanguages != null)
+				@if (_allLanguages != null)
 				{
-					@foreach (var lang in allLanguages)
+					@foreach (var lang in _allLanguages)
 					{
 						<option value="@lang">@lang</option>
 					}
@@ -33,11 +33,11 @@
 		</div>
 		<div class="col-md-3">
 			<label for="categoryFilter">@Localizer["Category"]: </label>
-			<select id="categoryFilter" class="form-select" @bind="categoryFilter">
+			<select id="categoryFilter" class="form-select" @bind="_categoryFilter">
 				<option value="">@Localizer["SelectCategory"]</option>
-				@if (allCategories != null)
+				@if (_allCategories != null)
 				{
-					@foreach (var cat in allCategories)
+					@foreach (var cat in _allCategories)
 					{
 						<option value="@cat">@cat</option>
 					}
@@ -47,10 +47,10 @@
 	</div>
 </div>
 
-@if (movies != null)
+@if (_movies != null)
 {
 	<div class="row p-3">
-		@foreach (MovieDto movie in filteredMovies)
+		@foreach (MovieDto movie in FilteredMovies)
 		{
 			<div class="col-sm-12 col-md-6 col-lg-3">
 				<div class="card m-4 p-0" style="background-color: #ffffff96; max-width: 400px;">
@@ -72,9 +72,9 @@
 			</div>
 		}
 	</div>
-	@if (!filteredMovies.Any())
+	@if (!FilteredMovies.Any())
 	{
-		<h3 class="p-3">@Localizer["NoMoviesMatchinYourSearchCriterea"]!</h3>
+		<h3 class="p-3">@Localizer["NoMoviesMatchingYourSearchCriteria"]!</h3>
 	}
 }
 else
@@ -83,63 +83,58 @@ else
 }
 
 @code {
-	string searchText = "";
-	string ageFilter = "";
-	string languageFilter = "";
-	string categoryFilter = "";
-	private List<MovieDto>? movies;
-	string[] allLanguages = new string[0];
-	string[] allCategories = new string[0];
-	int[] ageOptions = new int[0];
+	private string _searchText = "";
+	private string _ageFilter = "";
+	private string _languageFilter = "";
+	private string _categoryFilter = "";
+	private List<MovieDto>? _movies;
+	private string[] _allLanguages = Array.Empty<string>();
+	private string[] _allCategories = Array.Empty<string>();
+	private int[] _ageOptions = Array.Empty<int>();
 
-	private IEnumerable<MovieDto> filteredMovies
+	private IEnumerable<MovieDto> FilteredMovies
 	{
 		get
 		{
-			if (movies == null) return Enumerable.Empty<MovieDto>();
-			var query = movies.AsEnumerable();
-			if (!string.IsNullOrEmpty(searchText))
+			if (_movies == null) return Enumerable.Empty<MovieDto>();
+			var query = _movies.AsEnumerable();
+			if (!string.IsNullOrEmpty(_searchText))
 			{
-				query = query.Where(m => m.Title.Contains(searchText, StringComparison.InvariantCultureIgnoreCase));
+				query = query.Where(m => m.Title.Contains(_searchText, StringComparison.InvariantCultureIgnoreCase));
 			}
-			if (!string.IsNullOrEmpty(ageFilter))
+			if (!string.IsNullOrEmpty(_ageFilter))
 			{
-				int minAge = int.Parse(ageFilter);
+				var minAge = int.Parse(_ageFilter);
 				query = query.Where(m => m.MinAge >= minAge);
 			}
-			if (!string.IsNullOrEmpty(languageFilter))
+			if (!string.IsNullOrEmpty(_languageFilter))
 			{
-				query = query.Where(m => m.Language == languageFilter);
+				query = query.Where(m => m.Language == _languageFilter);
 			}
-			if (!string.IsNullOrEmpty(categoryFilter))
+			if (!string.IsNullOrEmpty(_categoryFilter))
 			{
-				query = query.Where(m => m.Category == categoryFilter);
+				query = query.Where(m => m.Category == _categoryFilter);
 			}
 			return query;
 		}
 	}
-	private bool hasMatchingMovies
-	{
-		get
-		{
-			return filteredMovies.Any();
-		}
-	}
+
+	private bool HasMatchingMovies => FilteredMovies.Any();
 
 	protected override async Task OnInitializedAsync()
 	{
 		var movies = await AnonymousHttpClient.Client.GetFromJsonAsync<MovieDto[]>("/api/Movies");
 		if (movies != null)
 		{
-			this.movies = movies.ToList<MovieDto>();
-			ageOptions = movies.Select(m => m.MinAge).Distinct().ToArray();
-			allLanguages = movies.Select(m => m.Language).Distinct().ToArray();
-			allCategories = movies.Select(m => m.Category).Distinct().ToArray();
+			this._movies = movies.ToList<MovieDto>();
+			_ageOptions = movies.Select(m => m.MinAge).Distinct().ToArray();
+			_allLanguages = movies.Select(m => m.Language).Distinct().ToArray();
+			_allCategories = movies.Select(m => m.Category).Distinct().ToArray();
 		}
 	}
 
 	private void UpdateOnSearch(ChangeEventArgs args)
 	{
-		searchText = args.Value.ToString();
+		_searchText = args.Value?.ToString() ?? "";
 	}
 }

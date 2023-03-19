@@ -4,13 +4,11 @@ namespace FilmFlow.Client.Auth
 {
     public class AuthorizedHttpClient : IAuthorizedHttpClient
     {
-        private readonly HttpClient _httpClient;
-
-        public AuthorizedHttpClient(HttpClient httpClient)
+	    public AuthorizedHttpClient(HttpClient httpClient)
         {
-            _httpClient = httpClient;
+            Client = httpClient;
         }
 
-        public HttpClient Client => _httpClient;
+        public HttpClient Client { get; }
     }
 }

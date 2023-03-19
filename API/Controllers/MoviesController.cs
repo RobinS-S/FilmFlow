@@ -55,7 +55,7 @@ namespace FilmFlow.API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Roles.AdminRoleName)]
         [ProducesResponseType(typeof(MovieDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] MovieDto movieDto)
@@ -68,7 +68,7 @@ namespace FilmFlow.API.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Roles.AdminRoleName)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -93,7 +93,7 @@ namespace FilmFlow.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Roles.AdminRoleName)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(long id)
@@ -204,7 +204,7 @@ namespace FilmFlow.API.Controllers
                 return BadRequest();
             }
 
-            if (review.UserId != user.Id && !await userManager.IsInRoleAsync(user, Roles.Admin))
+            if (review.UserId != user.Id && !await userManager.IsInRoleAsync(user, Roles.AdminRoleName))
             {
                 return Forbid();
             }
@@ -240,7 +240,7 @@ namespace FilmFlow.API.Controllers
                 return BadRequest();
             }
 
-            if (review.UserId != user.Id && !await userManager.IsInRoleAsync(user, Roles.Admin))
+            if (review.UserId != user.Id && !await userManager.IsInRoleAsync(user, Roles.AdminRoleName))
             {
                 return Forbid();
             }

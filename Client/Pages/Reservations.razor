@@ -6,10 +6,10 @@
 @attribute [Authorize]
 <h3>@Localizer["Reservations"]</h3>
 
-@if(reservations != null)
+@if(_reservations != null)
 {
     <div class="row p-3">
-        @foreach(var reservation in reservations)
+        @foreach(var reservation in _reservations)
         {
             <div class="col-sm-12 col-md-6 col-lg-3">
                 <div class="card m-4 p-0" style="background-color: #ffffff96;">
@@ -30,7 +30,7 @@ else
 
 
 @code {
-    private IEnumerable<ReservationDto>? reservations;
+    private IEnumerable<ReservationDto>? _reservations;
 
     protected override async Task OnInitializedAsync()
     {
@@ -39,7 +39,7 @@ else
             var reservationDtos = await AuthorizedHttpClient.Client.GetFromJsonAsync<List<ReservationDto>>(ApiCallUrls.Reservations());
             if (reservationDtos != null)
             {
-                reservations = reservationDtos.OrderByDescending(r => r.Id);
+                _reservations = reservationDtos.OrderByDescending(r => r.Id);
             }
         }
         catch (AccessTokenNotAvailableException exception)

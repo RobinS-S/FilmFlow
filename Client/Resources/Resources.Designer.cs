@@ -61,6 +61,15 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Address.
+        /// </summary>
+        public static string Address {
+            get {
+                return ResourceManager.GetString("Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Age Rating.
         /// </summary>
         public static string AgeRating {
@@ -268,11 +277,11 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No movies matching your search criterea.
+        ///   Looks up a localized string similar to No movies matching your search criteria.
         /// </summary>
-        public static string NoMoviesMatchinYourSearchCriterea {
+        public static string NoMoviesMatchingYourSearchCriteria {
             get {
-                return ResourceManager.GetString("NoMoviesMatchinYourSearchCriterea", resourceCulture);
+                return ResourceManager.GetString("NoMoviesMatchingYourSearchCriteria", resourceCulture);
             }
         }
         
@@ -477,45 +486,45 @@ namespace FilmFlow.Client.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Children.
         /// </summary>
-        public static string TarriffType_CHILDREN {
+        public static string TariffType_Children {
             get {
-                return ResourceManager.GetString("TarriffType.CHILDREN", resourceCulture);
+                return ResourceManager.GetString("TariffType.Children", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Normal.
         /// </summary>
-        public static string TarriffType_NORMAL {
+        public static string TariffType_Normal {
             get {
-                return ResourceManager.GetString("TarriffType.NORMAL", resourceCulture);
+                return ResourceManager.GetString("TariffType.Normal", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Secret.
         /// </summary>
-        public static string TarriffType_SECRET {
+        public static string TariffType_Secret {
             get {
-                return ResourceManager.GetString("TarriffType.SECRET", resourceCulture);
+                return ResourceManager.GetString("TariffType.Secret", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 65+.
         /// </summary>
-        public static string TarriffType_SENIORS {
+        public static string TariffType_Seniors {
             get {
-                return ResourceManager.GetString("TarriffType.SENIORS", resourceCulture);
+                return ResourceManager.GetString("TariffType.Seniors", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Students.
         /// </summary>
-        public static string TarriffType_STUDENTS {
+        public static string TariffType_Students {
             get {
-                return ResourceManager.GetString("TarriffType.STUDENTS", resourceCulture);
+                return ResourceManager.GetString("TariffType.Students", resourceCulture);
             }
         }
         

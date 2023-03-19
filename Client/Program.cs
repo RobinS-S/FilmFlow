@@ -1,10 +1,8 @@
 using FilmFlow.Client.Auth;
-using Microsoft.AspNetCore.Builder;
 using FilmFlow.Client.Auth.Interfaces;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.JSInterop;
 using System.Globalization;
 
@@ -12,7 +10,7 @@ namespace FilmFlow.Client
 {
     public class Program
     {
-        public const string LANGUAGE_KEY = "i18nextLng";
+        public const string LanguageKeyName = "i18nextLng";
 
         public static async Task Main(string[] args)
         {
@@ -30,7 +28,7 @@ namespace FilmFlow.Client
             var host = builder.Build();
 
             var jsRuntime = host.Services.GetRequiredService<IJSRuntime>();
-            var language = await jsRuntime.InvokeAsync<string?>("localStorage.getItem", LANGUAGE_KEY);
+            var language = await jsRuntime.InvokeAsync<string?>("localStorage.getItem", LanguageKeyName);
             if (!string.IsNullOrEmpty(language))
             {
                 var culture = new CultureInfo(language);

@@ -6,17 +6,17 @@
 @attribute [Authorize]
 <h3>@Localizer["Reservation"]</h3>
 
-@if(reservation != null)
+@if(_reservation != null)
 {
     <div class="row p-3">
         <div class="card m-4 p-0" style="background-color: #ffffff96;">
             <div class="card-body">
-                <h5 class="card-title">@reservation.CinemaShow?.Movie?.Title</h5>
-                <h6 class="card-subtitle mb-2 text-muted"><strong>@reservation.CinemaShow?.Start.ToShortDateString() @reservation.CinemaShow?.Start.ToShortTimeString() - @reservation.CinemaShow?.End.ToShortTimeString()</strong></h6>
-                <p class="card-text"><strong>@Localizer["ChairsReserved"]:</strong> @string.Join(", ", reservation.ReservedSeats.Select(rs => $"{Localizer["Row"]} {rs.Seat.ParentRowId} {Localizer["Seat"]} {rs.Seat.SeatNumber}"))</p>
+                <h5 class="card-title">@_reservation.CinemaShow?.Movie?.Title</h5>
+                <h6 class="card-subtitle mb-2 text-muted"><strong>@_reservation.CinemaShow?.Start.ToShortDateString() @_reservation.CinemaShow?.Start.ToShortTimeString() - @_reservation.CinemaShow?.End.ToShortTimeString()</strong></h6>
+                <p class="card-text"><strong>@Localizer["ChairsReserved"]:</strong> @string.Join(", ", _reservation.ReservedSeats.Select(rs => $"{Localizer["Row"]} {rs.Seat.ParentRowId} {Localizer["Seat"]} {rs.Seat.SeatNumber}"))</p>
                 <div class="btn-group" role="group" aria-label="@Localizer["Reservation"]">
-                    <a href="reservations/@id/pay" class="btn btn-danger">@Localizer["PayNow"]</a>
-                    <a href="reservations/@id/tickets" class="btn btn-info">@Localizer["Tickets"]</a>
+                    <a href="reservations/@Id/pay" class="btn btn-danger">@Localizer["PayNow"]</a>
+                    <a href="reservations/@Id/tickets" class="btn btn-info">@Localizer["Tickets"]</a>
 		        </div>
             </div>
         </div>
@@ -29,15 +29,15 @@ else
 
 @code {
     [Parameter]
-    public long id { get; set; }
+    public long Id { get; set; }
 
-    private ReservationDto? reservation;
+    private ReservationDto? _reservation;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            reservation = await AuthorizedHttpClient.Client.GetFromJsonAsync<ReservationDto>(ApiCallUrls.ReservationById(id));
+            _reservation = await AuthorizedHttpClient.Client.GetFromJsonAsync<ReservationDto>(ApiCallUrls.ReservationById(Id));
         }
         catch (AccessTokenNotAvailableException exception)
         {
