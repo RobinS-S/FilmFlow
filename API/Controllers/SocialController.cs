@@ -16,8 +16,8 @@ namespace FilmFlow.API.Controllers
 
         public SocialController(SocialService socialService, IMapper mapper)
         {
-            this._socialService = socialService;
-            this._mapper = mapper;
+            _socialService = socialService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -46,19 +46,19 @@ namespace FilmFlow.API.Controllers
         }
 
 		[HttpDelete("{id}")]
-		//[Authorize(Roles = Roles.Admin)]
+		[Authorize(Roles = Roles.AdminRoleName)]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public async Task<IActionResult> Delete(long id)
 		{
-			var social = await socialService.GetById(id);
+			var social = await _socialService.GetById(id);
 
 			if (social == null)
 			{
 				return NotFound();
 			}
 
-			await socialService.Delete(id);
+			await _socialService.Delete(id);
 
 			return NoContent();
 		}

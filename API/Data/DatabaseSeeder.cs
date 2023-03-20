@@ -98,7 +98,7 @@ namespace FilmFlow.API.Data
             {
                 foreach (var movie in movies)
                 {
-                    for (var i = 1; i < 4; i++)
+                    for (var i = 1; i < 7; i++)
                     {
                         var start = DateTime.Today.AddDays(i).AddHours(2);
                         var end = start.AddHours(2);
