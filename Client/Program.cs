@@ -31,6 +31,10 @@ namespace FilmFlow.Client
             var language = await jsRuntime.InvokeAsync<string?>("localStorage.getItem", LanguageKeyName);
             if (!string.IsNullOrEmpty(language))
             {
+	            if (language.ToLower() == "en-gb")
+	            {
+		            language = "en-US";
+	            }
                 var culture = new CultureInfo(language);
                 CultureInfo.CurrentCulture = culture;
                 CultureInfo.CurrentUICulture = culture;
