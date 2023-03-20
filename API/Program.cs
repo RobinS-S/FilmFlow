@@ -51,6 +51,11 @@ namespace FilmFlow.API
             });
 
             builder.Services.AddAuthentication()
+                .AddMicrosoftAccount(microsoftOptions =>
+                {
+                    microsoftOptions.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"] ?? throw new InvalidOperationException();
+                    microsoftOptions.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"] ?? throw new InvalidOperationException();
+                })
                 .AddIdentityServerJwt();
 
             builder.Services.AddControllersWithViews();
