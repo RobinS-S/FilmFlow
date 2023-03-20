@@ -37,13 +37,11 @@ namespace FilmFlow.API
 
             builder.Services.AddIdentityServer(options =>
             {
-                if (builder.Environment.IsDevelopment())
-                {
-                    options.Events.RaiseErrorEvents = true;
-                    options.Events.RaiseInformationEvents = true;
-                    options.Events.RaiseFailureEvents = true;
-                    options.Events.RaiseSuccessEvents = true;
-                }
+	            if (!builder.Environment.IsDevelopment()) return;
+	            options.Events.RaiseErrorEvents = true;
+	            options.Events.RaiseInformationEvents = true;
+	            options.Events.RaiseFailureEvents = true;
+	            options.Events.RaiseSuccessEvents = true;
             }).AddApiAuthorization<ApplicationUser, ApplicationDbContext>(o =>
             {
                 if (builder.Environment.IsDevelopment())

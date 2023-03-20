@@ -1,14 +1,15 @@
 ﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @inject NavigationManager Navigation
+@inherits BaseComponent
 
 <AuthorizeView>
-    <Authorized>
-        <a href="authentication/profile">Hello, @context.User.Identity?.Name!</a>
-        <button class="nav-link btn btn-link" @onclick="BeginLogOut">Log out</button>
-    </Authorized>
+	<Authorized>
+        <a class="nav-link" href="authentication/profile">@Localizer["Hello"] @context.User.Identity?.Name!</a>
+		<a class="nav-link btn btn-link" @onclick="BeginLogOut">@Localizer["LogOut"]</a>
+	</Authorized>
     <NotAuthorized>
-        <a href="authentication/register">Register</a>
-        <a href="authentication/login">Log in</a>
+        <!--<a class="nav-link" href="authentication/register">Register</a>-->
+        <a class="nav-link" href="authentication/login">@Localizer["LogIn"]</a>
     </NotAuthorized>
 </AuthorizeView>
 

@@ -279,4 +279,13 @@
   <data name="Address" xml:space="preserve">
     <value>Adres</value>
   </data>
+  <data name="Hello" xml:space="preserve">
+    <value>Hallo</value>
+  </data>
+  <data name="LogIn" xml:space="preserve">
+    <value>Inloggen</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>Uitloggen</value>
+  </data>
 </root>
