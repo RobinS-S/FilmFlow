@@ -1,12 +1,10 @@
 ﻿@using FilmFlow.Client.Auth.Interfaces;
-@using Microsoft.AspNetCore.Builder;
-@using Microsoft.AspNetCore.Localization;
 @using Microsoft.Extensions.Localization;
 @using System.Globalization;
 @inject IStringLocalizerFactory localizerFactory
 @inject IAnonymousHttpClient anonymousHttpClient
 @inject IAuthorizedHttpClient authorizedHttpClient
-@inject IJSRuntime JSRuntime
+@inject IJSRuntime JsRuntime
 @inject NavigationManager NavigationManager
 
 @code {
@@ -14,13 +12,13 @@
     public IAnonymousHttpClient AnonymousHttpClient = null!;
     public IAuthorizedHttpClient AuthorizedHttpClient = null!;
 
-    private string browserLanguage = "en-US";
+    private string _browserLanguage = "en-US";
     public string SelectedLanguage
     {
-        get => browserLanguage;
+        get => _browserLanguage;
         set
         {
-            if (value == browserLanguage) return;
+            if (value == _browserLanguage) return;
             #pragma warning disable
             ChangeLanguage(value);
             #pragma warning restore
@@ -36,13 +34,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var lang = await JSRuntime.InvokeAsync<string?>("localStorage.getItem", Program.LANGUAGE_KEY) ?? "en-US";
-        browserLanguage = lang ?? CultureInfo.CurrentCulture.ToString();
+        var lang = await JsRuntime.InvokeAsync<string?>("localStorage.getItem", Program.LanguageKeyName) ?? "en-US";
+        _browserLanguage = lang;
     }
 
     private async Task ChangeLanguage(string value)
     {
-        await JSRuntime.InvokeVoidAsync("localStorage.setItem", Program.LANGUAGE_KEY, value ?? "en-US");
+        await JsRuntime.InvokeVoidAsync("localStorage.setItem", Program.LanguageKeyName, value ?? "en-US");
         NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }
 }

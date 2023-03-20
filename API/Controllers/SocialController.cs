@@ -11,36 +11,37 @@ namespace FilmFlow.API.Controllers
     [Route("api/Socials")]
     public partial class SocialController : ControllerBase
     {
-        private readonly SocialService socialService;
-        private readonly IMapper mapper;
+        private readonly SocialService _socialService;
+        private readonly IMapper _mapper;
 
         public SocialController(SocialService socialService, IMapper mapper)
         {
-            this.socialService = socialService;
-            this.mapper = mapper;
+            this._socialService = socialService;
+            this._mapper = mapper;
         }
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<SocialDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll()
         {
-            var socials = await socialService.GetAll();
-            var socialDtos = mapper.Map<IEnumerable<SocialDto>>(socials);
+            var socials = await _socialService.GetAll();
+            var socialDtos = _mapper.Map<IEnumerable<SocialDto>>(socials);
             return Ok(socialDtos);
         }
+
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(SocialDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(long id)
         {
-            var social = await socialService.GetById(id);
+            var social = await _socialService.GetById(id);
 
             if (social == null)
             {
                 return NotFound();
             }
 
-            var socialDto = mapper.Map<SocialDto>(social);
+            var socialDto = _mapper.Map<SocialDto>(social);
             return Ok(socialDto);
         }
 

@@ -4,9 +4,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace FilmFlow.API.Swagger
+namespace FilmFlow.API.Auth
 {
-
     public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -57,7 +56,7 @@ namespace FilmFlow.API.Swagger
                 .GetResult();
         }
 
-        private OpenApiInfo CreateOpenApiInfo()
+        private static OpenApiInfo CreateOpenApiInfo()
         {
             return new OpenApiInfo
             {

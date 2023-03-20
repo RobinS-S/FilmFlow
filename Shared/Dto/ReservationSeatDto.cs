@@ -6,16 +6,16 @@ namespace FilmFlow.Shared.Dto
     {
         public long Id { get; set; }
 
-		public long ReservationId { get; set; }
+        public long ReservationId { get; set; }
 
-		public CinemaHallRowSeatDto Seat { get; set; } = null!;
+        public CinemaHallRowSeatDto Seat { get; set; } = null!;
 
         public long SeatId { get; set; }
 
-		public TarriffType TarriffType { get; set; }
+        public TariffType TariffType { get; set; }
 
-		public ShowTicketDto? Ticket { get; set; }
+        public ShowTicketDto? Ticket { get; set; }
 
-		public long? TicketId { get; set; }
-	}
+        public long? TicketId { get; set; }
+    }
 }

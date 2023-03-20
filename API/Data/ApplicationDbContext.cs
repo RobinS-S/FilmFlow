@@ -1,9 +1,9 @@
 ﻿using Duende.IdentityServer.EntityFramework.Options;
+using FilmFlow.API.Data.Entities;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Reflection;
-using FilmFlow.API.Data.Entities;
 
 namespace FilmFlow.API.Data
 {
@@ -31,9 +31,9 @@ namespace FilmFlow.API.Data
 
         public DbSet<MovieReview> MovieReviews { get; set; } = null!;
 
-		public DbSet<Social> Socials { get; set; } = null!;
+        public DbSet<Social> Socials { get; set; } = null!;
 
-		protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 

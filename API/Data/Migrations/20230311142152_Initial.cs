@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -492,7 +491,7 @@ namespace FilmFlow.API.Data.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ReservationId = table.Column<long>(type: "bigint", nullable: false),
                     SeatId = table.Column<long>(type: "bigint", nullable: false),
-                    TarriffType = table.Column<int>(type: "int", nullable: false),
+                    TariffType = table.Column<int>(type: "int", nullable: false),
                     TicketId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>

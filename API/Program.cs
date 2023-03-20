@@ -1,15 +1,15 @@
+using FilmFlow.API.Auth;
 using FilmFlow.API.Data;
 using FilmFlow.API.Data.Entities;
 using FilmFlow.API.Misc;
 using FilmFlow.API.Services;
-using FilmFlow.API.Swagger;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace FilmFlow
+namespace FilmFlow.API
 {
     public class Program
     {
@@ -37,13 +37,11 @@ namespace FilmFlow
 
             builder.Services.AddIdentityServer(options =>
             {
-                if (builder.Environment.IsDevelopment())
-                {
-                    options.Events.RaiseErrorEvents = true;
-                    options.Events.RaiseInformationEvents = true;
-                    options.Events.RaiseFailureEvents = true;
-                    options.Events.RaiseSuccessEvents = true;
-                }
+                if (!builder.Environment.IsDevelopment()) return;
+                options.Events.RaiseErrorEvents = true;
+                options.Events.RaiseInformationEvents = true;
+                options.Events.RaiseFailureEvents = true;
+                options.Events.RaiseSuccessEvents = true;
             }).AddApiAuthorization<ApplicationUser, ApplicationDbContext>(o =>
             {
                 if (builder.Environment.IsDevelopment())
@@ -120,7 +118,7 @@ namespace FilmFlow
             app.MapControllers();
             app.MapFallbackToFile("index.html");
 
-            app.Run();
+            await app.RunAsync();
         }
     }
 }

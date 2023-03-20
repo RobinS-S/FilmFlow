@@ -165,7 +165,7 @@
   <data name="NavigateToFilmFlow" xml:space="preserve">
     <value>Navigeer naar FilmFlow</value>
   </data>
-  <data name="NoMoviesMatchinYourSearchCriterea" xml:space="preserve">
+  <data name="NoMoviesMatchingYourSearchCriteria" xml:space="preserve">
     <value>Er zijn geen films gevonden</value>
   </data>
   <data name="ReservationCreated" xml:space="preserve">
@@ -207,19 +207,19 @@
   <data name="UpcomingShow" xml:space="preserve">
     <value>Komende shows</value>
   </data>
-  <data name="TarriffType.CHILDREN" xml:space="preserve">
+  <data name="TariffType.Children" xml:space="preserve">
     <value>Kinderen</value>
   </data>
-  <data name="TarriffType.NORMAL" xml:space="preserve">
+  <data name="TariffType.Normal" xml:space="preserve">
     <value>Normaal</value>
   </data>
-  <data name="TarriffType.SECRET" xml:space="preserve">
+  <data name="TariffType.Secret" xml:space="preserve">
     <value>Geheim</value>
   </data>
-  <data name="TarriffType.SENIORS" xml:space="preserve">
+  <data name="TariffType.Seniors" xml:space="preserve">
     <value>65+</value>
   </data>
-  <data name="TarriffType.STUDENTS" xml:space="preserve">
+  <data name="TariffType.Students" xml:space="preserve">
     <value>Studenten</value>
   </data>
   <data name="CardNumber" xml:space="preserve">
@@ -269,5 +269,23 @@
   </data>
   <data name="Tickets" xml:space="preserve">
     <value>Kaartjes</value>
+  </data>
+  <data name="NoMoreShows" xml:space="preserve">
+    <value>Geen opkomende voorstellingen</value>
+  </data>
+  <data name="ReservationAlreadyPaid" xml:space="preserve">
+    <value>Deze reservering is al betaald. U kan de kaartjes inzien.</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Adres</value>
+  </data>
+  <data name="Hello" xml:space="preserve">
+    <value>Hallo</value>
+  </data>
+  <data name="LogIn" xml:space="preserve">
+    <value>Inloggen</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>Uitloggen</value>
   </data>
 </root>

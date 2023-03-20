@@ -1,32 +1,31 @@
 ﻿@page "/reservations/{id:long}/tickets"
 @using FilmFlow.Shared.Dto;
-@using FilmFlow.Shared.Enums;
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 @inherits BaseComponent
 @attribute [Authorize]
 <h3>@Localizer["Tickets"]</h3>
 
-@if (reservation != null && hall != null)
+@if (_reservation != null && _hall != null)
 {
-	<h5>@reservation.CinemaShow?.Movie?.Title</h5>
-	<h6 class="mb-2 text-muted"><strong>@reservation.CinemaShow?.Start.ToShortDateString() @reservation.CinemaShow?.Start.ToShortTimeString() - @reservation.CinemaShow?.End.ToShortTimeString()</strong></h6>
+	<h5>@_reservation.CinemaShow?.Movie?.Title</h5>
+	<h6 class="mb-2 text-muted"><strong>@_reservation.CinemaShow?.Start.ToShortDateString() @_reservation.CinemaShow?.Start.ToShortTimeString() - @_reservation.CinemaShow?.End.ToShortTimeString()</strong></h6>
 	
-	@if(reservation.IsPaid)
+	@if(_reservation.IsPaid)
 	{
 		<div class="row">
-			@foreach (var reservedSeat in reservation.ReservedSeats)
+			@foreach (var reservedSeat in _reservation.ReservedSeats)
 			{
 				@if(reservedSeat.Ticket != null)
 				{
 					<div class="col m-1">
 						<div class="card" style="background-color: #ffffff96;">
 							<div class="card-body">
-								<h6 class="card-subtitle text-muted"><strong>@(hall.IsThreeDimensional ? "3D" : "")</strong></h6>
-								<p class="card-text">@Localizer["Row"] @hall.Rows.Single(hr => hr.Id == reservedSeat.Seat.ParentRowId).RowId, @Localizer["Seat"] @reservedSeat.Seat.SeatNumber</p>
+								<h6 class="card-subtitle text-muted"><strong>@(_hall.IsThreeDimensional ? "3D" : "")</strong></h6>
+								<p class="card-text">@Localizer["Row"] @_hall.Rows.Single(hr => hr.Id == reservedSeat.Seat.ParentRowId).RowId, @Localizer["Seat"] @reservedSeat.Seat.SeatNumber</p>
 								<div class="d-flex-row">
 									<div class="d-flex justify-content-center">
-										<img src="@ApiCallUrls.TicketQrByCode(reservation.Id, reservedSeat.Ticket.Code)"/>
+										<img src="@ApiCallUrls.TicketQrByCode(_reservation.Id, reservedSeat.Ticket.Code)"/>
 									</div>
 								</div>
 							</div>
@@ -39,7 +38,7 @@
 	else
 	{
 		<h3>@Localizer["ReservationNotPaidYet"]</h3>
-		<a href="reservations/@reservation.Id/pay" class="btn btn-danger">@Localizer["PayNow"]</a>
+		<a href="reservations/@_reservation.Id/pay" class="btn btn-danger">@Localizer["PayNow"]</a>
 	}
 }
 else
@@ -49,18 +48,19 @@ else
 
 @code {
 	[Parameter]
-	public long id { get; set; }
+	public long Id { get; set; }
 
-	private ReservationDto? reservation;
-	private CinemaHallDto? hall;
+	private ReservationDto? _reservation;
+	private CinemaHallDto? _hall;
 
 	protected override async Task OnInitializedAsync()
 	{
 		try
 		{
-			reservation = await AuthorizedHttpClient.Client.GetFromJsonAsync<ReservationDto>(ApiCallUrls.ReservationById(id));
-			if(reservation != null) {
-				hall = await AnonymousHttpClient.Client.GetFromJsonAsync<CinemaHallDto>(ApiCallUrls.CinemaHallById(reservation.CinemaShow!.CinemaHallId));
+			_reservation = await AuthorizedHttpClient.Client.GetFromJsonAsync<ReservationDto>(ApiCallUrls.ReservationById(Id));
+			if(_reservation != null)
+			{
+				_hall = await AnonymousHttpClient.Client.GetFromJsonAsync<CinemaHallDto>(ApiCallUrls.CinemaHallById(_reservation.CinemaShow!.CinemaHallId));
 			}
 		}
 		catch (AccessTokenNotAvailableException exception)

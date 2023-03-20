@@ -1,10 +1,8 @@
 using FilmFlow.Client.Auth;
-using Microsoft.AspNetCore.Builder;
 using FilmFlow.Client.Auth.Interfaces;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.JSInterop;
 using System.Globalization;
 
@@ -12,7 +10,7 @@ namespace FilmFlow.Client
 {
     public class Program
     {
-        public const string LANGUAGE_KEY = "i18nextLng";
+        public const string LanguageKeyName = "i18nextLng";
 
         public static async Task Main(string[] args)
         {
@@ -23,16 +21,20 @@ namespace FilmFlow.Client
             builder.Services.AddHttpClient<IAuthorizedHttpClient, AuthorizedHttpClient>("FilmFlow.AuthorizedClient", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
                 .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
             builder.Services.AddHttpClient<IAnonymousHttpClient, AnonymousHttpClient>("FilmFlow.Client", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
-            
+
             builder.Services.AddApiAuthorization();
             builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             var host = builder.Build();
 
             var jsRuntime = host.Services.GetRequiredService<IJSRuntime>();
-            var language = await jsRuntime.InvokeAsync<string?>("localStorage.getItem", LANGUAGE_KEY);
+            var language = await jsRuntime.InvokeAsync<string?>("localStorage.getItem", LanguageKeyName);
             if (!string.IsNullOrEmpty(language))
             {
+                if (language.ToLower() == "en-gb")
+                {
+                    language = "en-US";
+                }
                 var culture = new CultureInfo(language);
                 CultureInfo.CurrentCulture = culture;
                 CultureInfo.CurrentUICulture = culture;

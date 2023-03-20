@@ -1,7 +1,6 @@
 ﻿@page "/"
 @inherits BaseComponent
 @using FilmFlow.Shared.Dto;
-@using System.Collections;
 @using System.Web;
 
 <PageTitle>FilmFlow</PageTitle>
@@ -22,24 +21,31 @@
     </a>
 </div>
 
-@if (shows != null)
+@if (_shows != null)
 {
 	<div class="d-flex p-3 row">
-		@if(shows != null)
+		@if(_shows != null)
 		{
-			@foreach (var show in shows)
+			@if (_shows.Count > 0)
 			{
-				<div class="col-sm-6 col-md-4 col-lg-2">
-					<div class="card p-3 m-1 text-center" style="background-color: #ffffff96;">
-						<img src="@(!show.IsSecret ? show.Movie?.ImageUrl : "https://cdn.shopify.com/s/files/1/0017/7461/6627/products/mystery-kit-38-abstract-animal-diamond-art-painting-33620656816321_2048x2048.jpg?v=1674914645")" class="card-img-top mx-auto" alt="boxart" style="max-width: 200px;">
-						<h6 class="card-title"><strong>@(!show.IsSecret ? show.Movie?.Title : Localizer["SecretMovie"])</strong></h6>
-						<div class="card-body">
-							<h6 class="card-subtitle mb-2 text-muted">@show.Start.ToShortDateString()</h6>
-							<p class="card-text">@Localizer["Hall"] @show.CinemaHallId, @show.Start.ToShortTimeString() - @show.End.ToShortTimeString()</p>
-							<a href="cinemashow/@show.Id" class="btn btn-danger btn-sm">@Localizer["ReserveNow"]</a>
+				@foreach (var show in _shows)
+				{
+					<div class="col-sm-6 col-md-4 col-lg-2">
+						<div class="card p-3 m-1 text-center" style="background-color: #ffffff96;">
+							<img src="@(!show.IsSecret ? show.Movie?.ImageUrl : "https://cdn.shopify.com/s/files/1/0017/7461/6627/products/mystery-kit-38-abstract-animal-diamond-art-painting-33620656816321_2048x2048.jpg?v=1674914645")" class="card-img-top mx-auto" alt="boxart" style="max-width: 200px;">
+							<h6 class="card-title"><strong>@(!show.IsSecret ? show.Movie?.Title : Localizer["SecretMovie"])</strong></h6>
+							<div class="card-body">
+								<h6 class="card-subtitle mb-2 text-muted">@show.Start.ToShortDateString()</h6>
+								<p class="card-text">@Localizer["Hall"] @show.CinemaHallId, @show.Start.ToShortTimeString() - @show.End.ToShortTimeString()</p>
+								<a href="cinemashow/@show.Id" class="btn btn-danger btn-sm">@Localizer["ReserveNow"]</a>
+							</div>
 						</div>
 					</div>
-				</div>
+				}
+			}
+			else
+			{
+				<h3>@Localizer["NoMoreShows"]</h3>
 			}
 		}
 	</div>
@@ -50,13 +56,13 @@ else
 }
 
 @code {
-	private List<CinemaShowDto>? shows;
+	private List<CinemaShowDto>? _shows;
 
 	protected override async Task OnInitializedAsync()
 	{
-		DateTime startDate = DateTime.Now;
-		DateTime endDate = startDate.AddDays(7);
+		var startDate = DateTime.Now;
+		var endDate = startDate.AddDays(7);
 	
-		shows = await AnonymousHttpClient.Client.GetFromJsonAsync<List<CinemaShowDto>>($"/api/cinemashows/byStartEnd?start={HttpUtility.UrlEncode(startDate.ToString("yyyy-MM-ddTHH:mm:ss"))}&end={HttpUtility.UrlEncode(endDate.ToString("yyyy-MM-ddTHH:mm:ss"))}");
+		_shows = await AnonymousHttpClient.Client.GetFromJsonAsync<List<CinemaShowDto>>(ApiCallUrls.CinemaShowsByStartEnd(startDate, endDate));
 	}
 }

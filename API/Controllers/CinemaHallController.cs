@@ -12,21 +12,21 @@ namespace FilmFlow.API.Controllers
     [Route("api/cinemahalls")]
     public class CinemaHallController : ControllerBase
     {
-        private readonly CinemaHallService cinemaHallService;
-        private readonly IMapper mapper;
+        private readonly CinemaHallService _cinemaHallService;
+        private readonly IMapper _mapper;
 
         public CinemaHallController(CinemaHallService cinemaHallService, IMapper mapper)
         {
-            this.cinemaHallService = cinemaHallService;
-            this.mapper = mapper;
+            this._cinemaHallService = cinemaHallService;
+            this._mapper = mapper;
         }
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<CinemaHallDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll()
         {
-            var cinemaHalls = await cinemaHallService.GetAll();
-            var cinemaHallDtos = mapper.Map<IEnumerable<CinemaHallDto>>(cinemaHalls);
+            var cinemaHalls = await _cinemaHallService.GetAll();
+            var cinemaHallDtos = _mapper.Map<IEnumerable<CinemaHallDto>>(cinemaHalls);
             return Ok(cinemaHallDtos);
         }
 
@@ -35,32 +35,32 @@ namespace FilmFlow.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(long id)
         {
-            var cinemaHall = await cinemaHallService.GetById(id);
+            var cinemaHall = await _cinemaHallService.GetById(id);
 
             if (cinemaHall == null)
             {
                 return NotFound();
             }
 
-            var cinemaHallDto = mapper.Map<CinemaHallDto>(cinemaHall);
+            var cinemaHallDto = _mapper.Map<CinemaHallDto>(cinemaHall);
             return Ok(cinemaHallDto);
         }
 
         [HttpPost]
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Roles.AdminRoleName)]
         [ProducesResponseType(typeof(CinemaHallDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CinemaHallDto cinemaHallDto)
         {
-            var cinemaHall = mapper.Map<CinemaHall>(cinemaHallDto);
-            await cinemaHallService.Create(cinemaHall);
+            var cinemaHall = _mapper.Map<CinemaHall>(cinemaHallDto);
+            await _cinemaHallService.Create(cinemaHall);
 
-            cinemaHallDto = mapper.Map<CinemaHallDto>(cinemaHall);
+            cinemaHallDto = _mapper.Map<CinemaHallDto>(cinemaHall);
             return CreatedAtAction(nameof(GetById), new { id = cinemaHall.Id }, cinemaHallDto);
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Roles.AdminRoleName)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -71,26 +71,26 @@ namespace FilmFlow.API.Controllers
                 return BadRequest();
             }
 
-            var cinemaHall = await cinemaHallService.GetById(id);
+            var cinemaHall = await _cinemaHallService.GetById(id);
 
             if (cinemaHall == null)
             {
                 return NotFound();
             }
 
-            mapper.Map(cinemaHallDto, cinemaHall);
-            await cinemaHallService.Update(cinemaHall);
+            _mapper.Map(cinemaHallDto, cinemaHall);
+            await _cinemaHallService.Update(cinemaHall);
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Roles.AdminRoleName)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(long id)
         {
-            var deleted = await cinemaHallService.Delete(id);
+            var deleted = await _cinemaHallService.Delete(id);
 
             if (!deleted)
             {

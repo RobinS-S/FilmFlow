@@ -20,7 +20,7 @@ namespace FilmFlow.API.Data.Entities
             IsWheelchairFriendly = isWheelchairFriendly;
         }
 
-        public CinemaHall(List<CinemaHallRow> rows, bool isThreeDimensional, bool isWheelchairFriendly) : this(isThreeDimensional, isWheelchairFriendly)
+        public CinemaHall(ICollection<CinemaHallRow> rows, bool isThreeDimensional, bool isWheelchairFriendly) : this(isThreeDimensional, isWheelchairFriendly)
         {
             Rows = rows;
         }

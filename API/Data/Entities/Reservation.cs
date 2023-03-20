@@ -22,7 +22,7 @@ namespace FilmFlow.API.Data.Entities
 
         public Reservation() { }
 
-        public Reservation(CinemaShow cinemaShow, ICollection<ReservationSeat> reservedSeats, bool isPaid = false,  ApplicationUser? user = null)
+        public Reservation(CinemaShow cinemaShow, ICollection<ReservationSeat> reservedSeats, bool isPaid = false, ApplicationUser? user = null)
         {
             Code = Misc.Crypto.GenerateHash(Misc.Crypto.GenerateRandomBaseEncodedString());
             CreatedAt = DateTime.UtcNow;

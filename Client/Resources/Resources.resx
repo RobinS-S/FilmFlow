@@ -166,8 +166,8 @@
   <data name="NavigateToFilmFlow" xml:space="preserve">
     <value>Navigate to FilmFlow</value>
   </data>
-  <data name="NoMoviesMatchinYourSearchCriterea" xml:space="preserve">
-    <value>No movies matching your search criterea</value>
+  <data name="NoMoviesMatchingYourSearchCriteria" xml:space="preserve">
+    <value>No movies matching your search criteria</value>
   </data>
   <data name="ReservationCreated" xml:space="preserve">
     <value>Reservation created with ID {0}</value>
@@ -205,22 +205,22 @@
   <data name="SelectLanguage" xml:space="preserve">
     <value>Select language</value>
   </data>
-  <data name="TarriffType.CHILDREN" xml:space="preserve">
+  <data name="TariffType.Children" xml:space="preserve">
     <value>Children</value>
   </data>
-  <data name="TarriffType.NORMAL" xml:space="preserve">
+  <data name="TariffType.Normal" xml:space="preserve">
     <value>Normal</value>
   </data>
-  <data name="TarriffType.SECRET" xml:space="preserve">
+  <data name="TariffType.Secret" xml:space="preserve">
     <value>Secret</value>
   </data>
-  <data name="TarriffType.STUDENTS" xml:space="preserve">
+  <data name="TariffType.Students" xml:space="preserve">
     <value>Students</value>
   </data>
   <data name="UpcomingShow" xml:space="preserve">
     <value>Upcoming show</value>
   </data>
-  <data name="TarriffType.SENIORS" xml:space="preserve">
+  <data name="TariffType.Seniors" xml:space="preserve">
     <value>65+</value>
   </data>
   <data name="CardNumber" xml:space="preserve">
@@ -270,5 +270,23 @@
   </data>
   <data name="Tickets" xml:space="preserve">
     <value>Tickets</value>
+  </data>
+  <data name="NoMoreShows" xml:space="preserve">
+    <value>No more upcoming shows</value>
+  </data>
+  <data name="ReservationAlreadyPaid" xml:space="preserve">
+    <value>This reservation is already paid for. You can view the tickets.</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="Hello" xml:space="preserve">
+    <value>Hello</value>
+  </data>
+  <data name="LogIn" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>Log out</value>
   </data>
 </root>

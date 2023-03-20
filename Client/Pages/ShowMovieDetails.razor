@@ -2,43 +2,47 @@
 @using FilmFlow.Shared.Dto
 @inherits BaseComponent
 
-@if (Movie != null)
+@if (_movie != null)
 {
 	<div class="row p-3">
 		<div class="col-sm-12 col-md-6 col-lg-3">
 			<div class="card m-4 p-0" style="background-color: #ffffff96">
-				<img src="@Movie.ImageUrl" class="card-img-top img-fluid" alt="...">
+				<img src="@_movie.ImageUrl" class="card-img-top img-fluid" alt="...">
 				<div class="card-body">
-					<h5 class="card-title">@Movie.Title</h5>
+					<h5 class="card-title">@_movie.Title</h5>
 					<ul>
-						<li>@Localizer["Category"]: @Movie.Category</li>
-						<li>@Localizer["AgeRating"]: @Movie.MinAge</li>
-						<li>@Localizer["Language"]: @Movie.Language</li>
+						<li>@Localizer["Category"]: @_movie.Category</li>
+						<li>@Localizer["AgeRating"]: @_movie.MinAge</li>
+						<li>@Localizer["Language"]: @_movie.Language</li>
 					</ul>
-					<p class="card-text">@Movie.Description</p>
+					<p class="card-text">@_movie.Description</p>
 				</div>
 			</div>
 		</div>
 		<div class="col-sm-12 col-md-6 col-lg-9">
 			<div class="text-center row p-3">
 				<div class="col-12"><h3>@Localizer["UpcomingShow"]</h3></div>
-				@if (Shows != null)
+				@if (_shows != null)
 				{
-					@foreach (var show in Shows)
+					@if (_shows.Count > 0)
 					{
-						@if(!show.IsSecret && show.Start > DateTime.Now)
+						@foreach (var show in _shows)
 						{
-						<div class="col-sm-12 col-md-6 col-lg-4">
-							<div class="card p-3 m-3" style="background-color: #ffffff96;">
-								<div class="card-body">
-									<h5 class="card-title">Zaal @show.CinemaHallId</h5>
-									<h6 class="card-subtitle mb-2 text-muted">@show.Start.ToShortDateString()</h6>
-									<p class="card-text">@show.Start.ToShortTimeString() - @show.End.ToShortTimeString()</p>
-									<a href="cinemashow/@show.Id" class="btn btn-danger">@Localizer["ReserveNow"]</a>
+							<div class="col-sm-12 col-md-6 col-lg-4">
+								<div class="card p-3 m-3" style="background-color: #ffffff96;">
+									<div class="card-body">
+										<h5 class="card-title">@Localizer["Hall"] @show.CinemaHallId</h5>
+										<h6 class="card-subtitle mb-2 text-muted">@show.Start.ToShortDateString()</h6>
+										<p class="card-text">@show.Start.ToShortTimeString() - @show.End.ToShortTimeString()</p>
+										<a href="cinemashow/@show.Id" class="btn btn-danger">@Localizer["ReserveNow"]</a>
+									</div>
 								</div>
 							</div>
-						</div>
 						}
+					}
+					else
+					{
+						<h4>@Localizer["NoMoreShows"]</h4>
 					}
 				}
 				else
@@ -56,15 +60,21 @@ else
 
 @code {
 	[Parameter]
-	public long id { get; set; }
+	public long Id { get; set; }
 
-	private MovieDto? Movie;
-	private CinemaShowDto[]? Shows;
+	private MovieDto? _movie;
+	private List<CinemaShowDto>? _shows;
 
 	protected override async Task OnInitializedAsync()
 	{
-		Movie = await AnonymousHttpClient.Client.GetFromJsonAsync<MovieDto>($"/api/Movies/{id}");
-		var shows = await AnonymousHttpClient.Client.GetFromJsonAsync<CinemaShowDto[]>($"/api/Movies/{id}/shows");
-		if (shows != null) Shows = shows.OrderBy(s => s.Start).ToArray();
+		_movie = await AnonymousHttpClient.Client.GetFromJsonAsync<MovieDto>(ApiCallUrls.MovieById(Id));
+		var shows = await AnonymousHttpClient.Client.GetFromJsonAsync<List<CinemaShowDto>>(ApiCallUrls.MovieShowsById(Id));
+		
+		if (shows != null)
+		{
+			_shows = shows.Where(show => !show.IsSecret && show.Start > DateTime.Now)
+				.OrderBy(s => s.Start)
+				.ToList();
+		}
 	}
 }

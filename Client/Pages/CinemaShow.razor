@@ -5,17 +5,17 @@
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 @inherits BaseComponent
-@inject IJSRuntime JSRuntime
+@inject IJSRuntime JsRuntime
 @attribute [Authorize]
 @inject NavigationManager Navigation
 
-@if (hall != null && seats != null)
+@if (_hall != null && _seats != null)
 {
     <h3>@Localizer["ChooseYourSeats"]</h3>
-    <p>@Localizer["SeatsPlanned"]: @seatsPlanned</p>
+    <p>@Localizer["SeatsPlanned"]: @_seatsPlanned</p>
     <div class="card-body">
 
-        @foreach (var row in seats)
+        @foreach (var row in _seats)
         {
             <div class="d-flex flex-row justify-content-center align-items-center">
                 <strong>@Localizer["Row"] @row.Key</strong>
@@ -30,23 +30,23 @@
         }
 
 
-        @foreach (var row in seats)
+        @foreach (var row in _seats)
         {
             <div class="d-flex flex-row justify-content-center align-items-center">
                 @foreach (var seat in row.Value)
                 {
-                    @if (seats[row.Key][seat.Key] != "")
+                    @if (_seats[row.Key][seat.Key] != "")
                     {
                         <div class="text-center mx-1">
                             <strong>@Localizer["Row"] @row.Key, Seat @seat.Key</strong>
-                            <strong>Price: €@Tarriffs.GetTarriffPrice(Enum.Parse<TarriffType>(@seat.Value), hall.IsThreeDimensional) @(hall.IsThreeDimensional ? "3D" : "")</strong>
-                            @if (!show?.IsSecret ?? true)
+                            <strong>Price: €@Tariffs.GetTariffPrice(Enum.Parse<TariffType>(@seat.Value), _hall.IsThreeDimensional) @(_hall.IsThreeDimensional ? "3D" : "")</strong>
+                            @if (!_show?.IsSecret ?? true)
                             {
-                                <select @bind="seats[row.Key][seat.Key]" class="form-select form-select-sm text-light" style="background-color: #050505;">
-                                    <option value="NORMAL">@Localizer["TarriffType.NORMAL"]</option>
-                                    <option value="CHILDREN">@Localizer["TarriffType.CHILDREN"]</option>
-                                    <option value="STUDENTS">@Localizer["TarriffType.STUDENTS"]</option>
-                                    <option value="SENIORS">@Localizer["TarriffType.SENIORS"]</option>
+                                <select @bind="_seats[row.Key][seat.Key]" class="form-select form-select-sm text-light" style="background-color: #050505;">
+                                    <option value="Normal">@Localizer["TariffType.Normal"]</option>
+                                    <option value="Children">@Localizer["TariffType.Children"]</option>
+                                    <option value="Students">@Localizer["TariffType.Students"]</option>
+                                    <option value="Seniors">@Localizer["TariffType.Seniors"]</option>
                                 </select>
                             }
                         </div>
@@ -55,36 +55,36 @@
             </div>
         }
     </div>
-    <button @onclick="CreateReservation" disabled="@(seatsPlanned == 0)">@Localizer["CreateReservation"]</button>
+    <button @onclick="CreateReservation" disabled="@(_seatsPlanned == 0)">@Localizer["CreateReservation"]</button>
 }
 
 @code {
-        [Parameter]
-        public long id { get; set; }
+    [Parameter]
+    public long Id { get; set; }
 
-    private CinemaHallDto? hall;
-    private CinemaShowDto? show;
-    private int seatsPlanned;
-    private Dictionary<int, Dictionary<int, string>>? seats;
-    private List<ReservationSeatDto>? reservedSeats;
+    private CinemaHallDto? _hall;
+    private CinemaShowDto? _show;
+    private int _seatsPlanned;
+    private Dictionary<int, Dictionary<int, string>>? _seats;
+    private List<ReservationSeatDto>? _reservedSeats;
 
     protected override async Task OnInitializedAsync()
     {
-        show = await AnonymousHttpClient.Client.GetFromJsonAsync<CinemaShowDto>(ApiCallUrls.CinemaShowById(id));
-        reservedSeats = await AnonymousHttpClient.Client.GetFromJsonAsync<List<ReservationSeatDto>>(ApiCallUrls.ReservedSeatsForShow(id));
-        if(show != null)
+        _show = await AnonymousHttpClient.Client.GetFromJsonAsync<CinemaShowDto>(ApiCallUrls.CinemaShowById(Id));
+        _reservedSeats = await AnonymousHttpClient.Client.GetFromJsonAsync<List<ReservationSeatDto>>(ApiCallUrls.ReservedSeatsForShow(Id));
+        if(_show != null)
         {
-            hall = await AnonymousHttpClient.Client.GetFromJsonAsync<CinemaHallDto>(ApiCallUrls.CinemaHallById(show.CinemaHallId));
+            _hall = await AnonymousHttpClient.Client.GetFromJsonAsync<CinemaHallDto>(ApiCallUrls.CinemaHallById(_show.CinemaHallId));
 
-            if (hall != null)
+            if (_hall != null)
             {
-                seats = new Dictionary<int, Dictionary<int, string>>();
-                foreach (CinemaHallRowDto row in hall.Rows)
+                _seats = new Dictionary<int, Dictionary<int, string>>();
+                foreach (var row in _hall.Rows)
                 {
-                    seats.Add(row.RowId, new Dictionary<int, string>());
+                    _seats.Add(row.RowId, new Dictionary<int, string>());
                     foreach(var chair in row.Seats)
                     {
-                        seats[row.RowId].Add(chair.SeatNumber, "");
+                        _seats[row.RowId].Add(chair.SeatNumber, "");
                     }
                 }
             }
@@ -93,13 +93,13 @@
 
     private string GetSeatImage(int row, int seat)
     {
-        if (seats == null || reservedSeats == null || hall == null)
+        if (_seats == null || _reservedSeats == null || _hall == null)
         {
             return "";
         }
-        if (seats.TryGetValue(row, out var seatNumbers) && seatNumbers[seat] == ""
-            && !reservedSeats.Any(rs => {
-                var hallRow = hall.Rows.Single(hr => hr.RowId == row);
+        if (_seats.TryGetValue(row, out var seatNumbers) && seatNumbers[seat] == ""
+            && !_reservedSeats.Any(rs => {
+                var hallRow = _hall.Rows.Single(hr => hr.RowId == row);
                 var hallSeat = hallRow.Seats.SingleOrDefault(hrs => hrs.Id == rs.SeatId);
                 return hallRow.RowId == row && hallSeat != null && hallSeat.SeatNumber == seat;
             }))
@@ -118,44 +118,43 @@
 
     private void ToggleSelected(int row, int seat)
     {
-        if (seats == null || reservedSeats == null || reservedSeats.Any(rs => rs.Seat.ParentRowId == row && rs.Seat.SeatNumber == seat) || show == null)
+        if (_seats == null || _reservedSeats == null || _reservedSeats.Any(rs => rs.Seat.ParentRowId == row && rs.Seat.SeatNumber == seat) || _show == null)
         {
             return;
         }
-        if (seats.TryGetValue(row, out var seatNumbers) && seatNumbers.TryGetValue(seat, out var isSelected))
-        {
-            if (isSelected == "")
-            {
-                seats[row][seat] = show.IsSecret ? TarriffType.SECRET.ToString() : TarriffType.NORMAL.ToString();
-                seatsPlanned++;
-            }
-            else if (isSelected != "")
-            {
-                seats[row][seat] = "";
-                seatsPlanned--;
-            }
-            StateHasChanged();
-        }
+	    if (!_seats.TryGetValue(row, out var seatNumbers) || !seatNumbers.TryGetValue(seat, out var isSelected)) return;
+	    
+	    if (isSelected == "")
+	    {
+		    _seats[row][seat] = _show.IsSecret ? TariffType.Secret.ToString() : TariffType.Normal.ToString();
+		    _seatsPlanned++;
+	    }
+	    else if (isSelected != "")
+	    {
+		    _seats[row][seat] = "";
+		    _seatsPlanned--;
+	    }
+	    StateHasChanged();
     }
 
     private async Task CreateReservation()
     {
-        if (hall == null || seats == null)
+        if (_hall == null || _seats == null)
         {
             return;
         }
-        var selectedRows = seats.Where(row => row.Value.Any(s => s.Value != ""));
-        var takenSeats = selectedRows.SelectMany(r => r.Value.Where(rv => rv.Value != "").Select(st => new CreateReservationSeatDto() { SeatId = hall.Rows.Single(hr => hr.RowId == r.Key).Seats.Single(hs => hs.SeatNumber == st.Key).Id, Tarriff = Enum.Parse<TarriffType>(st.Value) }));
-        var createReservationDto = new CreateReservationDto() { CinemaShowId = id, Seats = takenSeats.ToList() };
+        var selectedRows = _seats.Where(row => row.Value.Any(s => s.Value != ""));
+        var takenSeats = selectedRows.SelectMany(r => r.Value.Where(rv => rv.Value != "").Select(st => new CreateReservationSeatDto() { SeatId = _hall.Rows.Single(hr => hr.RowId == r.Key).Seats.Single(hs => hs.SeatNumber == st.Key).Id, Tariff = Enum.Parse<TariffType>(st.Value) }));
+        var createReservationDto = new CreateReservationDto() { CinemaShowId = Id, Seats = takenSeats.ToList() };
 
-        if (JSRuntime != null)
+        if (JsRuntime != null)
         {
             try
             {
-                var response = await AuthorizedHttpClient.Client.PostAsJsonAsync(ApiCallUrls.ReservationForCinemaShow(id), createReservationDto);
+                var response = await AuthorizedHttpClient.Client.PostAsJsonAsync(ApiCallUrls.ReservationForCinemaShow(Id), createReservationDto);
                 if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
                 {
-                    await JSRuntime.InvokeVoidAsync("alert", Localizer["ReservationChairsAlreadyTaken"].ToString());
+                    await JsRuntime.InvokeVoidAsync("alert", Localizer["ReservationChairsAlreadyTaken"].ToString());
                 }
                 else
                 {
@@ -166,7 +165,7 @@
                     }
                     else
                     {
-                        await JSRuntime.InvokeVoidAsync("alert", Localizer["ReservationCreationFailed"].ToString());
+                        await JsRuntime.InvokeVoidAsync("alert", Localizer["ReservationCreationFailed"].ToString());
                     }
                 }
             }

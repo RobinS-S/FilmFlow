@@ -18,8 +18,7 @@ namespace FilmFlow.API.Data.Configuration
                 .IsRequired();
 
             builder.Property(m => m.Icon)
-				.HasMaxLength(255);
-
+                .HasMaxLength(255);
         }
-	}
+    }
 }

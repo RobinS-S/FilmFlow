@@ -35,7 +35,6 @@ namespace FilmFlow.API.Data.Configuration
                 .IsUnicode()
                 .IsRequired();
 
-
             builder.Property(m => m.ImageUrl)
                 .HasMaxLength(512)
                 .IsUnicode()

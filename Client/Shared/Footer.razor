@@ -6,9 +6,9 @@
         <div class="row justify-content-center align-items-center">
             <div class="col-md-6">
                 <ul class="list-inline mb-0">
-                    @if (socials != null)
+                    @if (_socials != null)
                     {
-                        @foreach (var social in socials)
+                        @foreach (var social in _socials)
                         {
                             <li class="list-inline-item">
                                 <a href="@social.Url" target="_blank">
@@ -25,10 +25,10 @@
 
 
 @code {
-    private SocialDto[]? socials;
+    private SocialDto[]? _socials;
 
     protected override async Task OnInitializedAsync()
     {
-        socials = await AnonymousHttpClient.Client.GetFromJsonAsync<SocialDto[]>("api/Socials");
+        _socials = await AnonymousHttpClient.Client.GetFromJsonAsync<SocialDto[]>("api/Socials");
     }
 }

@@ -12,17 +12,17 @@ namespace FilmFlow.API.Controllers
     [Route("api/cinemashows")]
     public class CinemaShowController : ControllerBase
     {
-        private readonly CinemaShowService cinemaShowService;
-        private readonly ReservationService reservationService;
-        private readonly IMapper mapper;
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly CinemaShowService _cinemaShowService;
+        private readonly ReservationService _reservationService;
+        private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public CinemaShowController(CinemaShowService cinemaShowService, ReservationService reservationService, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
-            this.cinemaShowService = cinemaShowService;
-            this.reservationService = reservationService;
-            this.mapper = mapper;
-            this.userManager = userManager;
+            this._cinemaShowService = cinemaShowService;
+            this._reservationService = reservationService;
+            this._mapper = mapper;
+            this._userManager = userManager;
         }
 
         [HttpGet("{id}")]
@@ -30,14 +30,14 @@ namespace FilmFlow.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(long id)
         {
-            var cinemaShow = await cinemaShowService.GetById(id);
+            var cinemaShow = await _cinemaShowService.GetById(id);
 
             if (cinemaShow == null)
             {
                 return NotFound();
             }
 
-            var cinemaHallDto = mapper.Map<CinemaShowDto>(cinemaShow);
+            var cinemaHallDto = _mapper.Map<CinemaShowDto>(cinemaShow);
             return Ok(cinemaHallDto);
         }
 
@@ -46,14 +46,9 @@ namespace FilmFlow.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetReservedSeatsByShowId(long id)
         {
-            var seats = await reservationService.GetReservedSeatsForCinemaShow(id);
+            var seats = await _reservationService.GetReservedSeatsForCinemaShow(id);
 
-            if (seats == null)
-            {
-                return Ok(new List<ReservationSeatDto>());
-            }
-
-            var cinemaHallDto = mapper.Map<IEnumerable<ReservationSeatDto>>(seats);
+            var cinemaHallDto = _mapper.Map<IEnumerable<ReservationSeatDto>>(seats);
             return Ok(cinemaHallDto);
         }
 
@@ -64,27 +59,27 @@ namespace FilmFlow.API.Controllers
         [Authorize]
         public async Task<IActionResult> CreateReservationForShow(long id, [FromBody] CreateReservationDto reservationDto)
         {
-            var cinemaShow = await cinemaShowService.GetById(id);
+            var cinemaShow = await _cinemaShowService.GetById(id);
 
             if (cinemaShow == null)
             {
                 return NotFound();
             }
 
-            var user = User.Identity?.Name != null ? await userManager.FindByNameAsync(User.Identity.Name) : null;
+            var user = User.Identity?.Name != null ? await _userManager.FindByNameAsync(User.Identity.Name) : null;
             if (user == null)
             {
                 return BadRequest();
             }
 
             reservationDto.CinemaShowId = id;
-            var reservation = await reservationService.Create(reservationDto, user);
-            if(reservation == null)
+            var reservation = await _reservationService.Create(reservationDto, user);
+            if (reservation == null)
             {
                 return Conflict();
             }
 
-            var createdReservation = mapper.Map<ReservationDto>(reservation);
+            var createdReservation = _mapper.Map<ReservationDto>(reservation);
             return Ok(createdReservation);
         }
 
@@ -93,14 +88,9 @@ namespace FilmFlow.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByStartEndDate([FromQuery] DateTime start, [FromQuery] DateTime end)
         {
-            var shows = await cinemaShowService.GetByStartEndDate(start, end);
+            var shows = await _cinemaShowService.GetByStartEndDate(start, end);
 
-            if (shows == null)
-            {
-                return Ok(new List<CinemaShowDto>());
-            }
-
-            var showsThisWeek = mapper.Map<List<CinemaShowDto>>(shows);
+            var showsThisWeek = _mapper.Map<List<CinemaShowDto>>(shows);
             return Ok(showsThisWeek);
         }
     }

@@ -434,7 +434,7 @@ namespace FilmFlow.API.Data.Migrations
                     b.Property<long>("SeatId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("TarriffType")
+                    b.Property<int>("TariffType")
                         .HasColumnType("int");
 
                     b.Property<long?>("TicketId")

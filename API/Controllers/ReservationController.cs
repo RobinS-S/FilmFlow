@@ -13,15 +13,15 @@ namespace FilmFlow.API.Controllers
     [Route("api/reservations")]
     public class ReservationController : ControllerBase
     {
-        private readonly ReservationService reservationService;
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly IMapper mapper;
+        private readonly ReservationService _reservationService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
 
         public ReservationController(ReservationService reservationService, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
-            this.reservationService = reservationService;
-            this.userManager = userManager;
-            this.mapper = mapper;
+            this._reservationService = reservationService;
+            this._userManager = userManager;
+            this._mapper = mapper;
         }
 
         [Authorize]
@@ -29,14 +29,14 @@ namespace FilmFlow.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<MovieDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll()
         {
-            var user = User.Identity?.Name != null ? await userManager.FindByNameAsync(User.Identity.Name) : null;
+            var user = User.Identity?.Name != null ? await _userManager.FindByNameAsync(User.Identity.Name) : null;
             if (user == null)
             {
                 return BadRequest();
             }
 
-            var reservations = await reservationService.GetByUserId(user.Id);
-            var reservationDtos = mapper.Map<IEnumerable<ReservationDto>>(reservations);
+            var reservations = await _reservationService.GetByUserId(user.Id);
+            var reservationDtos = _mapper.Map<IEnumerable<ReservationDto>>(reservations);
             return Ok(reservationDtos);
         }
 
@@ -46,72 +46,13 @@ namespace FilmFlow.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(long id)
         {
-            var user = User.Identity?.Name != null ? await userManager.FindByNameAsync(User.Identity.Name) : null;
+            var user = User.Identity?.Name != null ? await _userManager.FindByNameAsync(User.Identity.Name) : null;
             if (user == null)
             {
                 return BadRequest();
             }
 
-            var reservation = await reservationService.GetById(id);
-            if(reservation == null)
-            {
-                return NotFound();
-            }
-
-            if(reservation.UserId != user.Id)
-            {
-                return Forbid();
-            }
-
-            var reservationDtos = mapper.Map<ReservationDto>(reservation);
-            return Ok(reservationDtos);
-        }
-
-		[Authorize]
-		[HttpPost("{id}/pay")]
-		[ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public async Task<IActionResult> PayReservation(long id)
-		{
-			var user = User.Identity?.Name != null ? await userManager.FindByNameAsync(User.Identity.Name) : null;
-			if (user == null)
-			{
-				return BadRequest();
-			}
-
-			var reservation = await reservationService.GetById(id);
-			if (reservation == null)
-			{
-				return NotFound();
-			}
-
-			if (reservation.UserId != user.Id)
-			{
-				return Forbid();
-			}
-
-            var paid = await reservationService.PayReservation(reservation);
-            if(!paid)
-            {
-                return Conflict();
-            }
-
-			return Ok(paid);
-		}
-
-		[Authorize]
-        [HttpGet("{id}/qrcode")]
-        [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetQrCode(long id)
-        {
-            var user = User.Identity?.Name != null ? await userManager.FindByNameAsync(User.Identity.Name) : null;
-            if (user == null)
-            {
-                return BadRequest();
-            }
-
-            var reservation = await reservationService.GetById(id);
+            var reservation = await _reservationService.GetById(id);
             if (reservation == null)
             {
                 return NotFound();
@@ -122,7 +63,66 @@ namespace FilmFlow.API.Controllers
                 return Forbid();
             }
 
-            byte[] imageData = await QrCodeEncoding.GenerateQrCodeAsPngFromText(reservation.Code);
+            var reservationDtos = _mapper.Map<ReservationDto>(reservation);
+            return Ok(reservationDtos);
+        }
+
+        [Authorize]
+        [HttpPost("{id}/pay")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> PayReservation(long id)
+        {
+            var user = User.Identity?.Name != null ? await _userManager.FindByNameAsync(User.Identity.Name) : null;
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            var reservation = await _reservationService.GetById(id);
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            if (reservation.UserId != user.Id)
+            {
+                return Forbid();
+            }
+
+            var paid = await _reservationService.PayReservation(reservation);
+            if (!paid)
+            {
+                return Conflict();
+            }
+
+            return Ok(paid);
+        }
+
+        [Authorize]
+        [HttpGet("{id}/qrcode")]
+        [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetQrCode(long id)
+        {
+            var user = User.Identity?.Name != null ? await _userManager.FindByNameAsync(User.Identity.Name) : null;
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            var reservation = await _reservationService.GetById(id);
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            if (reservation.UserId != user.Id)
+            {
+                return Forbid();
+            }
+
+            var imageData = await QrCodeEncoding.GenerateQrCodeAsPngFromText(reservation.Code);
             return File(imageData, "image/png");
         }
     }

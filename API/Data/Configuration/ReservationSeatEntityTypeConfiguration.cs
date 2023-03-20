@@ -9,7 +9,7 @@ namespace FilmFlow.API.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<ReservationSeat> builder)
         {
-            builder.Property(rs => rs.TarriffType)
+            builder.Property(rs => rs.TariffType)
                 .IsRequired();
         }
     }
