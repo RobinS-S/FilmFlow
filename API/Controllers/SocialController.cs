@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using FilmFlow.API.Auth;
 using FilmFlow.API.Services;
 using FilmFlow.Shared.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FilmFlow.API.Controllers
@@ -41,5 +43,23 @@ namespace FilmFlow.API.Controllers
             var socialDto = mapper.Map<SocialDto>(social);
             return Ok(socialDto);
         }
-    }
+
+		[HttpDelete("{id}")]
+		//[Authorize(Roles = Roles.Admin)]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		public async Task<IActionResult> Delete(long id)
+		{
+			var social = await socialService.GetById(id);
+
+			if (social == null)
+			{
+				return NotFound();
+			}
+
+			await socialService.Delete(id);
+
+			return NoContent();
+		}
+	}
 }
