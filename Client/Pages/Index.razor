@@ -63,6 +63,6 @@ else
 		var startDate = DateTime.Now;
 		var endDate = startDate.AddDays(7);
 	
-		_shows = await AnonymousHttpClient.Client.GetFromJsonAsync<List<CinemaShowDto>>($"/api/cinemashows/byStartEnd?start={HttpUtility.UrlEncode(startDate.ToString("yyyy-MM-ddTHH:mm:ss"))}&end={HttpUtility.UrlEncode(endDate.ToString("yyyy-MM-ddTHH:mm:ss"))}");
+		_shows = await AnonymousHttpClient.Client.GetFromJsonAsync<List<CinemaShowDto>>(ApiCallUrls.CinemaShowsByStartEnd(startDate, endDate));
 	}
 }

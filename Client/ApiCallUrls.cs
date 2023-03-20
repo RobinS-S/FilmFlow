@@ -1,4 +1,6 @@
-﻿namespace FilmFlow.Client
+﻿using System.Web;
+
+namespace FilmFlow.Client
 {
     public class ApiCallUrls
     {
@@ -13,6 +15,9 @@
 
         public static string CinemaShows() => $"{ApiPrefix}/cinemashows";
         public static string CinemaShowById(long id) => $"{ApiPrefix}/cinemashows/{id}";
+
+        public static string CinemaShowsByStartEnd(DateTime startDate, DateTime endDate) =>
+            $"{ApiPrefix}/cinemashows/byStartEnd?start={HttpUtility.UrlEncode(startDate.ToString("yyyy-MM-ddTHH:mm:ss"))}&end={HttpUtility.UrlEncode(endDate.ToString("yyyy-MM-ddTHH:mm:ss"))}";
         public static string ReservationForCinemaShow(long id) => $"{ApiPrefix}/cinemashows/{id}/reservation";
         public static string ReservedSeatsForShow(long id) => $"{ApiPrefix}/cinemashows/{id}/reserved";
 

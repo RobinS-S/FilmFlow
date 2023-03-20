@@ -76,20 +76,20 @@ namespace FilmFlow.API.Data
 
             var movies = new List<Movie>
             {
-                new Movie("Toy Story 4", "Woody and the gang are back!", new DateTime(2019, 6, 20), "Animation", 0, "English", "https://m.media-amazon.com/images/M/MV5BMTYzMDM4NzkxOV5BMl5BanBnXkFtZTgwNzM1Mzg2NzM@._V1_.jpg"),
-                new Movie("Joker", "The origin of the iconic villain", new DateTime(2019, 10, 4), "Drama", 16, "English","https://m.media-amazon.com/images/M/MV5BNGVjNWI4ZGUtNzE0MS00YTJmLWE0ZDctN2ZiYTk2YmI3NTYyXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_.jpg"),
-                new Movie("Avengers: Endgame", "The epic conclusion to the Infinity Saga", new DateTime(2019, 4, 26), "Action", 12, "English", "https://cdn.marvel.com/content/1x/avengersendgame_lob_crd_05.jpg"),
-                new Movie("Parasite", "A poor family becomes entangled with a wealthy one", new DateTime(2019, 11, 8), "Drama", 16, "Korean", "https://images.pathe-thuis.nl/20648_450x640.jpg"),
-                new Movie("The Lion King", "A remake of the classic Disney animated film", new DateTime(2019, 7, 19), "Animation", 0, "English","https://images.pathe-thuis.nl/19492_450x640.jpg")
+                new("Toy Story 4", "Woody and the gang are back!", new DateTime(2019, 6, 20), "Animation", 0, "English", "https://m.media-amazon.com/images/M/MV5BMTYzMDM4NzkxOV5BMl5BanBnXkFtZTgwNzM1Mzg2NzM@._V1_.jpg"),
+                new("Joker", "The origin of the iconic villain", new DateTime(2019, 10, 4), "Drama", 16, "English","https://m.media-amazon.com/images/M/MV5BNGVjNWI4ZGUtNzE0MS00YTJmLWE0ZDctN2ZiYTk2YmI3NTYyXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_.jpg"),
+                new("Avengers: Endgame", "The epic conclusion to the Infinity Saga", new DateTime(2019, 4, 26), "Action", 12, "English", "https://cdn.marvel.com/content/1x/avengersendgame_lob_crd_05.jpg"),
+                new("Parasite", "A poor family becomes entangled with a wealthy one", new DateTime(2019, 11, 8), "Drama", 16, "Korean", "https://images.pathe-thuis.nl/20648_450x640.jpg"),
+                new("The Lion King", "A remake of the classic Disney animated film", new DateTime(2019, 7, 19), "Animation", 0, "English","https://images.pathe-thuis.nl/19492_450x640.jpg")
             };
 
             var reviews = new List<MovieReview>
             {
-                new MovieReview(movies[0], 4, user, "A great family movie"),
-                new MovieReview(movies[1], 5, user, "Joaquin Phoenix gives a stunning performance"),
-                new MovieReview(movies[2], 4, user, "A fitting conclusion to the Marvel Cinematic Universe"),
-                new MovieReview(movies[3], 5, user, "A brilliantly crafted film with a powerful message"),
-                new MovieReview(movies[4], 3, user, "A faithful adaptation, but lacks the charm of the original")
+                new(movies[0], 4, user, "A great family movie"),
+                new(movies[1], 5, user, "Joaquin Phoenix gives a stunning performance"),
+                new(movies[2], 4, user, "A fitting conclusion to the Marvel Cinematic Universe"),
+                new(movies[3], 5, user, "A brilliantly crafted film with a powerful message"),
+                new(movies[4], 3, user, "A faithful adaptation, but lacks the charm of the original")
             };
 
             var shows = new List<CinemaShow>();
@@ -98,7 +98,7 @@ namespace FilmFlow.API.Data
             {
                 foreach (var movie in movies)
                 {
-                    for (int i = 1; i < 4; i++)
+                    for (var i = 1; i < 4; i++)
                     {
                         var start = DateTime.Today.AddDays(i).AddHours(2);
                         var end = start.AddHours(2);
@@ -112,14 +112,14 @@ namespace FilmFlow.API.Data
             var show = shows.ElementAt(0);
             var reservations = new List<Reservation>
             {
-                new Reservation(show, new List<ReservationSeat>() { new ReservationSeat(show.CinemaHall.Rows.ElementAt(1).Seats.ElementAt(3), TariffType.Normal) }, false, user)
+                new(show, new List<ReservationSeat>() { new(show.CinemaHall.Rows.ElementAt(1).Seats.ElementAt(3), TariffType.Normal) }, false, user)
             };
 
             var socials = new List<Social>
             {
-                new Social("Instagram", "https://www.instagram.com/avanshogeschool/", "https://cdn-icons-png.flaticon.com/512/174/174855.png"),
-                new Social("Facebook", "https://www.facebook.com/avans/?locale=nl_NL", "https://cdn-icons-png.flaticon.com/512/733/733547.png"),
-				new Social("Linkedin", "https://nl.linkedin.com/school/avans-hogeschool/", "https://cdn-icons-png.flaticon.com/512/3536/3536505.png")
+                new("Instagram", "https://www.instagram.com/avanshogeschool/", "https://cdn-icons-png.flaticon.com/512/174/174855.png"),
+                new("Facebook", "https://www.facebook.com/avans/?locale=nl_NL", "https://cdn-icons-png.flaticon.com/512/733/733547.png"),
+				new("Linkedin", "https://nl.linkedin.com/school/avans-hogeschool/", "https://cdn-icons-png.flaticon.com/512/3536/3536505.png")
 			};
 
             dbContext.CinemaHalls.AddRange(halls);

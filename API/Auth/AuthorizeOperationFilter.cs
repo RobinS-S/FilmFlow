@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Net;
 
-namespace FilmFlow.API.Swagger
+namespace FilmFlow.API.Auth
 {
     public class AuthorizeOperationFilter
         : IOperationFilter

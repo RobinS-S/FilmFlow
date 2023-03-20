@@ -6,52 +6,52 @@ namespace FilmFlow.API.Services
 {
     public class ShowTicketService
     {
-        private readonly ApplicationDbContext context;
+        private readonly ApplicationDbContext _context;
 
         public ShowTicketService(ApplicationDbContext dbContext)
         {
-            context = dbContext;
+            _context = dbContext;
         }
 
         public async Task<List<ShowTicket>> GetAll()
         {
-            return await context.ShowTickets.ToListAsync();
+            return await _context.ShowTickets.ToListAsync();
         }
 
         public async Task<ShowTicket?> GetById(long id)
         {
-            return await context.ShowTickets.FindAsync(id);
+            return await _context.ShowTickets.FindAsync(id);
         }
 
         public async Task<ShowTicket?> GetByCode(string code)
         {
-            return await context.ShowTickets.SingleOrDefaultAsync(st => st.Code == code);
+            return await _context.ShowTickets.SingleOrDefaultAsync(st => st.Code == code);
         }
 
         public async Task Create(ShowTicket showTicket)
         {
-            context.ShowTickets.Add(showTicket);
-            await context.SaveChangesAsync();
+            _context.ShowTickets.Add(showTicket);
+            await _context.SaveChangesAsync();
         }
 
         public async Task CreateRange(IEnumerable<ShowTicket> showTickets)
         {
-            context.ShowTickets.AddRange(showTickets);
-            await context.SaveChangesAsync();
+            _context.ShowTickets.AddRange(showTickets);
+            await _context.SaveChangesAsync();
         }
 
         public async Task Update(ShowTicket showTicket)
         {
-            context.ShowTickets.Update(showTicket);
-            await context.SaveChangesAsync();
+            _context.ShowTickets.Update(showTicket);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> Delete(long id)
         {
-            var showTicket = await context.ShowTickets.FindAsync(id);
+            var showTicket = await _context.ShowTickets.FindAsync(id);
             if (showTicket == null) return false;
-            context.ShowTickets.Remove(showTicket);
-            await context.SaveChangesAsync();
+            _context.ShowTickets.Remove(showTicket);
+            await _context.SaveChangesAsync();
             return true;
         }
     }

@@ -1,23 +1,22 @@
 ﻿using SendGrid;
 using SendGrid.Helpers.Mail;
-using System.Text;
 
 namespace FilmFlow.API.Services
 {
     public class EmailService
     {
-        private readonly IConfiguration configuration;
+        private readonly IConfiguration _configuration;
 
         public EmailService(IConfiguration configuration)
         {
-            this.configuration = configuration;
+            this._configuration = configuration;
         }
 
         public async Task<bool> SendHtmlEmail(string targetEmail, string targetName, string subject, string htmlBody)
         {
-            var apiKey = configuration.GetValue<string>("SendGrid:ApiKey");
-            var fromEmailAddress = configuration.GetValue<string>("SendGrid:FromEmail");
-            var fromName = configuration.GetValue<string>("SendGrid:FromName");
+            var apiKey = _configuration.GetValue<string>("SendGrid:ApiKey");
+            var fromEmailAddress = _configuration.GetValue<string>("SendGrid:FromEmail");
+            var fromName = _configuration.GetValue<string>("SendGrid:FromName");
 
             var client = new SendGridClient(apiKey);
             var message = new SendGridMessage
@@ -34,9 +33,9 @@ namespace FilmFlow.API.Services
 
         public async Task<bool> SendHtmlEmailWithAttachments(string targetEmail, string targetName, string subject, string htmlBody, Dictionary<string, byte[]> attachments)
         {
-            var apiKey = configuration.GetValue<string>("SendGrid:ApiKey");
-            var fromEmailAddress = configuration.GetValue<string>("SendGrid:FromEmail");
-            var fromName = configuration.GetValue<string>("SendGrid:FromName");
+            var apiKey = _configuration.GetValue<string>("SendGrid:ApiKey");
+            var fromEmailAddress = _configuration.GetValue<string>("SendGrid:FromEmail");
+            var fromName = _configuration.GetValue<string>("SendGrid:FromName");
 
             var client = new SendGridClient(apiKey);
             var message = new SendGridMessage

@@ -14,27 +14,27 @@ namespace FilmFlow.API.Controllers
     [Route("api/movies")]
     public partial class MovieController : ControllerBase
     {
-        private readonly MovieService movieService;
-        private readonly MovieReviewService movieReviewService;
-        private readonly CinemaShowService cinemaShowService;
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly IMapper mapper;
+        private readonly MovieService _movieService;
+        private readonly MovieReviewService _movieReviewService;
+        private readonly CinemaShowService _cinemaShowService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
 
         public MovieController(MovieService movieService, MovieReviewService movieReviewService, UserManager<ApplicationUser> userManager, CinemaShowService cinemaShowService, IMapper mapper)
         {
-            this.movieService = movieService;
-            this.movieReviewService = movieReviewService;
-            this.userManager = userManager;
-            this.mapper = mapper;
-            this.cinemaShowService = cinemaShowService;
+            this._movieService = movieService;
+            this._movieReviewService = movieReviewService;
+            this._userManager = userManager;
+            this._mapper = mapper;
+            this._cinemaShowService = cinemaShowService;
         }
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<MovieDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll()
         {
-            var movies = await movieService.GetAll();
-            var movieDtos = mapper.Map<IEnumerable<MovieDto>>(movies);
+            var movies = await _movieService.GetAll();
+            var movieDtos = _mapper.Map<IEnumerable<MovieDto>>(movies);
             return Ok(movieDtos);
         }
 
@@ -43,14 +43,14 @@ namespace FilmFlow.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(long id)
         {
-            var movie = await movieService.GetById(id);
+            var movie = await _movieService.GetById(id);
 
             if (movie == null)
             {
                 return NotFound();
             }
 
-            var movieDto = mapper.Map<MovieDto>(movie);
+            var movieDto = _mapper.Map<MovieDto>(movie);
             return Ok(movieDto);
         }
 
@@ -60,10 +60,10 @@ namespace FilmFlow.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] MovieDto movieDto)
         {
-            var movie = mapper.Map<Movie>(movieDto);
-            await movieService.Create(movie);
+            var movie = _mapper.Map<Movie>(movieDto);
+            await _movieService.Create(movie);
 
-            movieDto = mapper.Map<MovieDto>(movie);
+            movieDto = _mapper.Map<MovieDto>(movie);
             return CreatedAtAction(nameof(GetById), new { id = movie.Id }, movieDto);
         }
 
@@ -79,15 +79,15 @@ namespace FilmFlow.API.Controllers
                 return BadRequest();
             }
 
-            var movie = await movieService.GetById(id);
+            var movie = await _movieService.GetById(id);
 
             if (movie == null)
             {
                 return NotFound();
             }
 
-            mapper.Map(movieDto, movie);
-            await movieService.Update(movie);
+            _mapper.Map(movieDto, movie);
+            await _movieService.Update(movie);
 
             return NoContent();
         }
@@ -98,14 +98,14 @@ namespace FilmFlow.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(long id)
         {
-            var movie = await movieService.GetById(id);
+            var movie = await _movieService.GetById(id);
 
             if (movie == null)
             {
                 return NotFound();
             }
 
-            await movieService.Delete(id);
+            await _movieService.Delete(id);
 
             return NoContent();
         }
@@ -118,8 +118,8 @@ namespace FilmFlow.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<MovieReviewDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllReviews(long movieId)
         {
-            var reviews = await movieReviewService.GetAllByMovieId(movieId);
-            var reviewDtos = mapper.Map<IEnumerable<MovieReviewDto>>(reviews);
+            var reviews = await _movieReviewService.GetAllByMovieId(movieId);
+            var reviewDtos = _mapper.Map<IEnumerable<MovieReviewDto>>(reviews);
             return Ok(reviewDtos);
         }
 
@@ -128,14 +128,14 @@ namespace FilmFlow.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetReviewById(long movieId, long id)
         {
-            var review = await movieReviewService.GetByIdForMovie(movieId, id);
+            var review = await _movieReviewService.GetByIdForMovie(movieId, id);
 
             if (review == null)
             {
                 return NotFound();
             }
 
-            var reviewDto = mapper.Map<MovieReviewDto>(review);
+            var reviewDto = _mapper.Map<MovieReviewDto>(review);
             return Ok(reviewDto);
         }
 
@@ -145,14 +145,14 @@ namespace FilmFlow.API.Controllers
         [Authorize]
         public async Task<IActionResult> CreateReview(long movieId, [FromBody] MovieReviewDto reviewDto)
         {
-            var movie = await movieService.GetById(movieId);
+            var movie = await _movieService.GetById(movieId);
 
             if (movie == null)
             {
                 return BadRequest();
             }
 
-            var review = mapper.Map<MovieReview>(reviewDto);
+            var review = _mapper.Map<MovieReview>(reviewDto);
             review.MovieId = movieId;
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -161,15 +161,15 @@ namespace FilmFlow.API.Controllers
                 return BadRequest();
             }
 
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return BadRequest();
             }
 
-            await movieReviewService.Create(review, user);
+            await _movieReviewService.Create(review, user);
 
-            reviewDto = mapper.Map<MovieReviewDto>(review);
+            reviewDto = _mapper.Map<MovieReviewDto>(review);
             return CreatedAtAction(nameof(GetReviewById), new { movieId, id = review.Id }, reviewDto);
         }
 
@@ -185,7 +185,7 @@ namespace FilmFlow.API.Controllers
                 return BadRequest();
             }
 
-            var review = await movieReviewService.GetByIdForMovie(movieId, id);
+            var review = await _movieReviewService.GetByIdForMovie(movieId, id);
 
             if (review == null)
             {
@@ -198,19 +198,19 @@ namespace FilmFlow.API.Controllers
                 return BadRequest();
             }
 
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return BadRequest();
             }
 
-            if (review.UserId != user.Id && !await userManager.IsInRoleAsync(user, Roles.AdminRoleName))
+            if (review.UserId != user.Id && !await _userManager.IsInRoleAsync(user, Roles.AdminRoleName))
             {
                 return Forbid();
             }
 
-            mapper.Map(reviewDto, review);
-            await movieReviewService.Update(review);
+            _mapper.Map(reviewDto, review);
+            await _movieReviewService.Update(review);
 
             return NoContent();
         }
@@ -221,7 +221,7 @@ namespace FilmFlow.API.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteReview(long movieId, long id)
         {
-            var review = await movieReviewService.GetByIdForMovie(movieId, id);
+            var review = await _movieReviewService.GetByIdForMovie(movieId, id);
 
             if (review == null)
             {
@@ -234,18 +234,18 @@ namespace FilmFlow.API.Controllers
                 return BadRequest();
             }
 
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return BadRequest();
             }
 
-            if (review.UserId != user.Id && !await userManager.IsInRoleAsync(user, Roles.AdminRoleName))
+            if (review.UserId != user.Id && !await _userManager.IsInRoleAsync(user, Roles.AdminRoleName))
             {
                 return Forbid();
             }
 
-            await movieReviewService.Delete(id);
+            await _movieReviewService.Delete(id);
 
             return NoContent();
         }
@@ -258,14 +258,9 @@ namespace FilmFlow.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetMovieShowsById(long movieId)
         {
-            var shows = await cinemaShowService.GetByMovieId(movieId);
+            var shows = await _cinemaShowService.GetByMovieId(movieId);
 
-            if (shows == null)
-            {
-                return NotFound();
-            }
-
-            var movieDto = mapper.Map<IEnumerable<CinemaShowDto>>(shows);
+            var movieDto = _mapper.Map<IEnumerable<CinemaShowDto>>(shows);
             return Ok(movieDto);
         }
     }

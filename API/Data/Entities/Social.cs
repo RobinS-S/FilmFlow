@@ -4,17 +4,17 @@ namespace FilmFlow.API.Data.Entities
 {
 	public class Social : Entity
 	{
-		public string SocialName { get; set; }
+		public string SocialName { get; set; } = null!;
 
-		public string Url { get; set; }
+        public string Url { get; set; } = null!;
 
 		public string Icon { get; set; } = null!;
 
 		public Social() { }
 
-		public Social(string socialname, string url, string icon)
+		public Social(string socialName, string url, string icon)
 		{
-			SocialName = socialname;
+			SocialName = socialName;
 			Url = url;
 			Icon = icon;
 		}

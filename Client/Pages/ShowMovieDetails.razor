@@ -67,8 +67,8 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		_movie = await AnonymousHttpClient.Client.GetFromJsonAsync<MovieDto>($"/api/Movies/{Id}");
-		var shows = await AnonymousHttpClient.Client.GetFromJsonAsync<List<CinemaShowDto>>($"/api/Movies/{Id}/shows");
+		_movie = await AnonymousHttpClient.Client.GetFromJsonAsync<MovieDto>(ApiCallUrls.MovieById(Id));
+		var shows = await AnonymousHttpClient.Client.GetFromJsonAsync<List<CinemaShowDto>>(ApiCallUrls.MovieShowsById(Id));
 		
 		if (shows != null)
 		{

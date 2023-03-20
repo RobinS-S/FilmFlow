@@ -10,11 +10,9 @@
 			<label for="ageFilter">@Localizer["AgeRating"]: </label>
 			<select id="ageFilter" class="form-select" @bind="_ageFilter">
 				<option value="">@Localizer["SelectAgeRating"]</option>
-				@if (_ageOptions != null) {
-					@foreach (var age in _ageOptions)
-					{
-						<option value="@age">@age+</option>
-					}
+				@foreach (var age in _ageOptions)
+				{
+					<option value="@age">@age+</option>
 				}
 			</select>
 		</div>
@@ -22,12 +20,9 @@
 			<label for="languageFilter">@Localizer["Language"]: </label>
 			<select id="languageFilter" class="form-select" @bind="_languageFilter">
 				<option value="">@Localizer["SelectLanguage"]</option>
-				@if (_allLanguages != null)
+				@foreach (var lang in _allLanguages)
 				{
-					@foreach (var lang in _allLanguages)
-					{
-						<option value="@lang">@lang</option>
-					}
+					<option value="@lang">@lang</option>
 				}
 			</select>
 		</div>
@@ -35,12 +30,9 @@
 			<label for="categoryFilter">@Localizer["Category"]: </label>
 			<select id="categoryFilter" class="form-select" @bind="_categoryFilter">
 				<option value="">@Localizer["SelectCategory"]</option>
-				@if (_allCategories != null)
+				@foreach (var cat in _allCategories)
 				{
-					@foreach (var cat in _allCategories)
-					{
-						<option value="@cat">@cat</option>
-					}
+					<option value="@cat">@cat</option>
 				}
 			</select>
 		</div>
@@ -50,7 +42,7 @@
 @if (_movies != null)
 {
 	<div class="row p-3">
-		@foreach (MovieDto movie in FilteredMovies)
+		@foreach (var movie in FilteredMovies)
 		{
 			<div class="col-sm-12 col-md-6 col-lg-3">
 				<div class="card m-4 p-0" style="background-color: #ffffff96; max-width: 400px;">
@@ -123,10 +115,10 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		var movies = await AnonymousHttpClient.Client.GetFromJsonAsync<MovieDto[]>("/api/Movies");
+		var movies = await AnonymousHttpClient.Client.GetFromJsonAsync<MovieDto[]>(ApiCallUrls.Movies());
 		if (movies != null)
 		{
-			this._movies = movies.ToList<MovieDto>();
+			this._movies = movies.ToList();
 			_ageOptions = movies.Select(m => m.MinAge).Distinct().ToArray();
 			_allLanguages = movies.Select(m => m.Language).Distinct().ToArray();
 			_allCategories = movies.Select(m => m.Category).Distinct().ToArray();
