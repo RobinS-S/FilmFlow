@@ -44,7 +44,7 @@ namespace FilmFlow.API.Services
                 Subject = subject,
                 HtmlContent = htmlBody
             };
-            foreach(var attachment in attachments)
+            foreach (var attachment in attachments)
             {
                 message.AddAttachment($"{attachment.Key}.png", Convert.ToBase64String(attachment.Value), "image/png");
             }

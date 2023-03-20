@@ -8,7 +8,7 @@
 
         public CinemaShowDto? CinemaShow { get; set; }
 
-		public ICollection<ReservationSeatDto> ReservedSeats { get; set; } = null!;
+        public ICollection<ReservationSeatDto> ReservedSeats { get; set; } = null!;
 
         public string Code { get; set; } = null!;
 

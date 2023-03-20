@@ -29,35 +29,35 @@ namespace FilmFlow.API.Controllers
         public async Task<IActionResult> GetByCode([FromQuery] string code)
         {
             var ticket = await _ticketService.GetByCode(code);
-            if(ticket == null)
+            if (ticket == null)
             {
                 return NotFound();
             }
 
             var ticketDto = _mapper.Map<ShowTicketDto>(ticket);
             return Ok(ticketDto);
-		}
+        }
 
-		[HttpGet("qrByCode")]
-		[ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public async Task<IActionResult> GetQrByCode([FromQuery] long reservationId, [FromQuery] string code)
+        [HttpGet("qrByCode")]
+        [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetQrByCode([FromQuery] long reservationId, [FromQuery] string code)
         {
             var ticket = await _ticketService.GetByCode(code);
-			if (ticket == null)
-			{
-				return NotFound();
-			}
+            if (ticket == null)
+            {
+                return NotFound();
+            }
 
             var reservation = await _reservationService.GetById(reservationId);
             var seat = reservation!.ReservedSeats.Single(rs => rs.Ticket!.Code == code);
             var hall = await _cinemaHallService.GetById(reservation!.CinemaShow.CinemaHallId);
 
-			var imageData = await QrCodeEncoding.GenerateTicket(ticket.Code, 
+            var imageData = await QrCodeEncoding.GenerateTicket(ticket.Code,
                 $"FilmFlow: {reservation.CinemaShow.Movie!.Title}", $"{reservation.CinemaShow.Start.ToShortDateString()} {reservation.CinemaShow.Start.ToShortTimeString()} - {reservation.CinemaShow.End.ToShortTimeString()}",
                 $"Hall {reservation!.CinemaShow.CinemaHall.Id}, row {hall!.Rows.Single(hr => hr.Id == seat.Seat.ParentRowId).RowId}, seat {seat.Seat.SeatNumber} {(hall.IsThreeDimensional ? "3D" : "")}",
                 "Enjoy the show!");
-			return File(imageData, "image/png");
-		}
-	}
+            return File(imageData, "image/png");
+        }
+    }
 }

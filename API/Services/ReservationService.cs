@@ -72,7 +72,7 @@ namespace FilmFlow.API.Services
             // retrieve movie, decide tariff, check if seat not taken, place reservation
             var attemptedSeatIdsToReserve = reservationDto.Seats.Select(s => s.SeatId);
             var existingReservation = await _context.Reservations.Include(r => r.ReservedSeats)
-                .SingleOrDefaultAsync(r => r.CinemaShowId == reservationDto.CinemaShowId && r.ReservedSeats.Any(rs => attemptedSeatIdsToReserve.Contains(rs.SeatId))); 
+                .SingleOrDefaultAsync(r => r.CinemaShowId == reservationDto.CinemaShowId && r.ReservedSeats.Any(rs => attemptedSeatIdsToReserve.Contains(rs.SeatId)));
             if (existingReservation != null) return null;
 
             var cinemaShow = await _context.CinemaShows.
@@ -97,12 +97,12 @@ namespace FilmFlow.API.Services
 
         public async Task<bool> PayReservation(Reservation reservation, string soldBy = "FilmFlow site")
         {
-            if(reservation.IsPaid)
+            if (reservation.IsPaid)
             {
                 return false;
             }
 
-            foreach(var seat in reservation.ReservedSeats)
+            foreach (var seat in reservation.ReservedSeats)
             {
                 seat.Ticket = new ShowTicket(seat, soldBy);
             }
@@ -115,7 +115,7 @@ namespace FilmFlow.API.Services
             var newReservation = await GetById(reservation.Id);
             var attachments = new Dictionary<string, byte[]>();
             var hall = await _cinemaHallService.GetById(newReservation!.CinemaShow.CinemaHallId);
-            foreach(var seat in newReservation!.ReservedSeats)
+            foreach (var seat in newReservation!.ReservedSeats)
             {
                 var row = hall!.Rows.Single(hr => hr.Id == seat.Seat.ParentRowId);
                 byte[] imageData = await QrCodeEncoding.GenerateTicket(seat!.Ticket!.Code,

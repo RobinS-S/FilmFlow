@@ -4,7 +4,7 @@ namespace FilmFlow.Client.Auth
 {
     public class AnonymousHttpClient : IAnonymousHttpClient
     {
-	    public AnonymousHttpClient(HttpClient httpClient)
+        public AnonymousHttpClient(HttpClient httpClient)
         {
             Client = httpClient;
         }

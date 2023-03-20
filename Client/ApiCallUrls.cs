@@ -25,7 +25,7 @@ namespace FilmFlow.Client
         public static string ReservationById(long id) => $"{ApiPrefix}/reservations/{id}";
         public static string Reservations() => $"{ApiPrefix}/reservations";
 
-		public static string TicketByCode(string code) => $"{ApiPrefix}/tickets/byCode?code={code}";
-		public static string TicketQrByCode(long reservationId, string code) => $"{ApiPrefix}/tickets/qrByCode?reservationId={reservationId}&code={code}";
-	}
+        public static string TicketByCode(string code) => $"{ApiPrefix}/tickets/byCode?code={code}";
+        public static string TicketQrByCode(long reservationId, string code) => $"{ApiPrefix}/tickets/qrByCode?reservationId={reservationId}&code={code}";
+    }
 }

@@ -53,12 +53,12 @@ namespace FilmFlow.API.Controllers
             }
 
             var reservation = await _reservationService.GetById(id);
-            if(reservation == null)
+            if (reservation == null)
             {
                 return NotFound();
             }
 
-            if(reservation.UserId != user.Id)
+            if (reservation.UserId != user.Id)
             {
                 return Forbid();
             }
@@ -67,39 +67,39 @@ namespace FilmFlow.API.Controllers
             return Ok(reservationDtos);
         }
 
-		[Authorize]
-		[HttpPost("{id}/pay")]
-		[ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public async Task<IActionResult> PayReservation(long id)
-		{
-			var user = User.Identity?.Name != null ? await _userManager.FindByNameAsync(User.Identity.Name) : null;
-			if (user == null)
-			{
-				return BadRequest();
-			}
+        [Authorize]
+        [HttpPost("{id}/pay")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> PayReservation(long id)
+        {
+            var user = User.Identity?.Name != null ? await _userManager.FindByNameAsync(User.Identity.Name) : null;
+            if (user == null)
+            {
+                return BadRequest();
+            }
 
-			var reservation = await _reservationService.GetById(id);
-			if (reservation == null)
-			{
-				return NotFound();
-			}
+            var reservation = await _reservationService.GetById(id);
+            if (reservation == null)
+            {
+                return NotFound();
+            }
 
-			if (reservation.UserId != user.Id)
-			{
-				return Forbid();
-			}
+            if (reservation.UserId != user.Id)
+            {
+                return Forbid();
+            }
 
             var paid = await _reservationService.PayReservation(reservation);
-            if(!paid)
+            if (!paid)
             {
                 return Conflict();
             }
 
-			return Ok(paid);
-		}
+            return Ok(paid);
+        }
 
-		[Authorize]
+        [Authorize]
         [HttpGet("{id}/qrcode")]
         [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

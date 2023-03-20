@@ -22,9 +22,9 @@ namespace FilmFlow.API.Misc
 
             CreateMap<ApplicationUser, UserProfileDto>();
 
-			CreateMap<ShowTicket, ShowTicketDto>();
+            CreateMap<ShowTicket, ShowTicketDto>();
 
-			CreateMap<ReservationSeat, ReservationSeatDto>();
+            CreateMap<ReservationSeat, ReservationSeatDto>();
 
             CreateMap<Social, SocialDto>();
 

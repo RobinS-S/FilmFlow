@@ -74,7 +74,7 @@ namespace FilmFlow.API.Controllers
 
             reservationDto.CinemaShowId = id;
             var reservation = await _reservationService.Create(reservationDto, user);
-            if(reservation == null)
+            if (reservation == null)
             {
                 return Conflict();
             }

@@ -21,7 +21,7 @@ namespace FilmFlow.Client
             builder.Services.AddHttpClient<IAuthorizedHttpClient, AuthorizedHttpClient>("FilmFlow.AuthorizedClient", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
                 .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
             builder.Services.AddHttpClient<IAnonymousHttpClient, AnonymousHttpClient>("FilmFlow.Client", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
-            
+
             builder.Services.AddApiAuthorization();
             builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
@@ -31,10 +31,10 @@ namespace FilmFlow.Client
             var language = await jsRuntime.InvokeAsync<string?>("localStorage.getItem", LanguageKeyName);
             if (!string.IsNullOrEmpty(language))
             {
-	            if (language.ToLower() == "en-gb")
-	            {
-		            language = "en-US";
-	            }
+                if (language.ToLower() == "en-gb")
+                {
+                    language = "en-US";
+                }
                 var culture = new CultureInfo(language);
                 CultureInfo.CurrentCulture = culture;
                 CultureInfo.CurrentUICulture = culture;
