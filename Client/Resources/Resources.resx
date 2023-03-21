@@ -289,4 +289,7 @@
   <data name="LogOut" xml:space="preserve">
     <value>Log out</value>
   </data>
+  <data name="NoReservations" xml:space="preserve">
+    <value>You have no reservations yet. Book one!</value>
+  </data>
 </root>

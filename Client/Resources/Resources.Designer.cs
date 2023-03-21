@@ -313,6 +313,15 @@ namespace FilmFlow.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You have no reservations yet. Book one!.
+        /// </summary>
+        public static string NoReservations {
+            get {
+                return ResourceManager.GetString("NoReservations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pay with credit card.
         /// </summary>
         public static string PayCreditCard {

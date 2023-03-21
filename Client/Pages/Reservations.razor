@@ -8,20 +8,29 @@
 
 @if(_reservations != null)
 {
-    <div class="row p-3">
-        @foreach(var reservation in _reservations)
+	<div class="row p-3">
+        @if (_reservations.Any())
         {
-            <div class="col-sm-12 col-md-6 col-lg-3">
-                <div class="card m-4 p-0" style="background-color: #ffffff96;">
-		            <div class="card-body">
-                        <h5 class="card-title">@reservation.CinemaShow?.Movie?.Title</h5>
-                        <h6 class="card-subtitle mb-2 text-muted"><strong>@reservation.CinemaShow?.Start.ToShortDateString() @reservation.CinemaShow?.Start.ToShortTimeString() - @reservation.CinemaShow?.End.ToShortTimeString()</strong></h6>
-                        <a href="reservations/@reservation.Id" class="btn btn-danger">@Localizer["Details"]</a>
-		            </div>
-                </div>
-            </div>
+	        @foreach (var reservation in _reservations)
+	        {
+		        <div class="col-sm-12 col-md-6 col-lg-3">
+			        <div class="card m-4 p-0" style="background-color: #ffffff96;">
+				        <div class="card-body">
+					        <h5 class="card-title">@reservation.CinemaShow?.Movie?.Title</h5>
+					        <h6 class="card-subtitle mb-2 text-muted"><strong>@reservation.CinemaShow?.Start.ToShortDateString() @reservation.CinemaShow?.Start.ToShortTimeString() - @reservation.CinemaShow?.End.ToShortTimeString()</strong></h6>
+					        <a href="reservations/@reservation.Id" class="btn btn-danger">@Localizer["Details"]</a>
+				        </div>
+			        </div>
+		        </div>
+	        }
         }
-    </div>
+        else
+        {
+	        <div class="col-12">
+                <h4>@Localizer["NoReservations"]</h4>
+	        </div>
+        }
+	</div>
 }
 else
 {

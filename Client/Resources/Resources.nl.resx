@@ -288,4 +288,7 @@
   <data name="LogOut" xml:space="preserve">
     <value>Uitloggen</value>
   </data>
+  <data name="NoReservations" xml:space="preserve">
+    <value>Je hebt nog geen reserveringen. Boek er een!</value>
+  </data>
 </root>
