@@ -1,8 +1,8 @@
 using FilmFlow.API.Auth;
 using FilmFlow.API.Data;
-using FilmFlow.API.Data.Entities;
 using FilmFlow.API.Misc;
 using FilmFlow.API.Services;
+using FilmFlow.Domain.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using FilmFlow.API.Misc;
 using FilmFlow.API.Services;
+using FilmFlow.Application;
 using FilmFlow.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
 

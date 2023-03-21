@@ -1,7 +1,7 @@
-﻿using FilmFlow.API.Data.Entities.Helpers;
+﻿using FilmFlow.Domain.Entities.Helpers;
 using FilmFlow.Shared.Enums;
 
-namespace FilmFlow.API.Data.Entities
+namespace FilmFlow.Domain.Entities
 {
     public class ReservationSeat : Entity
     {

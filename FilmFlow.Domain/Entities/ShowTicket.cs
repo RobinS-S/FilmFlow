@@ -1,6 +1,6 @@
-﻿using FilmFlow.API.Data.Entities.Helpers;
+﻿using FilmFlow.Domain.Entities.Helpers;
 
-namespace FilmFlow.API.Data.Entities
+namespace FilmFlow.Domain.Entities
 {
     public class ShowTicket : Entity
     {
@@ -14,7 +14,7 @@ namespace FilmFlow.API.Data.Entities
 
         public ShowTicket(ReservationSeat seat, string soldBy)
         {
-            Code = Misc.Crypto.GenerateHash(Misc.Crypto.GenerateRandomBaseEncodedString());
+            Code = Crypto.GenerateHash(Crypto.GenerateRandomBaseEncodedString());
             Seat = seat;
             SoldBy = soldBy;
         }

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using FilmFlow.API.Data.Entities;
+using FilmFlow.Domain.Entities;
 using FilmFlow.Shared.Dto;
 
-namespace FilmFlow.API.Misc
+namespace FilmFlow.Application
 {
     public class MappingProfiles : Profile
     {

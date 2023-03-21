@@ -1,6 +1,6 @@
-﻿using FilmFlow.API.Data.Entities.Helpers;
+﻿using FilmFlow.Domain.Entities.Helpers;
 
-namespace FilmFlow.API.Data.Entities
+namespace FilmFlow.Domain.Entities
 {
     public class CinemaHall : Entity
     {

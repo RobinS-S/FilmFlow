@@ -1,6 +1,6 @@
-﻿using FilmFlow.API.Data.Entities.Helpers;
+﻿using FilmFlow.Domain.Entities.Helpers;
 
-namespace FilmFlow.API.Data.Entities
+namespace FilmFlow.Domain.Entities
 {
     public class Reservation : Entity
     {
@@ -24,7 +24,7 @@ namespace FilmFlow.API.Data.Entities
 
         public Reservation(CinemaShow cinemaShow, ICollection<ReservationSeat> reservedSeats, bool isPaid = false, ApplicationUser? user = null)
         {
-            Code = Misc.Crypto.GenerateHash(Misc.Crypto.GenerateRandomBaseEncodedString());
+            Code = Crypto.GenerateHash(Crypto.GenerateRandomBaseEncodedString());
             CreatedAt = DateTime.UtcNow;
             CinemaShow = cinemaShow;
             ReservedSeats = reservedSeats;

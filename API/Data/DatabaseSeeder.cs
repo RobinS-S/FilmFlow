@@ -1,5 +1,5 @@
 ﻿using FilmFlow.API.Auth;
-using FilmFlow.API.Data.Entities;
+using FilmFlow.Domain.Entities;
 using FilmFlow.API.Misc;
 using FilmFlow.Shared.Enums;
 using Microsoft.AspNetCore.Identity;

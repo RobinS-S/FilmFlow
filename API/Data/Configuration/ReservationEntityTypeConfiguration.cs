@@ -1,4 +1,4 @@
-﻿using FilmFlow.API.Data.Entities;
+﻿using FilmFlow.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

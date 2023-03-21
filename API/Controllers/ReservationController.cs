@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using FilmFlow.API.Data.Entities;
-using FilmFlow.API.Misc;
+using FilmFlow.Domain.Entities;
 using FilmFlow.API.Services;
+using FilmFlow.Application;
 using FilmFlow.Shared.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

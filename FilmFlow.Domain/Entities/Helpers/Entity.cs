@@ -1,4 +1,4 @@
-﻿namespace FilmFlow.API.Data.Entities.Helpers
+﻿namespace FilmFlow.Domain.Entities.Helpers
 {
     public abstract class Entity<T>
     {
