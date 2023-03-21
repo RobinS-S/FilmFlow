@@ -1,6 +1,6 @@
 ﻿using FilmFlow.API.Data;
-using FilmFlow.API.Data.Entities;
-using FilmFlow.API.Misc;
+using FilmFlow.Domain.Entities;
+using FilmFlow.Application;
 using FilmFlow.Shared.Dto;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

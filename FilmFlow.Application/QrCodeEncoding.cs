@@ -6,7 +6,7 @@ using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
-namespace FilmFlow.API.Misc
+namespace FilmFlow.Application
 {
     public class QrCodeEncoding
     {

@@ -45,22 +45,22 @@ namespace FilmFlow.API.Controllers
             return Ok(socialDto);
         }
 
-		[HttpDelete("{id}")]
-		[Authorize(Roles = Roles.AdminRoleName)]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public async Task<IActionResult> Delete(long id)
-		{
-			var social = await _socialService.GetById(id);
+        [HttpDelete("{id}")]
+        [Authorize(Roles = Roles.AdminRoleName)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete(long id)
+        {
+            var social = await _socialService.GetById(id);
 
-			if (social == null)
-			{
-				return NotFound();
-			}
+            if (social == null)
+            {
+                return NotFound();
+            }
 
-			await _socialService.Delete(id);
+            await _socialService.Delete(id);
 
-			return NoContent();
-		}
-	}
+            return NoContent();
+        }
+    }
 }

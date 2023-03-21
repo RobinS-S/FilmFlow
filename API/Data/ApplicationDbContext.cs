@@ -1,5 +1,5 @@
 ﻿using Duende.IdentityServer.EntityFramework.Options;
-using FilmFlow.API.Data.Entities;
+using FilmFlow.Domain.Entities;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;

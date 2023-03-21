@@ -1,5 +1,5 @@
 ﻿using FilmFlow.API.Data;
-using FilmFlow.API.Data.Entities;
+using FilmFlow.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FilmFlow.API.Services

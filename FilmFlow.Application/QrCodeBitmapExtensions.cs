@@ -4,7 +4,7 @@ using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
-namespace FilmFlow.API.Misc
+namespace FilmFlow.Application
 {
     public static class QrCodeBitmapExtensions
     {

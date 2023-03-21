@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace FilmFlow.API.Data.Entities
+namespace FilmFlow.Domain.Entities
 {
     public class ApplicationUser : IdentityUser
     {
