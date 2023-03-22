@@ -1,4 +1,4 @@
-﻿@page "/beheer";
+﻿@page "/beheer/{delededId:long?}";
 @using FilmFlow.Shared.Dto
 @inherits BaseComponent
 
@@ -28,7 +28,7 @@
                             <td>@movie.Category</td>
                             <td>@movie.Language</td>
                             <td><a href="/editMovie/@movie.Id" class="btn btn-warning">Edit</a></td>
-                            <td><a href="/api/movies/@movie.Id"  data-confirm="Are you sure?" data-method="DELETE" class="btn btn-danger">Delete</a></td>
+                            <td><a href="/beheer?delededId=@movie.Id" class="btn btn-danger">Delete</a></td>
                        </tr>
 				    }
                 </tbody>
@@ -127,23 +127,28 @@
 </div>
 
 @code {
+    [Parameter]
+    public long delededId { get; set; }
+
+
+
     private List<MovieDto>? movies;
     private List<CinemaHallDto>? CinemaHall;
     private List<SocialDto>? Socials;
     private List<ReservationDto>? reservations;
     protected override async Task OnInitializedAsync()
-	{
-		var movies = await AnonymousHttpClient.Client.GetFromJsonAsync<MovieDto[]>("/api/Movies");
-		if (movies != null)
-		{
-			this.movies = movies.ToList<MovieDto>();
-		}
+    {
+        var movies = await AnonymousHttpClient.Client.GetFromJsonAsync<MovieDto[]>("/api/Movies");
+        if (movies != null)
+        {
+            this.movies = movies.ToList<MovieDto>();
+        }
 
         var CinemaHall = await AnonymousHttpClient.Client.GetFromJsonAsync<CinemaHallDto[]>("/api/cinemahalls");
-		if (CinemaHall != null)
-		{
-			this.CinemaHall = CinemaHall.ToList<CinemaHallDto>();
-		}
+        if (CinemaHall != null)
+        {
+            this.CinemaHall = CinemaHall.ToList<CinemaHallDto>();
+        }
 
         var Socials = await AnonymousHttpClient.Client.GetFromJsonAsync<SocialDto[]>("/api/Socials");
         if (Socials != null)
@@ -156,6 +161,12 @@
         {
             this.reservations = reservations.ToList<ReservationDto>();
         }
+
+        if (delededId >= 1)
+        { 
+            var DeleteMovie = await AnonymousHttpClient.Client.DeleteFromJsonAsync<MovieDto>($"/api/Movies/{delededId}");
+        }
+
 	}
 
 }
