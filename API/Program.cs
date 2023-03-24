@@ -3,6 +3,7 @@ using FilmFlow.API.Data;
 using FilmFlow.API.Misc;
 using FilmFlow.API.Services;
 using FilmFlow.Domain.Entities;
+using FilmFlow.Application;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -72,7 +73,7 @@ namespace FilmFlow.API
                 builder.Services.AddSwaggerGen();
             }
 
-            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
             builder.Services.AddScoped<CinemaHallService>();
             builder.Services.AddScoped<CinemaHallRowService>();
