@@ -1,0 +1,172 @@
+﻿@page "/beheer/{delededId:long?}";
+@using FilmFlow.Shared.Dto
+@inherits BaseComponent
+
+<h3>Beheer</h3>
+
+<div class="d-flex">
+    <div class="col col-6">
+        <div class="m-2 p-2 rounded" style="background-color: #ffffff96;">
+            <p class="h3">Movies</p>
+            <table class="table table-striped ">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Naam</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Language</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (MovieDto movie in movies)
+		            {
+					   <tr>
+                            <th>@movie.Id</th>
+                            <td>@movie.Title</td>
+                            <td>@movie.Category</td>
+                            <td>@movie.Language</td>
+                            <td><a href="/editMovie/@movie.Id" class="btn btn-warning">Edit</a></td>
+                            <td><a href="/beheer?delededId=@movie.Id" class="btn btn-danger">Delete</a></td>
+                       </tr>
+				    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col col-6">
+        <div class="m-2 p-2 rounded" style="background-color: #ffffff96;">
+            <p class="h3">Cinemahalls</p>
+            <table class="table table-striped ">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">isThreeDimensional</th>
+                        <th scope="col">isWheelchairFriendly</th
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                     @foreach (CinemaHallDto cinemaHall in CinemaHall)
+		            {
+					   <tr>
+                            <th>@cinemaHall.Id</th>
+                            <td>@cinemaHall.IsThreeDimensional</td>
+                            <td>@cinemaHall.IsWheelchairFriendly</td>
+                            <td><a href="/editCinemaHall/@cinemaHall.Id" class="btn btn-warning">Edit</a></td>
+                            <td><a href="/api/cinemaHall/@cinemaHall.Id" data-confirm="Are you sure?" data-method="DELETE" class="btn btn-danger">Delete</a></td>
+                       </tr>
+				    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex">
+    <div class="col col-6">
+        <div class="m-2 p-2 rounded" style="background-color: #ffffff96;">
+            <p class="h3">Socials</p>
+            <table class="table table-striped ">
+                <thead>
+                    <tr
+                        <th scope="col">Social Name</th>
+                        <th scope="col">URL</th>
+                        <th scope="col">Icon</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (SocialDto Social in Socials)
+                    {
+                        <tr>
+                            <th>@Social.SocialName</th>
+                            <td>@Social.Icon</td>
+                            <td>@Social.Url</td>
+                            @*<td><a href="/editCinemaHall/@Social.Id" class="btn btn-warning">Edit</a></td>
+                            <td><a href="/api/cinemaHall/@Social.Id" data-confirm="Are you sure?" data-method="DELETE" class="btn btn-danger">Delete</a></td>*@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col col-6">
+        <div class="m-2 p-2 rounded" style="background-color: #ffffff96;">
+            <p class="h3">Reservereingen</p>
+            <table class="table table-striped ">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Created At</th>
+                        <th scope="col">CinemaShow</th>
+                        <th scope="col">IsPaid</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (ReservationDto reservations in reservations)
+                    {
+                        <tr>
+                            <th>@reservations.Id</th>
+                            <td>@reservations.CreatedAt</td>    
+                            <td>@reservations.CinemaShow.Movie.Title</td>
+                            <td>@reservations.IsPaid</td>
+                            <td><a href="/editCinemaHall/@reservations.Id" class="btn btn-warning">Edit</a></td>
+                            <td><a href="/api/cinemaHall/@reservations.Id" data-confirm="Are you sure?" data-method="DELETE" class="btn btn-danger">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public long delededId { get; set; }
+
+
+
+    private List<MovieDto>? movies;
+    private List<CinemaHallDto>? CinemaHall;
+    private List<SocialDto>? Socials;
+    private List<ReservationDto>? reservations;
+    protected override async Task OnInitializedAsync()
+    {
+        var movies = await AnonymousHttpClient.Client.GetFromJsonAsync<MovieDto[]>("/api/Movies");
+        if (movies != null)
+        {
+            this.movies = movies.ToList<MovieDto>();
+        }
+
+        var CinemaHall = await AnonymousHttpClient.Client.GetFromJsonAsync<CinemaHallDto[]>("/api/cinemahalls");
+        if (CinemaHall != null)
+        {
+            this.CinemaHall = CinemaHall.ToList<CinemaHallDto>();
+        }
+
+        var Socials = await AnonymousHttpClient.Client.GetFromJsonAsync<SocialDto[]>("/api/Socials");
+        if (Socials != null)
+        {
+            this.Socials = Socials.ToList<SocialDto>();
+        }
+
+        var reservations = await AnonymousHttpClient.Client.GetFromJsonAsync<ReservationDto[]>("/api/reservations");
+        if (reservations != null)
+        {
+            this.reservations = reservations.ToList<ReservationDto>();
+        }
+
+        if (delededId >= 1)
+        { 
+            var DeleteMovie = await AnonymousHttpClient.Client.DeleteFromJsonAsync<MovieDto>($"/api/Movies/{delededId}");
+        }
+
+	}
+
+}
