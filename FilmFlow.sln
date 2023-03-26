@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilmFlow.Client", "Client\F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilmFlow.Shared", "Shared\FilmFlow.Shared.csproj", "{95169F93-AD95-48E8-A88C-1E74F191C9B7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilmFlow.Tests", "FilmFlow.Tests\FilmFlow.Tests.csproj", "{A78F2C6E-85BF-4F09-822C-7A5DB3651F4C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmFlow.Tests", "FilmFlow.Tests\FilmFlow.Tests.csproj", "{A78F2C6E-85BF-4F09-822C-7A5DB3651F4C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{34E6AFBE-8BBB-4BD5-A819-7D76585EDF61} = {34E6AFBE-8BBB-4BD5-A819-7D76585EDF61}
 	EndProjectSection
